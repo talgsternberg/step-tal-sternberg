@@ -1,0 +1,1 @@
+function bad(){var noindent=1;var nolinebreaks=2; var badformatting=3;}
