@@ -7,5 +7,5 @@ extends:
 parserOptions:
   ecmaVersion: 11
 rules: {
-  "no-unused-vars": ["warningr", { "vars": "local", "args": "after-used" }]
+  "no-unused-vars": ["warning", { "vars": "local", "args": "after-used" }]
 }
