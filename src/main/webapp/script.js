@@ -3,7 +3,7 @@
  */
 function goToUser() {
   // TODO: fetch for actual user's page
-  let url = 'user_profile.html';
+  const url = 'user_profile.html';
   location.href = url;
 }
 
@@ -12,6 +12,6 @@ function goToUser() {
  */
 function goToTask() {
   // TODO: fetch for actual task's page
-  var url = 'task.html';
+  const url = 'task.html';
   location.href = url;
 }
