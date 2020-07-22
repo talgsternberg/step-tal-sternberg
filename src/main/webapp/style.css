@@ -54,6 +54,23 @@ button:active {
   transform: translateY(5px);
 }
 
+/* status on checklist determines task color */
+.incomplete {
+  background-color: red;
+}
+
+.incomplete:hover {
+  background-color: darkred;
+}
+
+.complete {
+  background-color: green;
+}
+
+.complete:hover {
+  background-color: darkgreen;
+}
+
 /* Lists */
 ul {
   list-style-type: none;
