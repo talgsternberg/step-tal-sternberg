@@ -9,6 +9,12 @@
   margin: 20px;
 }
 
+#user-stats {
+  border: 8px dotted rgba(158, 15, 158, 0.616);
+  margin-right: 60%;
+  padding: 8px;
+}
+
 /* Regular buttons */
 button {
   text-align: center;
