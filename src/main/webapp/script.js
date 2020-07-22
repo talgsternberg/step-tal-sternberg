@@ -8,7 +8,8 @@ function goToUser() {
 }
 
 /**
- * Redirect to Task Page. If no taskID is provided, randomize it from 1 to 3 inclusive.
+ * Redirect to Task Page.
+ * @param {number} taskID If not provided, randomize it from 1 to 3 inclusive.
  */
 function goToTask(taskID=Math.floor(Math.random()*(3))+1) {
   const url = 'task.html?taskID=' + taskID;
@@ -16,10 +17,14 @@ function goToTask(taskID=Math.floor(Math.random()*(3))+1) {
 }
 
 // Hard coded tasks that are global variables.
-const g_tasks = {task1:{taskID:1, projectID:1, name:"Task 1", description:"This is task 1", status:"incomplete"},
-                task2:{taskID:2, projectID:1, name:"Task 2", description:"This is task 2", status:"complete"},
-                task3:{taskID:3, projectID:1, name:"Task 3", description:"This is task 3", status:"incomplete"}};
-const g_JSONtasks = JSON.stringify(g_tasks);
+const gTasks = 
+  {task1: {taskID: 1, projectID: 1, name: 'Task 1',
+  description: 'This is task 1', status: 'incomplete'},
+  task2: {taskID: 2, projectID: 1, name: 'Task 2',
+  description: 'This is task 2', status: 'complete'},
+  task3: {taskID: 3, projectID: 1, name: 'Task 3',
+  description: 'This is task 3', status: 'incomplete'}};
+const gJSONtasks = JSON.stringify(gTasks);
 
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
@@ -27,16 +32,16 @@ const g_JSONtasks = JSON.stringify(g_tasks);
  */
 function getTaskInfo() {
   const params = new URLSearchParams(location.search);
-  let taskID = params.get("taskID");
-  let tasks = JSON.parse(g_JSONtasks);
-  for (task in tasks){
-    if (tasks[task].taskID == taskID){
-      let title = document.getElementById("task-title-container");
-      title.innerHTML = "<h1>" + tasks[task].name + "</h1>";
-      let description = document.getElementById("task-description-container");
+  const taskID = params.get('taskID');
+  const tasks = JSON.parse(g_JSONtasks);
+  for (task in tasks) {
+    if (tasks[task].taskID == taskID) {
+      const title = document.getElementById('task-title-container');
+      title.innerHTML = '<h1>' + tasks[task].name + '</h1>';
+      const description = document.getElementById('task-description-container');
       description.innerText = tasks[task].description;
-      let status = document.getElementById("task-status-container");
-      status.innerText = "Status: " + tasks[task].status;
+      const status = document.getElementById('task-status-container');
+      status.innerText = 'Status: ' + tasks[task].status;
       break;
     }
   }
