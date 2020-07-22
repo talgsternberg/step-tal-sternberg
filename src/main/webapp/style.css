@@ -40,10 +40,9 @@ button:active {
   transform: translateY(5px);
 }
 
-/*status on checklist determines color*/
+/* status on checklist determines color */
 .incomplete {
   background-color: red;
-
 }
 
 .incomplete:hover {
@@ -52,7 +51,6 @@ button:active {
 
 .complete {
     background-color: green;
-
 }
 
 .complete:hover {
@@ -64,5 +62,3 @@ ul {
   list-style-type: none;
   padding: 10px;
 }
-
-
