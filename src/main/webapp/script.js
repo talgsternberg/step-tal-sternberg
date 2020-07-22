@@ -17,13 +17,13 @@ function goToTask(taskID=Math.floor(Math.random()*(3))+1) {
 }
 
 // Hard coded tasks that are global variables.
-const gTasks = 
+const gTasks =
   {task1: {taskID: 1, projectID: 1, name: 'Task 1',
-  description: 'This is task 1', status: 'incomplete'},
-  task2: {taskID: 2, projectID: 1, name: 'Task 2',
-  description: 'This is task 2', status: 'complete'},
-  task3: {taskID: 3, projectID: 1, name: 'Task 3',
-  description: 'This is task 3', status: 'incomplete'}};
+    description: 'This is task 1', status: 'incomplete'},
+    task2: {taskID: 2, projectID: 1, name: 'Task 2',
+    description: 'This is task 2', status: 'complete'},
+    task3: {taskID: 3, projectID: 1, name: 'Task 3',
+    description: 'This is task 3', status: 'incomplete'}};
 const gJSONtasks = JSON.stringify(gTasks);
 
 /**
@@ -33,7 +33,7 @@ const gJSONtasks = JSON.stringify(gTasks);
 function getTaskInfo() {
   const params = new URLSearchParams(location.search);
   const taskID = params.get('taskID');
-  const tasks = JSON.parse(g_JSONtasks);
+  const tasks = JSON.parse(gJSONtasks);
   for (task in tasks) {
     if (tasks[task].taskID == taskID) {
       const title = document.getElementById('task-title-container');
