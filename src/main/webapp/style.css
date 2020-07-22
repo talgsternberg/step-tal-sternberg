@@ -9,6 +9,20 @@
   margin: 20px;
 }
 
+.inline {
+  display: inline-block;
+}
+
+.task {
+  border: 2px solid blueviolet;
+}
+
+.comment {
+  border: 2px solid blueviolet;
+  padding: 10px;
+  margin: 10px 50px;
+}
+
 /* Regular buttons */
 button {
   text-align: center;
@@ -38,4 +52,8 @@ button:active {
 ul {
   list-style-type: none;
   padding: 10px;
+}
+
+li {
+  margin: 10px;
 }
