@@ -46,15 +46,15 @@ button:active {
 }
 
 .incomplete:hover {
-    background-color: darkred;
+  background-color: darkred;
 }
 
 .complete {
-    background-color: green;
+  background-color: green;
 }
 
 .complete:hover {
-    background-color: darkgreen;
+  background-color: darkgreen;
 }
 
 /* Lists */
