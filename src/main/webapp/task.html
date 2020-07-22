@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getTaskInfo()">
     <div id="navigation">
       <a href="main_hub.html" id="hub">Main Hub</a>
       <a href="user_profile.html" id="user">User Profile</a>
@@ -14,11 +14,11 @@
       <a href="task.html" id="task">Task Page</a>
     </div>
     <div id="content">
-      <h1>Task Name</h1>
-      <p>Task description...</p>
-      <p>Task Status: status</p>
+      <div id="task-title-container"><h1>Default Task Name</h1></div>
+      <div id="task-description-container">Default description...</div>
+      <div id="task-status-container">Status: default status</div>
       <h2>Subtasks</h2>
-      <ul>
+      <ul id="task-subtasks-container">
         <li class="task">
           <button type="button" class="inline" onclick="goToTask()">Task 1</button>
           <p class="inline">Task 1 description...</p>
@@ -29,7 +29,7 @@
         </li>
       </ul>
       <h2>Members</h2>
-      <ul>
+      <ul id="task-users-container">
         <li class="inline">
           <button type="button" onclick="goToUser()">User 1</button>
         </li>
@@ -41,7 +41,7 @@
         </li>
       </ul>
       <h2>Comments</h2>
-      <ul>
+      <ul id="task-comments-container">
         <li class="comment">
           <p>Comment 1</p>
         </li>
