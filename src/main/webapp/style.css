@@ -40,7 +40,7 @@ button:active {
   transform: translateY(5px);
 }
 
-/* status on checklist determines color */
+/* status on checklist determines task color */
 .incomplete {
   background-color: red;
 }
