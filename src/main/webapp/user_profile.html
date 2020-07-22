@@ -15,6 +15,7 @@
     </div>
     <div id="content">
       <h1>Welcome, UserName</h1>
+      <h2>User Stats:</h2>
       <div id="user-stats">
         <div>Name: UserName LastName</div>
         <div>Year: Junior</div>
@@ -22,6 +23,30 @@
         <div>Total Completed Tasks: 7</div>
         <button type="button" onclick="goToTask()">See Tasks</button>
       </div>
+      <h2>Checklist:</h2>
+      <ul>
+        <li>
+          <input type="checkbox" name="Task1" value="Task1">
+          <button class="incomplete" type="button" onclick="goToTask()">Task 1</button>
+        </li>
+        <li>
+          <input type="checkbox" name="Task2" value="Task2">
+          <button class="incomplete" type="button" onclick="goToTask()">Task 2</button>
+        </li>
+        <li>
+          <input type="checkbox" name="Task3" value="Task3" checked>
+          <button class="complete" type="button" onclick="goToTask()">Task 3</button>
+        </li>
+        <li>
+          <input type="checkbox" name="Task4" value="Task4" checked>
+          <button class="complete" type="button" onclick="goToTask()">Task 4</button>
+        </li>
+      </ul>
+     
+
+
+
+      
     </div>
     <div id="footer"><!-- we should come up with a footer here --></div>
   </body>
