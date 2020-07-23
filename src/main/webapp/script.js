@@ -34,7 +34,7 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
-const gUsers = 
+const gUsers =
   {user1: {userID: 1, name: 'User 1', skills: 'Art, Writing',
     major: 'Studio Art', numTaskCompleted: 5, admin: true},
   user2: {userID: 2, name: 'User 2', skills: 'Object Oriented Programming',
@@ -43,8 +43,8 @@ const gUsers =
     major: 'Chemistry', numTaskCompleted: 4, admin: false}};
 
 const gJSONusers = JSON.stringify(gUsers);
-const gDefaultUser = {userID: 0, name: 'Default Username', 
-  skills: 'Default Skills',major: 'Default Major', 
+const gDefaultUser = {userID: 0, name: 'Default Username',
+  skills: 'Default Skills', major: 'Default Major',
   numTaskCompleted: 'Default Number', admin: false}; // Add attributes
 
 /**
