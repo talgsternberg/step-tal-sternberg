@@ -31,7 +31,6 @@ const gJSONtasks = JSON.stringify(gTasks);
 const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
-console.log(gTasks);
 
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
 const gUsers = {};
@@ -46,7 +45,6 @@ function getTaskInfo() {
   const params = new URLSearchParams(location.search);
   const taskID = params.get('taskID');
   const tasks = JSON.parse(gJSONtasks);
-  console.log(tasks);
   for (task in tasks) {
     if (tasks[task].taskID == taskID) {
       const title = document.getElementById('task-title-container');
@@ -56,42 +54,32 @@ function getTaskInfo() {
       const status = document.getElementById('task-status-container');
       status.innerText = 'Status: ' + tasks[task].status;
       const subtasks = document.getElementById('task-subtasks-container');
-      if (tasks[task].subtasks.length != 0) {
-        console.log(tasks[task].subtasks);
-        const ulSubtaskElement = document.createElement('ul');
-        for (subtaskID of tasks[task].subtasks) {
-          // Get subtask info
-          let subtask = gDefaultTask;
-          for (task in gTasks) {
-            if (gTasks[task].taskID == subtaskID) {
-              subtask = gTasks[task];
-              break;
-            }
-          }
-          ulSubtaskElement.appendChild(createTaskLiElement(subtask));
-        }
-        subtasks.appendChild(ulSubtaskElement);
-      }
+      subtasks.appendChild(getSubtasks(tasks[task].subtasks));
       const users = document.getElementById('task-users-container');
-      if (tasks[task].users.length != 0) {
-        console.log(tasks[task].users);
-        const ulUserElement = document.createElement('ul');
-        for (userID of tasks[task].users) {
-          // Get user info
-          let taskUser = gDefaultUser;
-          for (user in gUsers) {
-            if (gUsers[user].taskID == userID) {
-              taskUser = gUsers[user];
-              break;
-            }
-          }
-          ulUserElement.appendChild(createUserLiElement(taskUser));
-        }
-        users.appendChild(ulUserElement);
-      } 
+      users.appendChild(getUsers(tasks[task].users))
       break;
     }
   }
+}
+
+/**
+ * Build ul element for subtasks on Task Page.
+ * @param {Array} subtasks Array of taskIDs.
+ * @returns {Element} HTML ul element containing a list of subtasks.
+ */
+function getSubtasks(subtasks) {
+  const ulElement = document.createElement('ul');
+  for (subtaskID of subtasks) {
+    let subtask = gDefaultTask;
+    for (task in gTasks) {
+      if (gTasks[task].taskID == subtaskID) {
+        subtask = gTasks[task];
+        break;
+      }
+    }
+    ulElement.appendChild(createTaskLiElement(subtask));
+  }
+  return ulElement;
 }
 
 /**
@@ -120,7 +108,27 @@ function createTaskLiElement(task) {
 }
 
 /**
- * Build li element for a task or subtask.
+ * Build ul element for users on Task Page.
+ * @param {Array} users Array of userIDs.
+ * @returns {Element} HTML ul element containing a list of users.
+ */
+function getUsers(users) {
+  const ulElement = document.createElement('ul');
+  for (userID of users) {
+    let taskUser = gDefaultUser;
+    for (user in gUsers) {
+      if (gUsers[user].taskID == userID) {
+        taskUser = gUsers[user];
+        break;
+      }
+    }
+    ulElement.appendChild(createUserLiElement(taskUser));
+  }
+  return ulElement;
+}
+
+/**
+ * Build li element for a user.
  * @param {Hashmap} user Details of the user.
  * @returns {Element} HTML li element containing user button.
  */
