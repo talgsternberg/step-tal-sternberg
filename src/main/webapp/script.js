@@ -56,7 +56,7 @@ function getTaskInfo() {
       const subtasks = document.getElementById('task-subtasks-container');
       subtasks.appendChild(getSubtasks(tasks[task].subtasks));
       const users = document.getElementById('task-users-container');
-      users.appendChild(getUsers(tasks[task].users))
+      users.appendChild(getUsers(tasks[task].users));
       break;
     }
   }
@@ -65,7 +65,7 @@ function getTaskInfo() {
 /**
  * Build ul element for subtasks on Task Page.
  * @param {Array} subtasks Array of taskIDs.
- * @returns {Element} HTML ul element containing a list of subtasks.
+ * @return {Element} HTML ul element containing a list of subtasks.
  */
 function getSubtasks(subtasks) {
   const ulElement = document.createElement('ul');
@@ -85,7 +85,7 @@ function getSubtasks(subtasks) {
 /**
  * Build li element for a task or subtask.
  * @param {Hashmap} task Details of the task.
- * @returns {Element} HTML li element containing task button and details.
+ * @return {Element} HTML li element containing task button and details.
  */
 function createTaskLiElement(task) {
   console.log(task);
@@ -110,7 +110,7 @@ function createTaskLiElement(task) {
 /**
  * Build ul element for users on Task Page.
  * @param {Array} users Array of userIDs.
- * @returns {Element} HTML ul element containing a list of users.
+ * @return {Element} HTML ul element containing a list of users.
  */
 function getUsers(users) {
   const ulElement = document.createElement('ul');
@@ -130,7 +130,7 @@ function getUsers(users) {
 /**
  * Build li element for a user.
  * @param {Hashmap} user Details of the user.
- * @returns {Element} HTML li element containing user button.
+ * @return {Element} HTML li element containing user button.
  */
 function createUserLiElement(user) {
   console.log(user);
