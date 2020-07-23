@@ -23,7 +23,7 @@
   margin: 10px 50px;
 }
 
-#user-stats {
+.user-stats {
   border: 2px solid blueviolet;
   margin-right: 60%;
   padding: 8px;
@@ -36,11 +36,11 @@
 }
 
 #form {
-    padding: 6px;
+  padding: 6px;
 }
 
-#sub-form {
-    padding: 4px;
+.sub-form {
+  padding: 4px;
 }
 
 /* Regular buttons */
