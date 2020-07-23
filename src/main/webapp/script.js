@@ -19,12 +19,19 @@ function goToTask(taskID=Math.floor(Math.random()*(3))+1) {
 // Hard coded tasks that are global variables.
 const gTasks =
   {task1: {taskID: 1, projectID: 1, name: 'Task 1',
-    description: 'This is task 1', status: 'incomplete'},
+    description: 'Task 1 description...', status: 'incomplete',
+    users: [1, 2], subtasks: [3]},
   task2: {taskID: 2, projectID: 1, name: 'Task 2',
-    description: 'This is task 2', status: 'complete'},
+    description: 'Task 2 description...', status: 'complete',
+    users: [1, 3], subtasks: []},
   task3: {taskID: 3, projectID: 1, name: 'Task 3',
-    description: 'This is task 3', status: 'incomplete'}};
+    description: 'Task 3 description...', status: 'incomplete',
+    users: [2, 3], subtasks: []}};
 const gJSONtasks = JSON.stringify(gTasks);
+const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
+  description: 'Default task description...', status: 'none',
+  users: [], subtasks: []};
+console.log(gTasks);
 
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
@@ -34,6 +41,7 @@ function getTaskInfo() {
   const params = new URLSearchParams(location.search);
   const taskID = params.get('taskID');
   const tasks = JSON.parse(gJSONtasks);
+  console.log(tasks);
   for (task in tasks) {
     if (tasks[task].taskID == taskID) {
       const title = document.getElementById('task-title-container');
@@ -42,7 +50,49 @@ function getTaskInfo() {
       description.innerText = tasks[task].description;
       const status = document.getElementById('task-status-container');
       status.innerText = 'Status: ' + tasks[task].status;
+      const subtasks = document.getElementById('task-subtasks-container');
+      if (tasks[task].subtasks.length != 0) {
+        console.log(tasks[task].subtasks);
+        const ulElement = document.createElement('ul');
+        for (subtaskID of tasks[task].subtasks) {
+          // Get subtask info
+          let subtask = gDefaultTask;
+          for (task in gTasks) {
+            if (gTasks[task].taskID == subtaskID) {
+              subtask = gTasks[task];
+              break;
+            }
+          }
+          ulElement.appendChild(createTaskLiElement(subtask));
+        }
+        subtasks.appendChild(ulElement);
+      }
       break;
     }
   }
+}
+
+/**
+ * Build li element for a task or subtask.
+ * @param {Hashmap} task Details of the task.
+ * @returns {Element} HTML li element containing task button and details.
+ */
+function createTaskLiElement(task) {
+  console.log(task);
+  // Create HTML elements
+  const liElement = document.createElement('li');
+  liElement.setAttribute('class', 'task');
+  // button element
+  const buttonElement = document.createElement('button');
+  buttonElement.setAttribute('type', 'button');
+  buttonElement.setAttribute('class', 'inline');
+  buttonElement.setAttribute('onclick', 'goToTask(' + task.taskID + ')');
+  buttonElement.innerText = task.name;
+  liElement.appendChild(buttonElement);
+  // p element
+  const pElement = document.createElement('p');
+  pElement.setAttribute('class', 'inline');
+  pElement.innerText = task.description;
+  liElement.appendChild(pElement);
+  return liElement;
 }
