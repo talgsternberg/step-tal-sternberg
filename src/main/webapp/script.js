@@ -33,6 +33,11 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   users: [], subtasks: []};
 console.log(gTasks);
 
+// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
+const gUsers = {};
+const gJSONusers = {};
+const gDefaultUser = {userID: 0, name: 'Default Username'}; // Add attributes
+
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
  * default values will be shown.
@@ -53,7 +58,7 @@ function getTaskInfo() {
       const subtasks = document.getElementById('task-subtasks-container');
       if (tasks[task].subtasks.length != 0) {
         console.log(tasks[task].subtasks);
-        const ulElement = document.createElement('ul');
+        const ulSubtaskElement = document.createElement('ul');
         for (subtaskID of tasks[task].subtasks) {
           // Get subtask info
           let subtask = gDefaultTask;
@@ -63,10 +68,27 @@ function getTaskInfo() {
               break;
             }
           }
-          ulElement.appendChild(createTaskLiElement(subtask));
+          ulSubtaskElement.appendChild(createTaskLiElement(subtask));
         }
-        subtasks.appendChild(ulElement);
+        subtasks.appendChild(ulSubtaskElement);
       }
+      const users = document.getElementById('task-users-container');
+      if (tasks[task].users.length != 0) {
+        console.log(tasks[task].users);
+        const ulUserElement = document.createElement('ul');
+        for (userID of tasks[task].users) {
+          // Get user info
+          let taskUser = gDefaultUser;
+          for (user in gUsers) {
+            if (gUsers[user].taskID == userID) {
+              taskUser = gUsers[user];
+              break;
+            }
+          }
+          ulUserElement.appendChild(createUserLiElement(taskUser));
+        }
+        users.appendChild(ulUserElement);
+      } 
       break;
     }
   }
@@ -94,5 +116,24 @@ function createTaskLiElement(task) {
   pElement.setAttribute('class', 'inline');
   pElement.innerText = task.description;
   liElement.appendChild(pElement);
+  return liElement;
+}
+
+/**
+ * Build li element for a task or subtask.
+ * @param {Hashmap} user Details of the user.
+ * @returns {Element} HTML li element containing user button.
+ */
+function createUserLiElement(user) {
+  console.log(user);
+  // Create HTML elements
+  const liElement = document.createElement('li');
+  liElement.setAttribute('class', 'inline');
+  // button element
+  const buttonElement = document.createElement('button');
+  buttonElement.setAttribute('type', 'button');
+  buttonElement.setAttribute('onclick', 'goToUser()');
+  buttonElement.innerText = user.name;
+  liElement.appendChild(buttonElement);
   return liElement;
 }
