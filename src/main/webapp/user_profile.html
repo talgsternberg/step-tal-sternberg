@@ -14,7 +14,15 @@
       <a href="task.html" id="task">Task Page</a>
     </div>
     <div id="content">
-      <h1>Welcome, UserName</h1>
+      <h1>UserName</h1>
+      <div>Are you UserName? Re-confirm to make edits to your page</div>
+      <form>
+          <label for="email">email</label><br>
+          <input type="text" id="email" name="email" value="test@gmail.com"><br>
+          <label for="password">password:</label><br>
+          <input type="text" id="password" name="password" value="test"><br><br>
+          <input type="submit" value="Submit">
+      </form> 
       <h2>User Stats:</h2>
       <div id="user-stats">
         <div>Name: UserName LastName</div>
@@ -23,7 +31,17 @@
         <div>Total Completed Tasks: 7</div>
         <button type="button" onclick="goToTask()">See Tasks</button>
       </div>
-      <h2>Checklist:</h2>
+      <h2>User Skills:</h2>
+      <div id="user-stats">
+        <div>Leadership, bilingual (Spanish), HTML/CSS, organization</div>
+        <div> </div>
+        <form id="form">
+          <label id="sub-form" for="skills">Update Your Skills</label><br>
+          <input type="text" id="skills" name="skills" value="ex: leadership, Python, statistics..."><br>
+          <input id="sub-form" type="submit" value="Submit">
+        </form> 
+      </div>
+      <h2>User Checklist:</h2>
       <ul>
         <li>
           <input type="checkbox" name="Task1" value="Task1">
