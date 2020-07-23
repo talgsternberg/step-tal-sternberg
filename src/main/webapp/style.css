@@ -35,12 +35,17 @@
   margin: 10px 50px;
 }
 
-#form {
+#stats-form {
   padding: 6px;
 }
 
-.sub-form {
-  padding: 4px;
+#skills-form {
+  padding: 6px;
+}
+
+.user-settings {
+  border: 2px solid blueviolet;
+  padding: 10px;
 }
 
 /* Regular buttons */

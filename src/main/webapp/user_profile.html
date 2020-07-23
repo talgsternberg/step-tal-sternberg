@@ -15,32 +15,36 @@
     </div>
     <div id="content">
       <h1>UserName</h1>
-      <div>Are you UserName? Re-confirm to make edits to your page</div>
-      <form>
-        <label for="email">email</label><br>
-        <input type="text" id="email" name="email" value="test@gmail.com"><br>
-        <label for="password">password:</label><br>
-        <input type="text" id="password" name="password" value="test"><br><br>
-        <input type="submit" value="Submit">
-      </form>
       <h2>User Stats:</h2>
       <div class="user-stats">
         <div>Name: UserName LastName</div>
         <div>Year: Junior</div>
         <div>Major: Biology</div>
         <div>Total Completed Tasks: 7</div>
-        <button type="button" onclick="goToTask()">See Tasks</button>
       </div>
       <h2>User Skills:</h2>
       <div class="user-stats">
-        <div>Leadership, speaks 3 languages, HTML/CSS, organization</div>
-        <div> </div>
-        <form id="form">
-          <label class="sub-form" for="skills">Update Your Skills</label><br>
+        <h3>Leadership, speaks 3 languages, HTML/CSS, organization</h3>
+      </div>
+      <!--Only show this if the user is looking at their own profile-->
+      <h2>Change Settings:</h2>
+      <div class=user-settings>
+        <form id="skills-form">
+          <label class="sub-form" for="skills">Update Your Skills:</label><br>
           <input type="text" id="skills" name="skills" value="ex: leadership, Python, statistics..."><br>
           <input class="sub-form" type="submit" value="Submit">
         </form>
+        <form id="stats-form">
+          <label for="stats">Update Name:</label><br>
+          <input type="text" id="name" name="name" value="ex: John Doe"><br>
+          <label for="stats">Update Class Year:</label><br>
+          <input type="text" id="year" name="year" value="ex: Junior"><br>
+          <label for="stats">Update Major:</label><br>
+          <input type="text" id="major" name="major" value="ex: Biology"><br>
+          <input type="submit" value="Submit">
+        </form>
       </div>
+      <!--anyone can see this. only user assigned to task or admin can check off-->
       <h2>User Checklist:</h2>
       <ul>
         <li>
