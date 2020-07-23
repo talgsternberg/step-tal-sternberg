@@ -1,4 +1,11 @@
 /**
+ * Redirect to a Project Page.
+ */
+function goToProject(projectID) {
+  location.href = 'project.html?projectID=' + projectID;
+}
+
+/**
  * Redirect to User Profile Page.
  */
 function goToUser() {
