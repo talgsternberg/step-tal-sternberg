@@ -17,7 +17,7 @@ function goToUser() {
 
 /**
  * Redirect to Project Page.
- * @param {number} projectID If not provided, randomize it from 1 to 3 inclusive.
+ * @param {number} projectID If not provided, randomize it from 1-3 inclusive.
  */
 function goToProject(projectID=Math.floor(Math.random()*2)+1) {
   const url = 'project.html?projectID=' + projectID;
@@ -26,7 +26,7 @@ function goToProject(projectID=Math.floor(Math.random()*2)+1) {
 
 /**
  * Redirect to Task Page.
- * @param {number} taskID If not provided, randomize it from 1 to 3 inclusive.
+ * @param {number} taskID If not provided, randomize it from 1-7 inclusive.
  */
 function goToTask(taskID=Math.floor(Math.random()*7)+1) {
   const url = 'task.html?taskID=' + taskID;
@@ -141,13 +141,13 @@ function getProjectReturn(task) {
   const pElement = document.createElement('p');
   for (project in gProjects) {
     if (gProjects[project].projectID == task.projectID) {
-      pElement.innerText = task.name + " is part of " + gProjects[project].name;
+      pElement.innerText = task.name + ' is part of ' + gProjects[project].name;
       pElement.innerHTML += '<br>';
       const buttonElement = document.createElement('button');
       buttonElement.setAttribute('type', 'button');
       buttonElement.setAttribute(
-        'onclick', 'goToProject(' + task.projectID + ')');
-      buttonElement.innerText = "Go to " + gProjects[project].name;
+          'onclick', 'goToProject(' + task.projectID + ')');
+      buttonElement.innerText = 'Go to ' + gProjects[project].name;
       pElement.appendChild(buttonElement);
     }
   }
