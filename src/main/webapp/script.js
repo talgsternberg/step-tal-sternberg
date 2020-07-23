@@ -1,5 +1,7 @@
 /**
  * Redirect to User Profile Page.
+  * @param {number} userID If not provided, randomize it from 1 to 3 inclusive.
+
  */
 function goToUser(userID=Math.floor(Math.random()*(3))+1) {
   // TODO: fetch for actual user's page
@@ -31,7 +33,6 @@ const gJSONtasks = JSON.stringify(gTasks);
 const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
-
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
 const gUsers = 
   {user1: {userID: 1, name: 'User 1', skills: 'Art, Writing',
@@ -42,8 +43,9 @@ const gUsers =
     major: 'Chemistry', numTaskCompleted: 4, admin: false}};
 
 const gJSONusers = JSON.stringify(gUsers);
-const gDefaultUser = {userID: 0, name: 'Default Username', skills: 'Default Skills',
-    major: 'Default Major', numTaskCompleted: 'Default Number', admin: false}; // Add attributes
+const gDefaultUser = {userID: 0, name: 'Default Username', 
+  skills: 'Default Skills',major: 'Default Major', 
+  numTaskCompleted: 'Default Number', admin: false}; // Add attributes
 
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
@@ -70,10 +72,9 @@ function getTaskInfo() {
   }
 }
 
-
-
 /**
- * When the User Profile Page loads, get user info. If no userID is provided in the URL,
+ * When the User Profile Page loads, get user info.
+   If no userID is provided in the URL,
  * default values will be shown.
  */
 function getUserInfo() {
@@ -88,8 +89,10 @@ function getUserInfo() {
       major.innerText = 'Major: ' + users[user].major;
       const year = document.getElementById('year-container');
       year.innerText = 'Class Year: ' + users[user].year;
-      const numTaskCompleted = document.getElementById('num-complete-container');
-      numTaskCompleted.innerText = 'Total Tasks Completed: ' + users[user].numTaskCompleted;
+      const numTaskCompleted =
+        document.getElementById('num-complete-container');
+      numTaskCompleted.innerText =
+        'Total Tasks Completed: ' + users[user].numTaskCompleted;
       const skills = document.getElementById('skills-container');
       skills.innerText = users[user].skills;
       break;
