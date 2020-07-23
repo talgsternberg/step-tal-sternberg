@@ -83,27 +83,27 @@ li {
 
 /* Style Login Page */
 .login-header {
-    padding: 200px 0 200px 0;
-    width: 40%;
-    margin: 0 auto;
-    align-items: center;
-    text-align: center;
+  padding: 200px 0 200px 0;
+  width: 40%;
+  margin: 0 auto;
+  align-items: center;
+  text-align: center;
 }
 
 .login-header h1 {
-    font-size: 40px;
+  font-size: 40px;
 }
 
 .feature img {
-    height: 50%;
-    width: 50%;
+  height: 50%;
+  width: 50%;
 }
 
 .feature {
-    display: flex;
-    width: 50%;
-    margin: 0 auto;
-    padding: 0 0 200px 0;
+  display: flex;
+  width: 50%;
+  margin: 0 auto;
+  padding: 0 0 200px 0;
 }
 
 /* Style Main Hub/Home Page */
