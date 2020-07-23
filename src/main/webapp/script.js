@@ -1,9 +1,9 @@
 /**
  * Redirect to User Profile Page.
  */
-function goToUser() {
+function goToUser(userID=Math.floor(Math.random()*(3))+1) {
   // TODO: fetch for actual user's page
-  const url = 'user_profile.html';
+  const url = 'user_profile.html?userID=' + userID;
   location.href = url;
 }
 
@@ -33,9 +33,17 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   users: [], subtasks: []};
 
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
-const gUsers = {};
-const gJSONusers = {};
-const gDefaultUser = {userID: 0, name: 'Default Username'}; // Add attributes
+const gUsers = 
+  {user1: {userID: 1, name: 'User 1', skills: 'Art, Writing',
+    major: 'Studio Art', numTaskCompleted: 5, admin: true},
+  user2: {userID: 2, name: 'User 2', skills: 'Object Oriented Programming',
+    major: 'Computer Science', numTaskCompleted: 8, admin: false},
+  user3: {userID: 3, name: 'User 1', skills: 'Leadership, Organization',
+    major: 'Chemistry', numTaskCompleted: 4, admin: false}};
+
+const gJSONusers = JSON.stringify(gUsers);
+const gDefaultUser = {userID: 0, name: 'Default Username', skills: 'Default Skills',
+    major: 'Default Major', numTaskCompleted: 'Default Number', admin: false}; // Add attributes
 
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
@@ -57,6 +65,33 @@ function getTaskInfo() {
       subtasks.appendChild(getSubtasks(tasks[task].subtasks));
       const users = document.getElementById('task-users-container');
       users.appendChild(getUsers(tasks[task].users));
+      break;
+    }
+  }
+}
+
+
+
+/**
+ * When the User Profile Page loads, get user info. If no userID is provided in the URL,
+ * default values will be shown.
+ */
+function getUserInfo() {
+  const params = new URLSearchParams(location.search);
+  const userID = params.get('userID');
+  const users = JSON.parse(gJSONusers);
+  for (user in users) {
+    if (users[user].userID == userID) {
+      const title = document.getElementById('user-name-container');
+      title.innerHTML = '<h1>' + users[user].name + '</h1>';
+      const major = document.getElementById('major-container');
+      major.innerText = 'Major: ' + users[user].major;
+      const year = document.getElementById('year-container');
+      year.innerText = 'Class Year: ' + users[user].year;
+      const numTaskCompleted = document.getElementById('num-complete-container');
+      numTaskCompleted.innerText = 'Total Tasks Completed: ' + users[user].numTaskCompleted;
+      const skills = document.getElementById('skills-container');
+      skills.innerText = users[user].skills;
       break;
     }
   }
