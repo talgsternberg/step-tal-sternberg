@@ -17,23 +17,35 @@
       <h1>UserName</h1>
       <h2>User Stats:</h2>
       <div class="user-stats">
-        <div>Name: UserName LastName</div>
-        <div>Year: Junior</div>
-        <div>Major: Biology</div>
-        <div>Total Completed Tasks: 7</div>
+        <div>Name: default</div>
+        <div>Year: default</div>
+        <div>Major: default</div>
+        <div>Total Completed Tasks: default</div>
       </div>
       <h2>User Skills:</h2>
       <div class="user-stats">
-        <h3>Leadership, speaks 3 languages, HTML/CSS, organization</h3>
+        <h3>default skillset</h3>
       </div>
       <!--Only show this if the user is looking at their own profile-->
-      <h2>Change Settings:</h2>
-      <div class=user-settings>
-        <form id="skills-form">
-          <label class="sub-form" for="skills">Update Your Skills:</label><br>
-          <input type="text" id="skills" name="skills" value="ex: leadership, Python, statistics..."><br>
-          <input class="sub-form" type="submit" value="Submit">
+      <h2>Change Settings: </h2>
+      <div class="user-settings">
+        <h3>Change Skills:</h3>
+        <form>
+          <input type="checkbox" id="leadership" name="leadership" value="leadership">
+          <label for="leadership">Leadership</label><br>
+          <input type="checkbox" id="organization" name="organization" value="organization">
+          <label for="organization">Organization</label><br>
+          <input type="checkbox" id="writ" name="writ" value="writ">
+          <label for="writ">Analytical/Creative Writing</label><br>
+          <input type="checkbox" id="art" name="art" value="art">
+          <label for="art">Artistic Ability</label><br>
+          <input type="checkbox" id="webdev" name="webdev" value="webdev">
+          <label for="webdev">Web Development (HTML,CSS,Javascript)</label><br>
+          <input type="checkbox" id="OOP" name="OOP" value="OOP">
+          <label for="OOP">Object Oriented Programming Languages (ex:java)</label><br><br>
+          <input type="submit" value="Submit">
         </form>
+        <h3>Change Other Information:</h3>
         <form id="stats-form">
           <label for="stats">Update Name:</label><br>
           <input type="text" id="name" name="name" value="ex: John Doe"><br>
