@@ -1,4 +1,12 @@
 /**
+ * Redirect to Main Hub Page.
+ */
+function goToHub() {
+  const url = 'main_hub.html';
+  location.href = url;
+}
+
+/**
  * Redirect to User Profile Page.
  */
 function goToUser() {
@@ -20,10 +28,15 @@ function goToProject(projectID=Math.floor(Math.random()*2)+1) {
  * Redirect to Task Page.
  * @param {number} taskID If not provided, randomize it from 1 to 3 inclusive.
  */
-function goToTask(taskID=Math.floor(Math.random()*8)+1) {
+function goToTask(taskID=Math.floor(Math.random()*7)+1) {
   const url = 'task.html?taskID=' + taskID;
   location.href = url;
 }
+
+// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
+const gUsers = {};
+const gJSONusers = {};
+const gDefaultUser = {userID: 0, name: 'Default Username'}; // Add attributes
 
 // Hard coded projects that are global variables.
 const gProjects =
@@ -66,10 +79,31 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
 
-// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
-const gUsers = {};
-const gJSONusers = {};
-const gDefaultUser = {userID: 0, name: 'Default Username'}; // Add attributes
+/**
+ * When the Project Page loads, get project info. If no projectID is provided in
+ * the URL, default values will be shown.
+ */
+function getProjectInfo() {
+  const params = new URLSearchParams(location.search);
+  const projectID = params.get('projectID');
+  const projects = JSON.parse(gJSONprojects);
+  for (project in projects) {
+    if (projects[project].projectID == projectID) {
+      const title = document.getElementById('project-title-container');
+      title.innerHTML = '<h1>' + projects[project].name + '</h1>';
+      const description =
+        document.getElementById('project-description-container');
+      description.innerText = projects[project].description;
+      const admins = document.getElementById('project-admins-container');
+      admins.appendChild(getUsers(projects[project].admins));
+      const tasks = document.getElementById('project-tasks-container');
+      tasks.appendChild(getTasks(projects[project].tasks));
+      const users = document.getElementById('project-users-container');
+      users.appendChild(getUsers(projects[project].allowedUsers));
+      break;
+    }
+  }
+}
 
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
@@ -141,6 +175,26 @@ function getTasks(tasks) {
 }
 
 /**
+ * Build ul element for users on Task Page.
+ * @param {Array} users Array of userIDs.
+ * @return {Element} HTML ul element containing a list of users.
+ */
+function getUsers(users) {
+  const ulElement = document.createElement('ul');
+  for (userID of users) {
+    let taskUser = gDefaultUser;
+    for (user in gUsers) {
+      if (gUsers[user].taskID == userID) {
+        taskUser = gUsers[user];
+        break;
+      }
+    }
+    ulElement.appendChild(createUserLiElement(taskUser));
+  }
+  return ulElement;
+}
+
+/**
  * Build li element for a task or subtask.
  * @param {Hashmap} task Details of the task.
  * @return {Element} HTML li element containing task button and details.
@@ -166,26 +220,6 @@ function createTaskLiElement(task) {
 }
 
 /**
- * Build ul element for users on Task Page.
- * @param {Array} users Array of userIDs.
- * @return {Element} HTML ul element containing a list of users.
- */
-function getUsers(users) {
-  const ulElement = document.createElement('ul');
-  for (userID of users) {
-    let taskUser = gDefaultUser;
-    for (user in gUsers) {
-      if (gUsers[user].taskID == userID) {
-        taskUser = gUsers[user];
-        break;
-      }
-    }
-    ulElement.appendChild(createUserLiElement(taskUser));
-  }
-  return ulElement;
-}
-
-/**
  * Build li element for a user.
  * @param {Hashmap} user Details of the user.
  * @return {Element} HTML li element containing user button.
@@ -202,31 +236,4 @@ function createUserLiElement(user) {
   buttonElement.innerText = user.name;
   liElement.appendChild(buttonElement);
   return liElement;
-}
-
-//12345678901234567890123456789012345678901234567890123456789012345678901234567890
-/**
- * When the Project Page loads, get project info. If no projectID is provided in
- * the URL, default values will be shown.
- */
-function getProjectInfo() {
-  const params = new URLSearchParams(location.search);
-  const projectID = params.get('projectID');
-  const projects = JSON.parse(gJSONprojects);
-  for (project in projects) {
-    if (projects[project].projectID == projectID) {
-      const title = document.getElementById('project-title-container');
-      title.innerHTML = '<h1>' + projects[project].name + '</h1>';
-      const description =
-        document.getElementById('project-description-container');
-      description.innerText = projects[project].description;
-      const admins = document.getElementById('project-admins-container');
-      admins.appendChild(getUsers(projects[project].admins));
-      const tasks = document.getElementById('project-tasks-container');
-      tasks.appendChild(getTasks(projects[project].tasks));
-      const users = document.getElementById('project-users-container');
-      users.appendChild(getUsers(projects[project].allowedUsers));
-      break;
-    }
-  }
 }
