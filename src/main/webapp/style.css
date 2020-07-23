@@ -110,11 +110,11 @@ li {
 .projects,
 .new-project,
 #home-header {
-    width: 50%;
-    margin: 0 auto;
+  width: 50%;
+  margin: 0 auto;
 }
 
 .projects button {
-    width: 200px;
-    height: 150px;
+  width: 200px;
+  height: 150px;
 }
