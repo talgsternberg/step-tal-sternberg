@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Main Hub</title>
+    <title>Home</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
@@ -13,29 +13,17 @@
       <a href="project.html" id="project">Project Page</a>
       <a href="task.html" id="task">Task Page</a>
     </div>
-
-    <!-- 'projects' can be later styled to be a flex box for grid display-->
-    <div id="projects">
-      <a href="project.html">
-        <div class="projects-board">
-          <h3 class="header">Project A</h3>
-        </div>
-      </a>
-      <a href="project.html">
-        <div class="projects-board">
-          <h3 class="header">Project B</h3>
-        </div>
-      </a>
-      <a href="project.html">
-        <div class="projects-board">
-          <h3 class="header">Project C</h3>
-        </div>
-      </a>
-      <a href="project.html">
-        <div class="projects-board">
-          <h3 class="header">Create or Join Project</h3>
-        </div>
-      </a>
+    <div id="content">
+      <h1 id="home-header">My Projects</h1>
+      <div class="new-project">
+        <button onclick="goToProject(1)">Create Project</button>     
+        <button onclick="goToProject(2)">Join Project</button>
+      </div>
+      <div class="projects">
+        <button onclick="goToProject(2)">Project A</button>
+        <button onclick="goToProject(3)">Project B</button>
+        <button onclick="goToProject(4)">Project C</button>
+      </div>
     </div>
   </body>
 </html>
