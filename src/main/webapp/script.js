@@ -12,7 +12,7 @@ function goToUser() {
  * @param {number} projectID If not provided, randomize it from 1 to 3 inclusive.
  */
 function goToProject(projectID=Math.floor(Math.random()*2)+1) {
-  const url = 'task.html?projectID=' + projectID;
+  const url = 'project.html?projectID=' + projectID;
   location.href = url;
 }
 
@@ -20,7 +20,7 @@ function goToProject(projectID=Math.floor(Math.random()*2)+1) {
  * Redirect to Task Page.
  * @param {number} taskID If not provided, randomize it from 1 to 3 inclusive.
  */
-function goToTask(taskID=Math.floor(Math.random()*3)+1) {
+function goToTask(taskID=Math.floor(Math.random()*8)+1) {
   const url = 'task.html?taskID=' + taskID;
   location.href = url;
 }
@@ -87,6 +87,8 @@ function getTaskInfo() {
       description.innerText = tasks[task].description;
       const status = document.getElementById('task-status-container');
       status.innerText = 'Status: ' + tasks[task].status;
+      const project = document.getElementById('task-project-container');
+      project.appendChild(getProjectReturn(tasks[task]));
       const subtasks = document.getElementById('task-subtasks-container');
       subtasks.appendChild(getTasks(tasks[task].subtasks));
       const users = document.getElementById('task-users-container');
@@ -94,6 +96,28 @@ function getTaskInfo() {
       break;
     }
   }
+}
+
+/**
+ * Build return to project button.
+ * @param {Hashmap} task Array of taskIDs.
+ * @return {Element} HTML ul element containing a list of tasks.
+ */
+function getProjectReturn(task) {
+  const pElement = document.createElement('p');
+  for (project in gProjects) {
+    if (gProjects[project].projectID == task.projectID) {
+      pElement.innerText = task.name + " is part of " + gProjects[project].name;
+      pElement.innerHTML += '<br>';
+      const buttonElement = document.createElement('button');
+      buttonElement.setAttribute('type', 'button');
+      buttonElement.setAttribute(
+        'onclick', 'goToProject(' + task.projectID + ')');
+      buttonElement.innerText = "Go to " + gProjects[project].name;
+      pElement.appendChild(buttonElement);
+    }
+  }
+  return pElement;
 }
 
 /**
