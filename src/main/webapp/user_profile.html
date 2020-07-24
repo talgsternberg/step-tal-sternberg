@@ -19,8 +19,7 @@
       <div class="user-stats">
         <div id="user-year-container">Year: Default Year</div>
         <div id="user-major-container">Major: Default Major</div>
-        <div id="user-num-complete-container">Total Completed Tasks: Default</div>
-        <div id="user-prskills-container">Priority Skills: Default</div>
+        <div id="user-num-complete-container">Total Completed Tasks: default</div>
       </div>
       <h2>User Skills:</h2>
       <div class="user-stats">
@@ -31,30 +30,29 @@
       <div class="user-settings">
         <h3>Change Skills:</h3>
         <form>
-          <ul>
-            <li><input type="checkbox" id="leadership" name="leadership" value="leadership">
-                <label for="leadership">Leadership</label><li>
-            <li><input type="checkbox" id="organization" name="organization" value="organization">
-                <label for="organization">Organization</label><li>
-            <li><input type="checkbox" id="writ" name="writ" value="writ">
-              <label for="writ">Analytical/Creative Writing</label><li>
-            <li><input type="checkbox" id="art" name="art" value="art">
-              <label for="art">Artistic Ability</label><li>
-            <li><input type="checkbox" id="webdev" name="webdev" value="webdev">
-              <label for="webdev">Web Development (HTML,CSS,Javascript)</label><li>
-            <li><input type="checkbox" id="oop" name="oop" value="oop">
-              <label for="oop">Object Oriented Programming Languages (ex:java)</label><li>
-            <li><input type="submit" value="Submit"></li>
-          </ul>
+          <input type="checkbox" id="leadership" name="leadership" value="leadership">
+          <label for="leadership">Leadership</label><br>
+          <input type="checkbox" id="organization" name="organization" value="organization">
+          <label for="organization">Organization</label><br>
+          <input type="checkbox" id="writ" name="writ" value="writ">
+          <label for="writ">Analytical/Creative Writing</label><br>
+          <input type="checkbox" id="art" name="art" value="art">
+          <label for="art">Artistic Ability</label><br>
+          <input type="checkbox" id="webdev" name="webdev" value="webdev">
+          <label for="webdev">Web Development (HTML,CSS,Javascript)</label><br>
+          <input type="checkbox" id="oop" name="oop" value="oop">
+          <label for="oop">Object Oriented Programming Languages (ex:java)</label><br><br>
+          <input type="submit" value="Submit">
         </form>
         <h3>Change Other Information:</h3>
         <form id="stats-form">
-          <ul>
-            <li><input type="text" id="name" name="name" value="Update Name"><li>
-            <li><input type="text" id="year" name="year" value="Update Class Year (ex: 2020)"><li>
-            <li><input type="text" id="major" name="major" value="Update Major"><li>
-            <li><input type="submit" value="Submit"></li>
-          </ul>
+          <input type="text" id="name" name="name" value="ex: John Doe"><br>
+          <label for="name">Update Name:</label><br>
+          <input type="text" id="year" name="year" value="ex: Junior"><br>
+          <label for="year">Update Class Year:</label><br>
+          <input type="text" id="major" name="major" value="ex: Biology"><br>
+          <label for="major">Update Major:</label><br>
+          <input type="submit" value="Submit">
         </form>
       </div>
       <!--anyone can see this. only user assigned to task or admin can check off-->
