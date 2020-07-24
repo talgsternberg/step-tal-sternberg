@@ -184,8 +184,8 @@ function getUserInfo() {
       skillString = '';
       for (skill of users[user].skills) {
         if (skillString == '') {
-          skillString = skill.skill;}
-        else {
+          skillString = skill.skill;
+        } else {
           skillString = skillString + ', ' + skill.skill;}
       }
       skills.innerText = skillString;
@@ -196,11 +196,11 @@ function getUserInfo() {
 
 /**
  * Build ul element for subtasks on Task Page.
- * @param {Array} subtasks Array of taskIDs.
- * @return {Element} HTML ul element containing a list of subtasks.
  * Build return to project button.
  * @param {Hashmap} task Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
+ * @param {Array} subtasks Array of taskIDs.
+ * @return {Element} HTML ul element containing a list of subtasks.
  */
 function getProjectReturn(task, subtasks) {
   const pElement = document.createElement('p');
