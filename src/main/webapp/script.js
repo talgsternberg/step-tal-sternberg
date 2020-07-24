@@ -7,11 +7,20 @@ function goToHub() {
 }
 
 /**
- * Redirect to User Profile Page.
-  * @param {number} userID If not provided, randomize it from 1 to 3 inclusive.
-
+ * Redirect to User Settings Page.
  */
-function goToUser(userID=Math.floor(Math.random()*(3))+1) {
+function goToSettings() {
+  const url = 'user_settings.html';
+  location.href = url;
+}
+
+/**
+ * Redirect to User Profile Page.
+ * if user is going to their own page (default)
+ * then eventually we pass their UserID
+ * @param {number} userID 
+ */
+function goToUser(userID) {
   // TODO: fetch for actual user's page
   const url = 'user_profile.html?userID=' + userID;
   location.href = url;
