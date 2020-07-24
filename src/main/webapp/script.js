@@ -184,11 +184,9 @@ function getUserInfo() {
       skillString = '';
       for (skill of users[user].skills) {
         if (skillString == '') {
-          skillString = skill.skill;
-         }
+          skillString = skill.skill;}
         else {
-          skillString = skillString + ', ' + skill.skill;
-         }
+          skillString = skillString + ', ' + skill.skill;}
       }
       skills.innerText = skillString;
       break;
@@ -198,13 +196,13 @@ function getUserInfo() {
 
 /**
  * Build ul element for subtasks on Task Page.
- *@ param {Array} subtasks Array of taskIDs.
+ * @param {Array} subtasks Array of taskIDs.
  * @return {Element} HTML ul element containing a list of subtasks.
  * Build return to project button.
  * @param {Hashmap} task Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
  */
-function getProjectReturn(task) {
+function getProjectReturn(task, subtasks) {
   const pElement = document.createElement('p');
   for (project in gProjects) {
     if (gProjects[project].projectID == task.projectID) {
