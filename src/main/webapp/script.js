@@ -173,8 +173,7 @@ function getUserInfo() {
         if (skill.priority == true) {
           if (pskills == '') {
             pskills = skill.skill;
-          }
-          else {
+          } else {
             pskills = (pskills + ', ' + skill.skill);
           }
         }
@@ -186,7 +185,8 @@ function getUserInfo() {
         if (skillString == '') {
           skillString = skill.skill;
         } else {
-          skillString = skillString + ', ' + skill.skill;}
+          skillString = skillString + ', ' + skill.skill;
+        }
       }
       skills.innerText = skillString;
       break;
