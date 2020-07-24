@@ -6,40 +6,45 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getUserInfo()">
     <div id="navigation">
       <a onclick="goToHub()" id="hub">Main Hub</a>
       <a onclick="goToUser()" id="user">User Profile</a>
       <a onclick="goToProject()" id="project">Project Page</a>
       <a onclick="goToTask()" id="task">Task Page</a>
+      <a onclick="goToSettings()" id="settings">Settings Page</a>
     </div>
     <div id="content">
-      <h1>Welcome, UserName</h1>
+      <h1 id="user-name-container">Default User Name</h1>
       <h2>User Stats:</h2>
-      <div id="user-stats">
-        <div>Name: UserName LastName</div>
-        <div>Year: Junior</div>
-        <div>Major: Biology</div>
-        <div>Total Completed Tasks: 7</div>
-        <button type="button" onclick="goToTask()">See Tasks</button>
+      <div class="user-stats">
+        <div id="user-year-container">Year: Default Year</div>
+        <div id="user-major-container">Major: Default Major</div>
+        <div id="user-num-complete-container">Total Completed Tasks: Default</div>
+        <div id="user-prskills-container">Priority Skills: Default</div>
       </div>
-      <h2>Checklist:</h2>
+      <h2>User Skills:</h2>
+      <div class="user-stats">
+        <h3 id="user-skills-container">Default Skillset</h3>
+      </div>
+      <!--anyone can see this. only user assigned to task or admin can check off-->
+      <h2>User Checklist:</h2>
       <ul>
         <li>
           <input type="checkbox" name="Task1" value="Task1">
-          <button class="incomplete" type="button" onclick="goToTask()">Task 1</button>
+          <button class="incomplete" type="button" onclick="goToTask(1)">Task 1</button>
         </li>
         <li>
           <input type="checkbox" name="Task2" value="Task2">
-          <button class="incomplete" type="button" onclick="goToTask()">Task 2</button>
+          <button class="incomplete" type="button" onclick="goToTask(2)">Task 2</button>
         </li>
         <li>
           <input type="checkbox" name="Task3" value="Task3" checked>
-          <button class="complete" type="button" onclick="goToTask()">Task 3</button>
+          <button class="complete" type="button" onclick="goToTask(3)">Task 3</button>
         </li>
         <li>
           <input type="checkbox" name="Task4" value="Task4" checked>
-          <button class="complete" type="button" onclick="goToTask()">Task 4</button>
+          <button class="complete" type="button" onclick="goToTask(4)">Task 4</button>
         </li>
       </ul>
     </div>
