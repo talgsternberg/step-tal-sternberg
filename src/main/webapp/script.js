@@ -86,7 +86,7 @@ const gUsers =
   numTaskCompleted: 8, year: 2023},
   user3: {userID: 3, name: 'User 1', skills:
     [{skill: 'Leadership', priority: true},
-  {skill: 'Organization', priority: false}],
+      {skill: 'Organization', priority: false}],
   major: ['Chemistry', 'English'], numTaskCompleted: 4, year: 2024}};
 
 const gJSONusers = JSON.stringify(gUsers);
@@ -166,9 +166,10 @@ function getUserInfo() {
         document.getElementById('user-num-complete-container');
       numTaskCompleted.innerText =
         'Total Tasks Completed: ' + users[user].numTaskCompleted;
-      const priority_skills = document.getElementById('user-prskills-container');
+      const prioritySkills =
+        document.getElementById('user-prskills-container');
       pskills = '';
-      for (skill of users[user].skills){
+      for (skill of users[user].skills) {
         if (skill.priority == true){
           if(pskills == ''){
             pskills = skill.skill;
@@ -178,7 +179,7 @@ function getUserInfo() {
           }
         }
       }
-      priority_skills.innerText = 'Priority Skills: ' + pskills;
+      prioritySkills.innerText = 'Priority Skills: ' + pskills;
       const skills = document.getElementById('user-skills-container');
       skill_string = '';
       for (skill of users[user].skills){
