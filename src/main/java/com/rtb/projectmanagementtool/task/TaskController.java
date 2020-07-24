@@ -6,7 +6,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Key;
-
 import java.util.HashSet;
 
 /** Class controlling the TaskData object. */
