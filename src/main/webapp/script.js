@@ -35,17 +35,17 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   users: [], subtasks: []};
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
 const gUsers =
-  {user1: {userID: 1, name: 'User 1', skills: 'Art, Writing',
-    major: 'Studio Art', numTaskCompleted: 5, admin: true},
-  user2: {userID: 2, name: 'User 2', skills: 'Object Oriented Programming',
-    major: 'Computer Science', numTaskCompleted: 8, admin: false},
-  user3: {userID: 3, name: 'User 1', skills: 'Leadership, Organization',
-    major: 'Chemistry', numTaskCompleted: 4, admin: false}};
+  {user1: {userID: 1, name: 'User 1', skills: ['Art, Writing'],
+    major: ['Studio Art'], numTaskCompleted: 5, year: 'Junior'},
+  user2: {userID: 2, name: 'User 2', skills: ['Object Oriented Programming'],
+    major: ['Computer Science'], numTaskCompleted: 8, year: 'Freshman'},
+  user3: {userID: 3, name: 'User 1', skills: ['Leadership, Organization'],
+    major: ['Chemistry', 'English'], numTaskCompleted: 4, year: 'Senior'}};
 
 const gJSONusers = JSON.stringify(gUsers);
 const gDefaultUser = {userID: 0, name: 'Default Username',
   skills: 'Default Skills', major: 'Default Major',
-  numTaskCompleted: 'Default Number', admin: false}; // Add attributes
+  numTaskCompleted: 'Default Number'}; // Add attributes
 
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
@@ -85,15 +85,15 @@ function getUserInfo() {
     if (users[user].userID == userID) {
       const title = document.getElementById('user-name-container');
       title.innerHTML = '<h1>' + users[user].name + '</h1>';
-      const major = document.getElementById('major-container');
+      const major = document.getElementById('user-major-container');
       major.innerText = 'Major: ' + users[user].major;
-      const year = document.getElementById('year-container');
+      const year = document.getElementById('user-year-container');
       year.innerText = 'Class Year: ' + users[user].year;
       const numTaskCompleted =
-        document.getElementById('num-complete-container');
+        document.getElementById('user-num-complete-container');
       numTaskCompleted.innerText =
         'Total Tasks Completed: ' + users[user].numTaskCompleted;
-      const skills = document.getElementById('skills-container');
+      const skills = document.getElementById('user-skills-container');
       skills.innerText = users[user].skills;
       break;
     }
