@@ -118,8 +118,6 @@ function getProjectInfo() {
     }
   }
 }
->>>>>>> b4f09dae8dfcd261e6c6d77936c559e97132651d
-
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
  * default values will be shown.
@@ -148,7 +146,6 @@ function getTaskInfo() {
 }
 
 /**
-<<<<<<< HEAD
  * When the User Profile Page loads, get user info.
    If no userID is provided in the URL,
  * default values will be shown.
@@ -180,7 +177,6 @@ function getUserInfo() {
  * Build ul element for subtasks on Task Page.
  * @param {Array} subtasks Array of taskIDs.
  * @return {Element} HTML ul element containing a list of subtasks.
-=======
  * Build return to project button.
  * @param {Hashmap} task Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
