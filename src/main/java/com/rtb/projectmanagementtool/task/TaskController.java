@@ -23,7 +23,7 @@ public final class TaskController {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<TaskData> tasks = new HashSet<>();
     Query query = new Query("Task");
-    PreparedQuery results = datastore.prepare(query);  
+    PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
       // Get task entity data
       long taskID = (long) entity.getKey().getId();
@@ -43,7 +43,7 @@ public final class TaskController {
   public void addTasks(HashSet<TaskData> tasks) {
     HashSet<Entity> taskEntities = new HashSet<>();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    for (TaskData task: tasks) {
+    for (TaskData task : tasks) {
       // Get task data
       long taskID = task.getTaskID();
       long projectID = task.getProjectID();
@@ -69,9 +69,9 @@ public final class TaskController {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<Key> keys = new HashSet<>();
     Query query = new Query("Comment").setKeysOnly();
-    PreparedQuery results = datastore.prepare(query);  
+    PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
-      if (taskIDs.contains(entity.getProperty("id"))){
+      if (taskIDs.contains(entity.getProperty("id"))) {
         keys.add(entity.getKey());
       }
     }
