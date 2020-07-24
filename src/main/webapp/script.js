@@ -187,7 +187,7 @@ function getUserInfo() {
           skillString = skill.skill;
         }
         else {
-          skillString = (skillString + ', ' + skill.skill);
+          skillString = skillString + ', ' + skill.skill;
         }
       }
       skills.innerText = skillString;
