@@ -171,7 +171,9 @@ function getUserInfo() {
       pskills = '';
       for (skill of users[user].skills) {
         if (skill.priority == true) {
-          if (pskills == '') {pskills = skill.skill;}
+          if (pskills == '') {
+              pskills = skill.skill;
+          }
           else {
             pskills = (pskills + ', ' + skill.skill);
           }
