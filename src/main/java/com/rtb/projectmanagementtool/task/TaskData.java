@@ -13,8 +13,14 @@ public final class TaskData {
   private HashSet<Long> users;
   private HashSet<Long> subtasks;
 
-  public TaskData(long taskID, long projectID, String name, String description,
-    Status status, HashSet<Long> users, HashSet<Long> subtasks) {
+  public TaskData(
+      long taskID,
+      long projectID,
+      String name,
+      String description,
+      Status status,
+      HashSet<Long> users,
+      HashSet<Long> subtasks) {
     this.taskID = taskID;
     this.projectID = projectID;
     this.name = name;
