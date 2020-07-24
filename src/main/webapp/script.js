@@ -77,12 +77,15 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   users: [], subtasks: []};
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
 const gUsers =
-   {user1: {userID: 1, name: 'User 1', skills: [{skill: 'Art', priority: true},
+  {user1: {userID: 1, name: 'User 1', skills: [{skill: 'Art', priority: true},
     {skill: 'Writing', priority: true}], major: ['Studio Art'],
     numTaskCompleted: 5, year: 2021},
-  user2: {userID: 2, name: 'User 2', skills: [{skill: 'Object Oriented Programming',
-    priority: true}], major: ['Computer Science'], numTaskCompleted: 8, year: 2023},
-  user3: {userID: 3, name: 'User 1', skills: [{skill: 'Leadership', priority: true},
+  user2: {userID: 2, name: 'User 2', skills:
+    [{skill: 'Object Oriented Programming',
+    priority: true}], major: ['Computer Science'],
+    numTaskCompleted: 8, year: 2023},
+  user3: {userID: 3, name: 'User 1', skills:
+    [{skill: 'Leadership', priority: true},
     {skill: 'Organization', priority: false}],
     major: ['Chemistry', 'English'], numTaskCompleted: 4, year: 2024}};
 
