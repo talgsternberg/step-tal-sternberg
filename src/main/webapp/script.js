@@ -170,11 +170,11 @@ function getUserInfo() {
         document.getElementById('user-prskills-container');
       pskills = '';
       for (skill of users[user].skills) {
-        if (skill.priority == true){
-          if(pskills == ''){
+        if (skill.priority == true) {
+          if (pskills == '') {
             pskills = skill.skill;
           }
-          else{
+          else {
             pskills = pskills + ', ' + skill.skill
           }
         }
