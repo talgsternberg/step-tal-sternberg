@@ -18,7 +18,7 @@ function goToSettings() {
  * Redirect to User Profile Page.
  * if user is going to their own page (default)
  * then eventually we pass their UserID
- * @param {number} userID 
+ * @param {number} userID
  */
 function goToUser(userID) {
   // TODO: fetch for actual user's page
