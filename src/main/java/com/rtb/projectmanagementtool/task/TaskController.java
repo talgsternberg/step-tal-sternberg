@@ -70,13 +70,13 @@ public final class TaskController {
   public void addSubtask(long taskID) {
     HashSet<Long> subtasks = taskData.getSubtasks();
     subtasks.add(taskID);
-    taskData.setUsers(subtasks);
+    taskData.setSubtasks(subtasks);
   }
 
   public void removeSubtask(long taskID) {
     HashSet<Long> subtasks = taskData.getSubtasks();
     subtasks.remove(taskID);
-    taskData.setUsers(subtasks);
+    taskData.setSubtasks(subtasks);
   }
 
 }
