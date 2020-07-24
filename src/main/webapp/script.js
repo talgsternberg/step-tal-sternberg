@@ -7,11 +7,22 @@ function goToHub() {
 }
 
 /**
- * Redirect to User Profile Page.
+ * Redirect to User Settings Page.
  */
-function goToUser() {
+function goToSettings() {
+  const url = 'user_settings.html';
+  location.href = url;
+}
+
+/**
+ * Redirect to User Profile Page.
+ * if user is going to their own page (default)
+ * then eventually we pass their UserID
+ * @param {number} userID
+ */
+function goToUser(userID) {
   // TODO: fetch for actual user's page
-  const url = 'user_profile.html';
+  const url = 'user_profile.html?userID=' + userID;
   location.href = url;
 }
 
@@ -32,11 +43,6 @@ function goToTask(taskID=Math.floor(Math.random()*7)+1) {
   const url = 'task.html?taskID=' + taskID;
   location.href = url;
 }
-
-// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
-const gUsers = {};
-const gJSONusers = {};
-const gDefaultUser = {userID: 0, name: 'Default Username'}; // Add attributes
 
 // Hard coded projects that are global variables.
 const gProjects =
@@ -78,7 +84,24 @@ const gJSONtasks = JSON.stringify(gTasks);
 const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
+// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
+const gUsers =
+  {user1: {userID: 1, name: 'User 1', skills: [{skill: 'Art', priority: true},
+    {skill: 'Writing', priority: true}], major: ['Studio Art'],
+  numTaskCompleted: 5, year: 2021},
+  user2: {userID: 2, name: 'User 2', skills:
+    [{skill: 'Object Oriented Programming',
+      priority: true}], major: ['Computer Science'],
+  numTaskCompleted: 8, year: 2023},
+  user3: {userID: 3, name: 'User 1', skills:
+    [{skill: 'Leadership', priority: true},
+      {skill: 'Organization', priority: false}],
+  major: ['Chemistry', 'English'], numTaskCompleted: 4, year: 2024}};
 
+const gJSONusers = JSON.stringify(gUsers);
+const gDefaultUser = {userID: 0, name: 'Default Username',
+  skills: 'Default Skills', major: 'Default Major',
+  numTaskCompleted: 'Default Number'}; // Add attributes
 /**
  * When the Project Page loads, get project info. If no projectID is provided in
  * the URL, default values will be shown.
@@ -104,7 +127,6 @@ function getProjectInfo() {
     }
   }
 }
-
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
  * default values will be shown.
@@ -133,11 +155,63 @@ function getTaskInfo() {
 }
 
 /**
+ * When the User Profile Page loads, get user info.
+   If no userID is provided in the URL,
+ * default values will be shown.
+ */
+function getUserInfo() {
+  const params = new URLSearchParams(location.search);
+  const userID = params.get('userID');
+  const users = JSON.parse(gJSONusers);
+  for (user in users) {
+    if (users[user].userID == userID) {
+      const title = document.getElementById('user-name-container');
+      title.innerHTML = '<h1>' + users[user].name + '</h1>';
+      const major = document.getElementById('user-major-container');
+      major.innerText = 'Major: ' + users[user].major;
+      const year = document.getElementById('user-year-container');
+      year.innerText = 'Class Year: ' + users[user].year;
+      const numTaskCompleted =
+        document.getElementById('user-num-complete-container');
+      numTaskCompleted.innerText =
+        'Total Tasks Completed: ' + users[user].numTaskCompleted;
+      const prioritySkills =
+        document.getElementById('user-prskills-container');
+      pskills = '';
+      for (skill of users[user].skills) {
+        if (skill.priority == true) {
+          if (pskills == '') {
+            pskills = skill.skill;
+          } else {
+            pskills = (pskills + ', ' + skill.skill);
+          }
+        }
+      }
+      prioritySkills.innerText = 'Priority Skills: ' + pskills;
+      const skills = document.getElementById('user-skills-container');
+      skillString = '';
+      for (skill of users[user].skills) {
+        if (skillString == '') {
+          skillString = skill.skill;
+        } else {
+          skillString = skillString + ', ' + skill.skill;
+        }
+      }
+      skills.innerText = skillString;
+      break;
+    }
+  }
+}
+
+/**
+ * Build ul element for subtasks on Task Page.
  * Build return to project button.
  * @param {Hashmap} task Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
+ * @param {Array} subtasks Array of taskIDs.
+ * @return {Element} HTML ul element containing a list of subtasks.
  */
-function getProjectReturn(task) {
+function getProjectReturn(task, subtasks) {
   const pElement = document.createElement('p');
   for (project in gProjects) {
     if (gProjects[project].projectID == task.projectID) {
@@ -158,6 +232,7 @@ function getProjectReturn(task) {
  * Build ul element for tasks.
  * @param {Array} tasks Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
+>>>>>>> b4f09dae8dfcd261e6c6d77936c559e97132651d
  */
 function getTasks(tasks) {
   const ulElement = document.createElement('ul');

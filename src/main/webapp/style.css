@@ -23,10 +23,29 @@
   margin: 10px 50px;
 }
 
-#user-stats {
-  border: 8px dotted rgba(158, 15, 158, 0.616);
+.user-stats {
+  border: 2px solid blueviolet;
   margin-right: 60%;
   padding: 8px;
+}
+
+#user-skills {
+  border: 2px solid blueviolet;
+  padding: 10px;
+  margin: 10px 50px;
+}
+
+#stats-form {
+  padding: 6px;
+}
+
+#skills-form {
+  padding: 6px;
+}
+
+.user-settings {
+  border: 2px solid blueviolet;
+  padding: 10px;
 }
 
 /* Regular buttons */

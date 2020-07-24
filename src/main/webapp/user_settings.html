@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>User Settings</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body>
+    <div id="navigation">
+      <a onclick="goToHub()" id="hub">Main Hub</a>
+      <a onclick="goToUser()" id="user">User Profile</a>
+      <a onclick="goToProject()" id="project">Project Page</a>
+      <a onclick="goToTask()" id="task">Task Page</a>
+      <a onclick="goToSettings()" id="settings">Settings Page</a>
+    </div>
+    <div id="content">
+      <h2>Change User Settings: </h2>
+      <div class="user-settings">
+        <h3>Change Skills:</h3>
+        <form>
+          <ul>
+            <li><input type="checkbox" id="leadership" name="leadership" value="leadership">
+              <label for="leadership">Leadership</label></li>
+            <li><input type="checkbox" id="organization" name="organization" value="organization">
+              <label for="organization">Organization</label></li>
+            <li><input type="checkbox" id="writ" name="writ" value="writ">
+              <label for="writ">Analytical/Creative Writing</label></li>
+            <li><input type="checkbox" id="art" name="art" value="art">
+              <label for="art">Artistic Ability</label></li>
+            <li><input type="checkbox" id="webdev" name="webdev" value="webdev">
+              <label for="webdev">Web Development (HTML,CSS,Javascript)</label></li>
+            <li><input type="checkbox" id="oop" name="oop" value="oop">
+              <label for="oop">Object Oriented Programming Languages (ex:java)</label></li>
+            <li><input type="submit" value="Submit"></li>
+          </ul>
+        </form>
+        <h3>Change Other Information:</h3>
+        <form id="stats-form">
+          <ul>
+            <li><input type="text" id="name" name="name" value="Update Name"></li>
+            <li><input type="text" id="year" name="year" value="Update Class Year (ex: 2020)"></li>
+            <li><input type="text" id="major" name="major" value="Update Major"></li>
+            <li><input type="submit" value="Submit"></li>
+          </ul>
+        </form>
+      </div>
+    </div>
+    <div id="footer"><!-- we should come up with a footer here --></div>
+  </body>
+</html>
+
