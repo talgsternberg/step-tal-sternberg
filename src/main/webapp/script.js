@@ -35,11 +35,6 @@ function goToTask(taskID=Math.floor(Math.random()*7)+1) {
   location.href = url;
 }
 
-// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
-const gUsers = {};
-const gJSONusers = {};
-const gDefaultUser = {userID: 0, name: 'Default Username'}; // Add attributes
-
 // Hard coded projects that are global variables.
 const gProjects =
   {project1: {projectID: 1, name: 'Project 1',
@@ -82,12 +77,14 @@ const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   users: [], subtasks: []};
 // TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
 const gUsers =
-  {user1: {userID: 1, name: 'User 1', skills: ['Art, Writing'],
-    major: ['Studio Art'], numTaskCompleted: 5, year: 'Junior'},
-  user2: {userID: 2, name: 'User 2', skills: ['Object Oriented Programming'],
-    major: ['Computer Science'], numTaskCompleted: 8, year: 'Freshman'},
-  user3: {userID: 3, name: 'User 1', skills: ['Leadership, Organization'],
-    major: ['Chemistry', 'English'], numTaskCompleted: 4, year: 'Senior'}};
+   {user1: {userID: 1, name: 'User 1', skills: [{skill: 'Art', priority: true},
+    {skill: 'Writing', priority: true}], major: ['Studio Art'],
+    numTaskCompleted: 5, year: 2021},
+  user2: {userID: 2, name: 'User 2', skills: [{skill: 'Object Oriented Programming',
+    priority: true}], major: ['Computer Science'], numTaskCompleted: 8, year: 2023},
+  user3: {userID: 3, name: 'User 1', skills: [{skill: 'Leadership', priority: true},
+    {skill: 'Organization', priority: false}],
+    major: ['Chemistry', 'English'], numTaskCompleted: 4, year: 2024}};
 
 const gJSONusers = JSON.stringify(gUsers);
 const gDefaultUser = {userID: 0, name: 'Default Username',
@@ -166,8 +163,30 @@ function getUserInfo() {
         document.getElementById('user-num-complete-container');
       numTaskCompleted.innerText =
         'Total Tasks Completed: ' + users[user].numTaskCompleted;
+      const priority_skills = document.getElementById('user-prskills-container');
+      pskills = '';
+      for (skill of users[user].skills){
+        if (skill.priority == true){
+          if(pskills == ''){
+            pskills = skill.skill;
+          }
+          else{
+            pskills = pskills + ', ' + skill.skill
+          }
+        }
+      }
+      priority_skills.innerText = 'Priority Skills: ' + pskills;
       const skills = document.getElementById('user-skills-container');
-      skills.innerText = users[user].skills;
+      skill_string = '';
+      for (skill of users[user].skills){
+        if(skill_string == ''){
+          skill_string = skill.skill;
+        }
+        else{
+          skill_string = skill_string + ', ' + skill.skill
+        }
+      }
+      skills.innerText = skill_string;
       break;
     }
   }
