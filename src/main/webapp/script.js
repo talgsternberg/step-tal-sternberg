@@ -172,7 +172,7 @@ function getUserInfo() {
       for (skill of users[user].skills) {
         if (skill.priority == true) {
           if (pskills == '') {
-              pskills = skill.skill;
+            pskills = skill.skill;
           }
           else {
             pskills = (pskills + ', ' + skill.skill);
@@ -187,7 +187,7 @@ function getUserInfo() {
           skillString = skill.skill;
         }
         else {
-          skillString = skillString + ', ' + skill.skill
+          skillString = (skillString + ', ' + skill.skill);
         }
       }
       skills.innerText = skillString;
