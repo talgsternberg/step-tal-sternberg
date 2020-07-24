@@ -171,26 +171,24 @@ function getUserInfo() {
       pskills = '';
       for (skill of users[user].skills) {
         if (skill.priority == true) {
-          if (pskills == '') {
-            pskills = skill.skill;
-          }
+          if (pskills == '') {pskills = skill.skill;}
           else {
-            pskills = pskills + ', ' + skill.skill
+            pskills = (pskills + ', ' + skill.skill);
           }
         }
       }
       prioritySkills.innerText = 'Priority Skills: ' + pskills;
       const skills = document.getElementById('user-skills-container');
-      skill_string = '';
-      for (skill of users[user].skills){
-        if(skill_string == ''){
-          skill_string = skill.skill;
+      skillString = '';
+      for (skill of users[user].skills) {
+        if (skillString == '') {
+          skillString = skill.skill;
         }
-        else{
-          skill_string = skill_string + ', ' + skill.skill
+        else {
+          skillString = skillString + ', ' + skill.skill
         }
       }
-      skills.innerText = skill_string;
+      skills.innerText = skillString;
       break;
     }
   }
