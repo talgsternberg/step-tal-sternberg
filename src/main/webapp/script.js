@@ -19,7 +19,7 @@ function goToUser() {
  * Redirect to Project Page.
  * @param {number} projectID If not provided, randomize it from 1-3 inclusive.
  */
-function goToProject(projectID=Math.floor(Math.random()*2)+1) {
+function goToProject(projectID=Math.floor(Math.random()*gProjectsSize)+1) {
   const url = 'project.html?projectID=' + projectID;
   location.href = url;
 }
@@ -28,7 +28,7 @@ function goToProject(projectID=Math.floor(Math.random()*2)+1) {
  * Redirect to Task Page.
  * @param {number} taskID If not provided, randomize it from 1-7 inclusive.
  */
-function goToTask(taskID=Math.floor(Math.random()*7)+1) {
+function goToTask(taskID=Math.floor(Math.random()*gTasksSize)+1) {
   const url = 'task.html?taskID=' + taskID;
   location.href = url;
 }
@@ -50,6 +50,7 @@ const gJSONprojects = JSON.stringify(gProjects);
 const gDefaultProject = {projectID: 0, name: 'Default Project',
   description: 'Default project description...', admins: [],
   tasks: [], allowedUsers: []};
+const gProjectsSize = Object.keys(gProjects).length;
 
 // Hard coded tasks that are global variables.
 const gTasks =
@@ -78,6 +79,7 @@ const gJSONtasks = JSON.stringify(gTasks);
 const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
+const gTasksSize = Object.keys(gTasks).length;
 
 /**
  * When the Project Page loads, get project info. If no projectID is provided in
