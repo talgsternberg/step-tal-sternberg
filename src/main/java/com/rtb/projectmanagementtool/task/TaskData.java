@@ -2,6 +2,12 @@ package com.rtb.projectmanagementtool.task;
 
 import java.util.HashSet;
 
+/** Enum containing status options for a task. */
+enum Status {
+  COMPLETE,
+  INCOMPLETE
+}
+
 /** Class containing task data. */
 public final class TaskData {
 
@@ -86,9 +92,4 @@ public final class TaskData {
     this.subtasks = subtasks;
   }
 
-}
-
-enum Status {
-  COMPLETE,
-  INCOMPLETE
 }
