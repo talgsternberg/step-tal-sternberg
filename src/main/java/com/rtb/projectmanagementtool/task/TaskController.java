@@ -34,15 +34,7 @@ public final class TaskController {
       HashSet<Long> users = (HashSet<Long>) entity.getProperty("users");
       HashSet<Long> subtasks = (HashSet<Long>) entity.getProperty("subtasks");
       // Build TaskData object
-      TaskData task = new TaskData(
-          taskID,
-          projectID,
-          name,
-          description,
-          status,
-          users,
-          subtasks
-      );
+      TaskData task = new TaskData(taskID, projectID, name, description, status, users, subtasks);
       tasks.add(task);
     }
     return tasks;
