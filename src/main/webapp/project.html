@@ -6,52 +6,24 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getProjectInfo()">
     <div id="navigation">
-      <a href="main_hub.html" id="hub">Main Hub</a>
-      <a href="user_profile.html" id="user">User Profile</a>
-      <a href="project.html" id="project">Project Page</a>
-      <a href="task.html" id="task">Task Page</a>
+      <a onclick="goToHub()" id="hub">Main Hub</a>
+      <a onclick="goToUser()" id="user">User Profile</a>
+      <a onclick="goToProject()" id="project">Project Page</a>
+      <a onclick="goToTask()" id="task">Task Page</a>
     </div>
     <div id="content">
-      <h1>Project Name</h1>
-      <p>Project description...</p>
+      <div id="project-title-container"><h1>Default Project Name</h1></div>
+      <div id="project-description-container">
+        <p>Default Project description...</p>
+      </div>
       <h2>Admins</h2>
-      <ul>
-        <li class="inline">
-          <button type="button" onclick="goToUser()">Admin 1</button>
-        </li>
-        <li class="inline">
-          <button type="button" onclick="goToUser()">Admin 2</button>
-        </li>
-      </ul>
+      <div id="project-admins-container"></div>
       <h2>Tasks</h2>
-      <ul>
-        <li class="task">
-          <button type="button" class="inline" onclick="goToTask(1)">Task 1</button>
-          <p class="inline">Task 1 description...</p>
-        </li>
-        <li class="task">
-          <button type="button" class="inline" onclick="goToTask(2)">Task 2</button>
-          <p class="inline">Task 2 description...</p>
-        </li>
-        <li class="task">
-          <button type="button" class="inline" onclick="goToTask(3)">Task 3</button>
-          <p class="inline">Task 3 description...</p>
-        </li>
-      </ul>
+      <div id="project-tasks-container"></div>
       <h2>Members</h2>
-      <ul>
-        <li class="inline">
-          <button type="button" onclick="goToUser()">User 1</button>
-        </li>
-        <li class="inline">
-          <button type="button" onclick="goToUser()">User 2</button>
-        </li>
-        <li class="inline">
-          <button type="button" onclick="goToUser()">User 3</button>
-        </li>
-      </ul>
+      <div id="project-users-container"></div>
     </div>
   </body>
 </html>
