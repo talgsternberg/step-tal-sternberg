@@ -113,5 +113,4 @@ public final class TaskData {
   public void setSubtasks(HashSet<Long> subtasks) {
     this.subtasks = subtasks;
   }
-
 }
