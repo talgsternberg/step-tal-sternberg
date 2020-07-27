@@ -56,12 +56,9 @@ public final class TaskController {
   public void deleteTasks(HashSet<Long> taskIDs) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<Key> keys = new HashSet<>();
-    Query query = new Query("Task");
-    Filter filter = new Query.FilterPredicate("__key__", Query.FilterOperator.IN, taskIDs);
-    query.setFilter(filter);
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity entity : results.asIterable()) {
-      keys.add(entity.getKey());
+    for (long taskID : taskIDs) {
+      Key key = KeyFactory.createKey("Task", taskID);
+      keys.add(key);
     }
     datastore.delete(keys);
   }
