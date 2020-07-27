@@ -4,45 +4,44 @@ import java.util.HashSet;
 
 /** Enum containing skills for user. */
 enum Skills {
-  LEADERSHIP(false),
-  ORGANIZATION(false),
-  WRITING(false),
-  ART(false),
-  WEBDEV(false),
-  OOP(false);
-
-  private final boolean isPriority;
-
-  private Skills(boolean isPriority) {
-    this.isPriority = isPriority;
-  }
+  LEADERSHIP,
+  ORGANIZATION,
+  WRITING,
+  ART,
+  WEBDEV,
+  OOP;
 }
 
 /** Class for User data. */
 public final class UserData {
 
+  private String userEmail;
   private long userID;
   private String userName;
   private int userYear;
   private HashSet<String> userMajors;
-  private HashSet<Skills> skills;
-  private HashSet<Skills> prioritySkills;
+  private Skills skills;
   private int userTotalCompTasks;
 
   public UserData(
+      String userEmail;
       long userID,
       String userName,
       int userYear,
       HashSet<String> userMajors,
-      HashSet<Skills> skills,
-      HashSet<Skills> prioritySkills,
+      Skills skills,
       int userTotalCompTasks) {
+    this.userEmail = userEmail;
     this.userID = userID;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
     this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
+  }
+
+  public String getUserEmail() {
+      return userEmail;
   }
 
   public long getUserID() {
@@ -61,16 +60,16 @@ public final class UserData {
     return userMajors;
   }
 
-  public HashSet<Skills> getUserSkills() {
+  public Skills getUserSkills() {
     return skills;
-  }
-
-  public HashSet<Skills> getUserPrSkills() {
-    return prioritySkills;
   }
 
   public int getUserTotal() {
     return userTotalCompTasks;
+  }
+
+  public void setUserEmail(String userEmail) {
+      this.userEmail = userEmail;
   }
 
   public void setUserID(long userID) {
@@ -85,12 +84,8 @@ public final class UserData {
     this.userYear = userYear;
   }
 
-  public void setUserSkills(HashSet<Skills> skills) {
+  public void setUserSkills(Skills skills) {
     this.skills = skills;
-  }
-
-  public void setUserPrSkills(HashSet<Skills> prioritySkills) {
-    this.prioritySkills = prioritySkills;
   }
 
   public void setUserTotal(int userTotalCompTasks) {
