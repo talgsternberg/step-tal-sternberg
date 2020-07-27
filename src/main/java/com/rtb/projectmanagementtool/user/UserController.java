@@ -31,7 +31,9 @@ public final class UserController {
           HashSet<String> userMajors = (HashSet<String>) entity.getProperty("userMajors");
           Skills skills = (Skills) entity.getProperty("skills");
           int userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
-          UserData user = new UserData(userID, userEmail, userName, userYear, userMajors, skills, userTotalCompTasks);
+          UserData user = 
+              new UserData(
+                  userID, userEmail, userName, userYear, userMajors, skills, userTotalCompTasks);
           users.add(user);
       }
       return users;
