@@ -1,6 +1,6 @@
 /**
- * ProjectData.java - this file implements the Project class, which contains details about a particular
- * project, including the members and tasks within it.
+ * ProjectData.java - this file implements the Project class, which contains details about a
+ * particular project, including the members and tasks within it.
  */
 package com.rtb.projectmanagementtool.project;
 
