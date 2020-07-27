@@ -17,13 +17,21 @@ public final class TaskController {
     this.tasks = tasks;
   }
 
-  // Optional TODO: Add sort and quantity paramters.
-  public HashSet<TaskData> getAllTasks() {
+  public HashSet<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<TaskData> tasks = new HashSet<>();
-    Query query = new Query("Task");
+    Query query;
+    if (sortDirection.equals("descending")){
+      query = new Query("Task").addSort(sortBy, SortDirection.DESCENDING);
+    } else {
+      query = new Query("Task").addSort(sortBy, SortDirection.ASCENDING);
+    }
     PreparedQuery results = datastore.prepare(query);
+    int count = 0;
     for (Entity entity : results.asIterable()) {
+      if (count++ >= quantity) {
+        break;
+      }
       TaskData task = new TaskData(entity);
       tasks.add(task);
     }
