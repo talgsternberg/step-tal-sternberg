@@ -13,7 +13,7 @@ public final class UserController {
     private HashSet<UserData> users;
 
     public UserController(HashSet<UserData> users) {
-        this.users = users
+        this.users = users;
     }
 
     //get users+data to direct/display user's profiles later

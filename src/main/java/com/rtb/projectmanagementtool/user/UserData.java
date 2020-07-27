@@ -24,7 +24,7 @@ public final class UserData {
   private int userTotalCompTasks;
 
   public UserData(
-      String userEmail;
+      String userEmail,
       long userID,
       String userName,
       int userYear,
