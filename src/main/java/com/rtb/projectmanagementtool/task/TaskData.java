@@ -1,5 +1,6 @@
 package com.rtb.projectmanagementtool.task;
 
+import com.google.appengine.api.datastore.Entity;
 import java.util.HashSet;
 
 /** Enum containing status options for a task. */
@@ -34,6 +35,27 @@ public final class TaskData {
     this.status = status;
     this.users = users;
     this.subtasks = subtasks;
+  }
+
+  public TaskData(Entity entity) {
+    taskID = (long) entity.getKey().getId();
+    projectID = (long) entity.getProperty("projectID");
+    name = (String) entity.getProperty("name");
+    description = (String) entity.getProperty("description");
+    status = (Status) entity.getProperty("status");
+    users = (HashSet<Long>) entity.getProperty("users");
+    subtasks = (HashSet<Long>) entity.getProperty("subtasks");
+  }
+
+  public Entity toEntity() {
+    Entity entity = new Entity("Task", taskID);
+    entity.setProperty("projectID", projectID);
+    entity.setProperty("name", name);
+    entity.setProperty("description", description);
+    entity.setProperty("status", status);
+    entity.setProperty("users", users);
+    entity.setProperty("subtasks", subtasks);
+    return entity;
   }
 
   public long getTaskID() {

@@ -24,16 +24,7 @@ public final class TaskController {
     Query query = new Query("Task");
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
-      // Get task entity data
-      long taskID = (long) entity.getKey().getId();
-      long projectID = (long) entity.getProperty("projectID");
-      String name = (String) entity.getProperty("name");
-      String description = (String) entity.getProperty("description");
-      Status status = (Status) entity.getProperty("status");
-      HashSet<Long> users = (HashSet<Long>) entity.getProperty("users");
-      HashSet<Long> subtasks = (HashSet<Long>) entity.getProperty("subtasks");
-      // Build TaskData object
-      TaskData task = new TaskData(taskID, projectID, name, description, status, users, subtasks);
+      TaskData task = new TaskData(entity);
       tasks.add(task);
     }
     return tasks;
@@ -43,22 +34,7 @@ public final class TaskController {
     HashSet<Entity> taskEntities = new HashSet<>();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     for (TaskData task : tasks) {
-      // Get task data
-      long taskID = task.getTaskID();
-      long projectID = task.getProjectID();
-      String name = task.getName();
-      String decription = task.getDescription();
-      Status status = task.getStatus();
-      HashSet<Long> users = task.getUsers();
-      HashSet<Long> subtasks = task.getSubtasks();
-      // Build task entity
-      Entity entity = new Entity("Task", taskID);
-      entity.setProperty("projectID", projectID);
-      entity.setProperty("name", name);
-      entity.setProperty("description", decription);
-      entity.setProperty("status", status);
-      entity.setProperty("users", users);
-      entity.setProperty("subtasks", subtasks);
+      Entity entity = task.toEntity();
       taskEntities.add(entity);
     }
     datastore.put(taskEntities);
