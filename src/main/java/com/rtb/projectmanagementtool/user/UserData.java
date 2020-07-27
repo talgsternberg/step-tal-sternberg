@@ -3,13 +3,14 @@ package com.rtb.projectmanagementtool.user;
 import java.util.HashSet;
 
 /** Enum containing skills for user. */
-enum Skills {
+public enum Skills {
   LEADERSHIP (false),
   ORGANIZATION (false),
   ANALYTICAL/CREATIVE WRITING (false),
   ARTISTIC ABILITY (false),
   WEB DEVELOPMENT (false),
   OBJECT ORIENTED PROGRAMMING (false);
+  }
 }
 
 /** Class for User data. */
