@@ -3,7 +3,7 @@ package com.rtb.projectmanagementtool.user;
 import java.util.HashSet;
 
 /** Enum containing skills for user. */
-enum Skills {
+enum Skills(boolean isPriority) {
   LEADERSHIP,
   ORGANIZATION,
   WRITING,
@@ -14,7 +14,7 @@ enum Skills {
   private final boolean isPriority;
 
   private Skills(boolean isPriority) {
-      this.isPriority = isPriority;
+    this.isPriority = isPriority;
   }
 }
 
@@ -65,7 +65,7 @@ public final class UserData {
   }
 
   public HashSet<Skills> getUserPrSkills() {
-      return prioritySkills;
+    return prioritySkills;
   }
 
   public int getUserTotal() {
@@ -89,7 +89,7 @@ public final class UserData {
   }
 
   public void setUserPrSkills(HashSet<Skills> prioritySkills) {
-      this.prioritySkills = prioritySkills;
+    this.prioritySkills = prioritySkills;
   }
 
   public void setUserTotal(int userTotalCompTasks) {
