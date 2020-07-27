@@ -16,14 +16,13 @@ import java.util.HashSet;
 /** Class controlling the TaskData object. */
 public final class TaskController {
 
-  private HashSet<TaskData> tasks;
+  private DatastoreService datastore;
 
-  public TaskController(HashSet<TaskData> tasks) {
-    this.tasks = tasks;
+  public TaskController() {
+    datastore = DatastoreServiceFactory.getDatastoreService();
   }
 
   public HashSet<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<TaskData> tasks = new HashSet<>();
     Query query;
     if (sortDirection.equals("descending")) {
@@ -45,7 +44,6 @@ public final class TaskController {
 
   public void addTasks(HashSet<TaskData> tasks) {
     HashSet<Entity> taskEntities = new HashSet<>();
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     for (TaskData task : tasks) {
       Entity entity = task.toEntity();
       taskEntities.add(entity);
@@ -54,7 +52,6 @@ public final class TaskController {
   }
 
   public void deleteTasks(HashSet<Long> taskIDs) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<Key> keys = new HashSet<>();
     for (long taskID : taskIDs) {
       Key key = KeyFactory.createKey("Task", taskID);
