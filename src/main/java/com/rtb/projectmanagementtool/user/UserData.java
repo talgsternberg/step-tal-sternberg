@@ -9,7 +9,7 @@ enum Skills {
   ANALYTICAL/CREATIVE WRITING (false),
   ARTISTIC ABILITY (false),
   WEB DEVELOPMENT (false),
-  OBJECT ORIENTED PROGRAMMING (false)
+  OBJECT ORIENTED PROGRAMMING (false);
 }
 
 /** Class for User data. */
