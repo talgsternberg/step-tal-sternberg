@@ -4,7 +4,12 @@ import java.util.HashSet;
 
 /** Enum containing skills for user. */
 enum Skills {
-  //not sure what to add here
+  LEADERSHIP (false);
+  ORGANIZATION (false);
+  ANALYTICAL/CREATIVE WRITING (false);
+  ARTISTIC ABILITY (false);
+  WEB DEVELOPMENT (false);
+  OBJECT ORIENTED PROGRAMMING (false);
 }
 
 /** Class for User data. */
