@@ -31,8 +31,8 @@ public final class UserData {
       HashSet<String> userMajors,
       Skills skills,
       int userTotalCompTasks) {
-    this.userEmail = userEmail;
     this.userID = userID;
+    this.userEmail = userEmail;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
