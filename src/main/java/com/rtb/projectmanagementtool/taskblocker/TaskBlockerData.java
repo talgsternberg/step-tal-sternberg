@@ -8,9 +8,7 @@ public final class TaskBlockerData {
   private long taskID;
   private long blockerID;
 
-  public TaskBlockerData(
-      long taskID,
-      long blockerID) {
+  public TaskBlockerData(long taskID, long blockerID) {
     this.taskID = taskID;
     this.blockerID = blockerID;
   }

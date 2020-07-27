@@ -6,8 +6,7 @@ import java.util.HashSet;
 
 /** Class controlling the TaskBlockerData object. */
 public final class TaskBlockerController {
-  public TaskBlockerController() {
-  }
+  public TaskBlockerController() {}
 
   public HashSet<TaskBlockerData> getTaskBlockers(DatastoreService datastore, long taskID) {
     Query query = new Query("TaskBlocker");
