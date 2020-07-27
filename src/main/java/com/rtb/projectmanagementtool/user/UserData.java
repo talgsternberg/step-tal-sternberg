@@ -3,13 +3,13 @@ package com.rtb.projectmanagementtool.user;
 import java.util.HashSet;
 
 /** Enum containing skills for user. */
-enum Skills(boolean isPriority) {
-  LEADERSHIP,
-  ORGANIZATION,
-  WRITING,
-  ART,
-  WEBDEV,
-  OOP;
+enum Skills {
+  LEADERSHIP(false),
+  ORGANIZATION(false),
+  WRITING(false),
+  ART(false),
+  WEBDEV(false),
+  OOP(false);
 
   private final boolean isPriority;
 
