@@ -30,7 +30,7 @@ function goToUser(userID) {
  * Redirect to Project Page.
  * @param {number} projectID If not provided, randomize it from 1-3 inclusive.
  */
-function goToProject(projectID=Math.floor(Math.random()*2)+1) {
+function goToProject(projectID=Math.floor(Math.random()*gProjectsSize)+1) {
   const url = 'project.html?projectID=' + projectID;
   location.href = url;
 }
@@ -39,7 +39,7 @@ function goToProject(projectID=Math.floor(Math.random()*2)+1) {
  * Redirect to Task Page.
  * @param {number} taskID If not provided, randomize it from 1-7 inclusive.
  */
-function goToTask(taskID=Math.floor(Math.random()*7)+1) {
+function goToTask(taskID=Math.floor(Math.random()*gTasksSize)+1) {
   const url = 'task.html?taskID=' + taskID;
   location.href = url;
 }
@@ -56,6 +56,7 @@ const gJSONprojects = JSON.stringify(gProjects);
 const gDefaultProject = {projectID: 0, name: 'Default Project',
   description: 'Default project description...', admins: [],
   tasks: [], allowedUsers: []};
+const gProjectsSize = Object.keys(gProjects).length;
 
 // Hard coded tasks that are global variables.
 const gTasks =
@@ -84,7 +85,9 @@ const gJSONtasks = JSON.stringify(gTasks);
 const gDefaultTask = {taskID: 0, projectID: 0, name: 'Default Task',
   description: 'Default task description...', status: 'none',
   users: [], subtasks: []};
-// TODO: fill gUsers and gJSONusers and gDefaultUser (similar to above).
+const gTasksSize = Object.keys(gTasks).length;
+
+// Hard coded users that are global variables.
 const gUsers =
   {user1: {userID: 1, name: 'User 1', skills: [{skill: 'Art', priority: true},
     {skill: 'Writing', priority: true}], major: ['Studio Art'],
@@ -102,6 +105,7 @@ const gJSONusers = JSON.stringify(gUsers);
 const gDefaultUser = {userID: 0, name: 'Default Username',
   skills: 'Default Skills', major: 'Default Major',
   numTaskCompleted: 'Default Number'}; // Add attributes
+
 /**
  * When the Project Page loads, get project info. If no projectID is provided in
  * the URL, default values will be shown.
@@ -127,6 +131,7 @@ function getProjectInfo() {
     }
   }
 }
+
 /**
  * When the Task Page loads, get task info. If no taskID is provided in the URL,
  * default values will be shown.
@@ -156,7 +161,7 @@ function getTaskInfo() {
 
 /**
  * When the User Profile Page loads, get user info.
-   If no userID is provided in the URL,
+ * If no userID is provided in the URL,
  * default values will be shown.
  */
 function getUserInfo() {
@@ -204,14 +209,13 @@ function getUserInfo() {
 }
 
 /**
- * Build ul element for subtasks on Task Page.
  * Build return to project button.
  * @param {Hashmap} task Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
  * @param {Array} subtasks Array of taskIDs.
  * @return {Element} HTML ul element containing a list of subtasks.
  */
-function getProjectReturn(task, subtasks) {
+function getProjectReturn(task) {
   const pElement = document.createElement('p');
   for (project in gProjects) {
     if (gProjects[project].projectID == task.projectID) {
@@ -232,7 +236,6 @@ function getProjectReturn(task, subtasks) {
  * Build ul element for tasks.
  * @param {Array} tasks Array of taskIDs.
  * @return {Element} HTML ul element containing a list of tasks.
->>>>>>> b4f09dae8dfcd261e6c6d77936c559e97132651d
  */
 function getTasks(tasks) {
   const ulElement = document.createElement('ul');
