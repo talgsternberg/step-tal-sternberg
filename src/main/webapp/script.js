@@ -1,6 +1,13 @@
 /**
  * Redirect to Main Hub Page.
  */
+function projectTest() {
+  fetch('my-project-test');
+}
+
+/**
+ * Redirect to Main Hub Page.
+ */
 function goToHub() {
   const url = 'main_hub.html';
   location.href = url;
