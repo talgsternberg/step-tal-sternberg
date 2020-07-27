@@ -11,7 +11,6 @@ package com.rtb.projectmanagementtool.task;
 // import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import java.util.HashSet;
 
 /** Class controlling the TaskData object. */
@@ -27,7 +26,7 @@ public final class TaskController {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<TaskData> tasks = new HashSet<>();
     Query query;
-    if (sortDirection.equals("descending")){
+    if (sortDirection.equals("descending")) {
       query = new Query("Task").addSort(sortBy, SortDirection.DESCENDING);
     } else {
       query = new Query("Task").addSort(sortBy, SortDirection.ASCENDING);
