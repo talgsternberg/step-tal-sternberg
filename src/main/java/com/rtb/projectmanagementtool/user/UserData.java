@@ -15,8 +15,8 @@ enum Skills {
 /** Class for User data. */
 public final class UserData {
 
-  private String userEmail;
   private long userID;
+  private String userEmail;
   private String userName;
   private int userYear;
   private HashSet<String> userMajors;
@@ -24,8 +24,8 @@ public final class UserData {
   private int userTotalCompTasks;
 
   public UserData(
-      String userEmail,
       long userID,
+      String userEmail,
       String userName,
       int userYear,
       HashSet<String> userMajors,
@@ -40,12 +40,12 @@ public final class UserData {
     this.userTotalCompTasks = userTotalCompTasks;
   }
 
-  public String getUserEmail() {
-      return userEmail;
-  }
-
   public long getUserID() {
     return userID;
+  }
+
+  public String getUserEmail() {
+    return userEmail;
   }
 
   public String getUserName() {
@@ -68,12 +68,12 @@ public final class UserData {
     return userTotalCompTasks;
   }
 
-  public void setUserEmail(String userEmail) {
-      this.userEmail = userEmail;
-  }
-
   public void setUserID(long userID) {
     this.userID = userID;
+  }
+
+  public void setUserEmail(String userEmail) {
+    this.userEmail = userEmail;
   }
 
   public void setUserName(String userName) {
