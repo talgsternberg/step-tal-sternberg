@@ -3,7 +3,7 @@ package com.rtb.projectmanagementtool.user;
 import java.util.HashSet;
 
 /** Enum containing skills for user. */
-public enum Skills {
+enum Skills {
   LEADERSHIP (false),
   ORGANIZATION (false),
   WRITING (false),
