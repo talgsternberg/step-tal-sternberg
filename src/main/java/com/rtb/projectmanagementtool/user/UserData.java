@@ -1,4 +1,4 @@
-package com.rtb.projectmanagementtool.task;
+package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.HashSet;
