@@ -19,16 +19,7 @@ public final class UserController {
     PreparedQuery results = datastore.prepare(query);
     // create new user object and add to users
     for (Entity entity : results.asIterable()) {
-      long userID = (long) entity.getKey().getId();
-      String userEmail = (String) entity.getProperty("userEmail");
-      String userName = (String) entity.getProperty("userName");
-      int userYear = (int) entity.getProperty("userYear");
-      HashSet<String> userMajors = (HashSet<String>) entity.getProperty("userMajors");
-      Skills skills = (Skills) entity.getProperty("skills");
-      int userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
-      UserData user =
-          new UserData(
-              userID, userEmail, userName, userYear, userMajors, skills, userTotalCompTasks);
+      UserData user = new UserData(entity);
       users.add(user);
     }
     return users;
