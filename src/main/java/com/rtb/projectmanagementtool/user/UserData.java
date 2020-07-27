@@ -6,10 +6,14 @@ import java.util.HashSet;
 public enum Skills {
   LEADERSHIP (false),
   ORGANIZATION (false),
-  ANALYTICAL/CREATIVE WRITING (false),
-  ARTISTIC ABILITY (false),
-  WEB DEVELOPMENT (false),
-  OBJECT ORIENTED PROGRAMMING (false);
+  WRITING (false),
+  ART (false),
+  WEBDEV (false),
+  OOP (false);
+
+  private Boolean priority;
+  Skills(Boolean priority){
+      this.priority = priority;
   }
 }
 
