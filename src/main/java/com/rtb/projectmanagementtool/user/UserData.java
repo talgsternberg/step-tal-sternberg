@@ -1,5 +1,6 @@
-package com.rtb.projectmanagementtool.user;
+package com.rtb.projectmanagementtool.task;
 
+import com.google.appengine.api.datastore.Entity;
 import java.util.HashSet;
 
 /** Enum containing skills for user. */
@@ -47,7 +48,7 @@ public final class UserData {
     userYear = (int) entity.getProperty("userYear");
     userMajors = (HashSet<String>) entity.getProperty("userMajors");
     skills = (Skills) entity.getProperty("skills");
-    userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks")
+    userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
   }
 
   public Entity toEntity() {
