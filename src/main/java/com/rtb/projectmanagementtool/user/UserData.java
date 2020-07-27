@@ -34,7 +34,8 @@ public final class UserData {
       String userName,
       int userYear,
       HashSet<String> userMajors,
-      Skills skills,
+      HashSet<Skills> skills,
+      HashSet<Skills> prioritySkills,
       int userTotalCompTasks) {
     this.userID = userID;
     this.userName = userName;
