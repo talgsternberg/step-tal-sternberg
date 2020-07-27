@@ -4,16 +4,17 @@ import java.util.HashSet;
 
 /** Enum containing skills for user. */
 enum Skills {
-  LEADERSHIP (false),
-  ORGANIZATION (false),
-  WRITING (false),
-  ART (false),
-  WEBDEV (false),
-  OOP (false);
+  LEADERSHIP,
+  ORGANIZATION,
+  WRITING,
+  ART,
+  WEBDEV,
+  OOP;
 
-  private Boolean priority;
-  Skills(Boolean priority){
-      this.priority = priority;
+  private final boolean isPriority;
+
+  private Skills(boolean isPriority) {
+      this.isPriority = isPriority;
   }
 }
 
@@ -24,7 +25,8 @@ public final class UserData {
   private String userName;
   private int userYear;
   private HashSet<String> userMajors;
-  private Skills skills;
+  private HashSet<Skills> skills;
+  private HashSet<Skills> prioritySkills;
   private int userTotalCompTasks;
 
   public UserData(
@@ -58,8 +60,12 @@ public final class UserData {
     return userMajors;
   }
 
-  public Skills getUserSkills() {
+  public HashSet<Skills> getUserSkills() {
     return skills;
+  }
+
+  public HashSet<Skills> getUserPrSkills() {
+      return prioritySkills;
   }
 
   public int getUserTotal() {
@@ -78,8 +84,12 @@ public final class UserData {
     this.userYear = userYear;
   }
 
-  public void setUserSkills(Skills skills) {
+  public void setUserSkills(HashSet<Skills> skills) {
     this.skills = skills;
+  }
+
+  public void setUserPrSkills(HashSet<Skills> prioritySkills) {
+      this.prioritySkills = prioritySkills;
   }
 
   public void setUserTotal(int userTotalCompTasks) {
