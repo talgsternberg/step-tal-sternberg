@@ -1,11 +1,17 @@
 package com.rtb.projectmanagementtool.task;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Key;
+// import com.google.appengine.api.datastore.DatastoreService;
+// import com.google.appengine.api.datastore.DatastoreServiceFactory;
+// import com.google.appengine.api.datastore.Entity;
+// import com.google.appengine.api.datastore.PreparedQuery;
+// import com.google.appengine.api.datastore.QueryResults;
+// import com.google.appengine.api.datastore.Query;
+// import com.google.appengine.api.datastore.Query.SortDirection;
+// import com.google.appengine.api.datastore.Query.newGqlQueryBuilder;
+// import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query.*;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import java.util.HashSet;
 
 /** Class controlling the TaskData object. */
@@ -51,12 +57,12 @@ public final class TaskController {
   public void deleteTasks(HashSet<Long> taskIDs) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<Key> keys = new HashSet<>();
-    Query query = new Query("Comment").setKeysOnly();
+    Query query = new Query("Task");
+    Filter filter = new Query.FilterPredicate("__key__", Query.FilterOperator.IN, taskIDs);
+    query.setFilter(filter);
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
-      if (taskIDs.contains(entity.getProperty("id"))) {
-        keys.add(entity.getKey());
-      }
+      keys.add(entity.getKey());
     }
     datastore.delete(keys);
   }
