@@ -6,4 +6,5 @@
   <static-files>
     <include path="/**" expiration="0s" />
   </static-files>
+  <auto-id-policy>default<auto-id-policy/>
 </appengine-web-app>
