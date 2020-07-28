@@ -42,12 +42,12 @@ public class UserControllerTest {
         ctl.addUser(
             ds, /*userID=*/ 1l, /*AuthID=*/ 2l,
             /*userName=*/ "Sarah", /*userYear=*/ 2022,
-            /*userMajors=*/ user1Majors, /*skills=*/ Skills.LEADERSHIP,
+            /*userMajors=*/ user1Majors, /*skills=*/ Skills.LEADERSHIP.name(),
             /*userTotalCompTasks=*/ 3);
         ctl.addUser(
             ds, /*userID=*/ 2l, /*AuthID=*/ 3l,
             /*userName=*/ "Joe", /*userYear=*/ 2024,
-            /*userMajors=*/ user2Majors, /*skills=*/ Skills.ORGANIZATION,
+            /*userMajors=*/ user2Majors, /*skills=*/ Skills.ORGANIZATION.name(),
             /*userTotalCompTasks=*/ 5);
 
         // Should have 2 now

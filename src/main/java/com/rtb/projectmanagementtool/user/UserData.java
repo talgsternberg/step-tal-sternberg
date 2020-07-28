@@ -47,7 +47,8 @@ public final class UserData {
     userName = (String) entity.getProperty("userName");
     userYear = (int) entity.getProperty("userYear");
     userMajors = (HashSet<String>) entity.getProperty("userMajors");
-    skills = (Skills) entity.getProperty("skills");
+    //skills = (Skills) entity.getProperty("skills");
+    skills = Skills.valueOf((String) entity.getProperty("skills"));
     userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
   }
 
