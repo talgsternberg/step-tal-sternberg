@@ -7,10 +7,10 @@ import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import org.junit.Test;
 
 /** Class testing tasks */
 public class TaskTest {
-  
+
   // Task 1 attributes
   private static final long taskID1 = 1l;
   private static final long projectID1 = 1l;
@@ -27,7 +27,7 @@ public class TaskTest {
   private static final Status status1 = Status.INCOMPLETE;
   private static final HashSet<Long> users1 = new HashSet<>(Arrays.asList(1l, 2l));
   private static final HashSet<Long> subtasks1 = new HashSet<>(Arrays.asList(3l));
- 
+
   // Task 2 attributes
   private static final long taskID2 = 2l;
   private static final long projectID2 = 1l;
@@ -36,7 +36,7 @@ public class TaskTest {
   private static final Status status2 = Status.COMPLETE;
   private static final HashSet<Long> users2 = new HashSet<>(Arrays.asList(1l, 3l));
   private static final HashSet<Long> subtasks2 = new HashSet<>();
- 
+
   // Task 3 attributes
   private static final long taskID3 = 3l;
   private static final long projectID3 = 1l;
@@ -49,7 +49,7 @@ public class TaskTest {
   private final LocalServiceTestHelper helper =
     new LocalServiceTestHelper(
         new LocalDatastoreServiceTestConfig()
-          .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
+            .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
   
   @Before
   public void setUp() {
@@ -63,10 +63,10 @@ public class TaskTest {
 
   private void DsInserts() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    
+
     // Assert no task entities are found
     Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
-    
+
     // Build task entity 1
     Entity entity1 = new Entity("Task", taskID1);
     entity1.setProperty("projectID", projectID1);
@@ -75,7 +75,7 @@ public class TaskTest {
     entity1.setProperty("status", status1.toString());
     entity1.setProperty("users", users1);
     entity1.setProperty("subtasks", subtasks1);
-    
+
     // Build task entity 2
     Entity entity2 = new Entity("Task", taskID2);
     entity2.setProperty("projectID", projectID2);
@@ -88,7 +88,7 @@ public class TaskTest {
     // Add task entities to ds
     ds.put(entity1);
     ds.put(entity2);
-    
+
     // Assert 2 entities were added
     Assert.assertEquals(2, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
   }
@@ -108,7 +108,7 @@ public class TaskTest {
     // Build TaskData object
     TaskData task =
         new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
-    
+
     // Assert TaskData parameters were stored correctly
     Assert.assertEquals("taskID", taskID1, task.getTaskID());
     Assert.assertEquals("projectID", projectID1, task.getProjectID());
@@ -132,7 +132,7 @@ public class TaskTest {
 
     // Build TaskData object from entity
     TaskData task = new TaskData(entity);
-    
+
     // Assert TaskData parameters were stored correctly
     Assert.assertEquals("taskID", taskID2, task.getTaskID());
     Assert.assertEquals("projectID", projectID2, task.getProjectID());
@@ -148,7 +148,7 @@ public class TaskTest {
     // Build TaskData object
     TaskData task =
         new TaskData(taskID3, projectID3, name3, description3, status3, users3, subtasks3);
-    
+
     // Create task entity from TaskData object
     Entity entity = task.toEntity();
 
@@ -160,7 +160,7 @@ public class TaskTest {
     Status entityStatus = Status.valueOf((String) entity.getProperty("status"));
     HashSet<Long> entityUsers = (HashSet<Long>) entity.getProperty("users");
     HashSet<Long> entitySubtasks = (HashSet<Long>) entity.getProperty("subtasks");
-    
+
     // Assert task entity attributes equal TaskData attributes
     Assert.assertEquals("taskID", taskID3, entityTaskID);
     Assert.assertEquals("projectID", projectID3, entityProjectID);
@@ -183,7 +183,7 @@ public class TaskTest {
     HashSet<TaskData> tasks = taskController.getTasks(3, "taskID", "ascending");
 
     // Assert no entities were retrieved
-    Assert.assertEquals("getTasks", new HashSet<TaskData>(), tasks);    
+    Assert.assertEquals("getTasks", new HashSet<TaskData>(), tasks);
   }
 
   @Test
@@ -201,7 +201,7 @@ public class TaskTest {
     entity1.setProperty("status", status1.toString());
     entity1.setProperty("users", users1);
     entity1.setProperty("subtasks", subtasks1);
-    
+
     // Build task entity 2
     Entity entity2 = new Entity("Task", taskID2);
     entity2.setProperty("projectID", projectID2);
@@ -254,6 +254,6 @@ public class TaskTest {
     // Assert all 3 entities were retrieved
     for (int i = 0; i < 3; i++) {
       Assert.assertTrue("getTask", getTasksArrayList.get(i).equals(tasks.get(i)));
-    } 
+    }
   }
 }

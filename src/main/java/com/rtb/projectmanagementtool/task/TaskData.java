@@ -1,8 +1,8 @@
 package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.Entity;
-import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /** Enum containing status options for a task. */
 enum Status {
@@ -129,9 +129,6 @@ public final class TaskData implements Comparable<TaskData> {
 
   @Override
   public int compareTo(TaskData task) {
-    //let's sort the employee based on an id in ascending order
-    //returns a negative integer, zero, or a positive integer as this employee id
-    //is less than, equal to, or greater than the specified object.
     long dif = this.taskID - task.taskID;
     int iDif = (int) dif;
     return iDif;
@@ -149,15 +146,15 @@ public final class TaskData implements Comparable<TaskData> {
     returnString += "Subtasks: " + subtasks.toString() + "\n}";
     return returnString;
   }
-  
+
   private boolean equals(TaskData a, TaskData b) {
-    return a.taskID == b.taskID &&
-        a.projectID == b.projectID &&
-        a.name.equals(b.name) &&
-        a.description.equals(b.description) &&
-        a.status == b.status &&
-        a.users.equals(b.users) &&
-        a.subtasks.equals(b.subtasks);
+    return a.taskID == b.taskID
+        && a.projectID == b.projectID
+        && a.name.equals(b.name)
+        && a.description.equals(b.description)
+        && a.status == b.status
+        && a.users.equals(b.users)
+        && a.subtasks.equals(b.subtasks);
   }
 
   @Override
