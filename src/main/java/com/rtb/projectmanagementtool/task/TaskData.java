@@ -2,6 +2,8 @@ package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /** Enum containing status options for a task. */
 enum Status {
@@ -10,7 +12,7 @@ enum Status {
 }
 
 /** Class containing task data. */
-public final class TaskData {
+public final class TaskData implements Comparable<TaskData> {
 
   private long taskID;
   private long projectID;
@@ -43,8 +45,20 @@ public final class TaskData {
     name = (String) entity.getProperty("name");
     description = (String) entity.getProperty("description");
     status = Status.valueOf((String) entity.getProperty("status"));
-    users = (HashSet<Long>) entity.getProperty("users");
-    subtasks = (HashSet<Long>) entity.getProperty("subtasks");
+    try {
+      users = new HashSet<Long>((ArrayList<Long>) entity.getProperty("users"));
+    } catch (ClassCastException e) {
+      users = (HashSet<Long>) entity.getProperty("users");
+    } catch (NullPointerException e) {
+      users = new HashSet<Long>();
+    }
+    try {
+      subtasks = new HashSet<Long>((ArrayList<Long>) entity.getProperty("subtasks"));
+    } catch (ClassCastException e) {
+      subtasks = (HashSet<Long>) entity.getProperty("subtasks");
+    } catch (NullPointerException e) {
+      subtasks = new HashSet<Long>();
+    }
   }
 
   public Entity toEntity() {
@@ -112,5 +126,50 @@ public final class TaskData {
 
   public void setSubtasks(HashSet<Long> subtasks) {
     this.subtasks = subtasks;
+  }
+
+  public final Comparator<TaskData> ORDER_BY_TASKID = new Comparator<TaskData>() {
+    @Override
+    public int compare(TaskData a, TaskData b) {
+      return Long.compare(a.taskID, b.taskID);
+    }
+  };
+
+  @Override
+  public int compareTo(TaskData task) {
+    //let's sort the employee based on an id in ascending order
+    //returns a negative integer, zero, or a positive integer as this employee id
+    //is less than, equal to, or greater than the specified object.
+    long dif = this.taskID - task.taskID;
+    int iDif = (int) dif;
+    return iDif;
+  }
+
+  @Override
+  public String toString() {
+    String returnString = "{\n";
+    returnString += "Task ID: " + taskID + "\n";
+    returnString += "Project ID: " + projectID + "\n";
+    returnString += "Name: " + name + "\n";
+    returnString += "Description: " + description + "\n";
+    returnString += "Status: " + status.name() + "\n";
+    returnString += "Users: " + users.toString() + "\n";
+    returnString += "Subtasks: " + subtasks.toString() + "\n}";
+    return returnString;
+  }
+  
+  private boolean equals(TaskData a, TaskData b) {
+    return a.taskID == b.taskID &&
+        a.projectID == b.projectID &&
+        a.name.equals(b.name) &&
+        a.description.equals(b.description) &&
+        a.status == b.status &&
+        a.users.equals(b.users) &&
+        a.subtasks.equals(b.subtasks);
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof TaskData && equals(this, (TaskData) other);
   }
 }
