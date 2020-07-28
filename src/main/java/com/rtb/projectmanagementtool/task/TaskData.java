@@ -3,7 +3,6 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.Entity;
 import java.util.HashSet;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /** Enum containing status options for a task. */
 enum Status {
@@ -127,13 +126,6 @@ public final class TaskData implements Comparable<TaskData> {
   public void setSubtasks(HashSet<Long> subtasks) {
     this.subtasks = subtasks;
   }
-
-  public final Comparator<TaskData> ORDER_BY_TASKID = new Comparator<TaskData>() {
-    @Override
-    public int compare(TaskData a, TaskData b) {
-      return Long.compare(a.taskID, b.taskID);
-    }
-  };
 
   @Override
   public int compareTo(TaskData task) {
