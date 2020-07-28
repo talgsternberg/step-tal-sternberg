@@ -12,7 +12,7 @@ public final class TaskBlockerController {
     Query query = new Query("TaskBlocker");
     // Filter by taskID here
     PreparedQuery results = datastore.prepare(query);
-    
+
     HashSet<TaskBlockerData> blockers = new HashSet<>();
     for (Entity entity : results.asIterable()) {
       TaskBlockerData blocker = new TaskBlockerData(entity);

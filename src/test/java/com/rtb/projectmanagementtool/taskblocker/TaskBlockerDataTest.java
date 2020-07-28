@@ -10,35 +10,35 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TaskBlockerDataTest {
-    private final LocalServiceTestHelper helper =
+  private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
           new LocalDatastoreServiceTestConfig()
-          .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
+              .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
 
-    @Before
-    public void setUp() {
-        helper.setUp();
-    }
+  @Before
+  public void setUp() {
+    helper.setUp();
+  }
 
-    @After
-    public void tearDown() {
-        helper.tearDown();
-    }
+  @After
+  public void tearDown() {
+    helper.tearDown();
+  }
 
-    @Test
-    public void testCreateFromConstructor() {
-        TaskBlockerData blocker = new TaskBlockerData(/*taskID=*/ 1l, /*blockerID=*/ 2l);
-        Assert.assertEquals(blocker.getTaskID(), 1l);
-        Assert.assertEquals(blocker.getBlockerID(), 2l);
-    }
+  @Test
+  public void testCreateFromConstructor() {
+    TaskBlockerData blocker = new TaskBlockerData(/*taskID=*/ 1l, /*blockerID=*/ 2l);
+    Assert.assertEquals(blocker.getTaskID(), 1l);
+    Assert.assertEquals(blocker.getBlockerID(), 2l);
+  }
 
-    @Test
-    public void testCreateFromEntity() {
-        Entity entity = new Entity("TaskBlocker");
-        entity.setProperty("taskID", /*taskID=*/ 1l);
-        entity.setProperty("blockerID", /*blockerID=*/ 2l);
-        TaskBlockerData blocker = new TaskBlockerData(entity);
-        Assert.assertEquals(blocker.getTaskID(), 1l);
-        Assert.assertEquals(blocker.getBlockerID(), 2l);
-    }
+  @Test
+  public void testCreateFromEntity() {
+    Entity entity = new Entity("TaskBlocker");
+    entity.setProperty("taskID", /*taskID=*/ 1l);
+    entity.setProperty("blockerID", /*blockerID=*/ 2l);
+    TaskBlockerData blocker = new TaskBlockerData(entity);
+    Assert.assertEquals(blocker.getTaskID(), 1l);
+    Assert.assertEquals(blocker.getBlockerID(), 2l);
+  }
 }
