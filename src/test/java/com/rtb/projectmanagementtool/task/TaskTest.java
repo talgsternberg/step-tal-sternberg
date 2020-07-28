@@ -47,9 +47,9 @@ public class TaskTest {
   private static final HashSet<Long> subtasks3 = new HashSet<>();
 
   private final LocalServiceTestHelper helper =
-    new LocalServiceTestHelper(
-        new LocalDatastoreServiceTestConfig()
-            .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
+      new LocalServiceTestHelper(
+          new LocalDatastoreServiceTestConfig()
+              .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
   
   @Before
   public void setUp() {
