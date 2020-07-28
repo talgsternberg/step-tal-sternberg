@@ -50,7 +50,7 @@ public class TaskTest {
       new LocalServiceTestHelper(
           new LocalDatastoreServiceTestConfig()
               .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
-  
+
   @Before
   public void setUp() {
     helper.setUp();
