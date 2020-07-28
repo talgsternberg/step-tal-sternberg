@@ -42,7 +42,7 @@ public final class TaskData {
     projectID = (long) entity.getProperty("projectID");
     name = (String) entity.getProperty("name");
     description = (String) entity.getProperty("description");
-    status = (Status) entity.getProperty("status");
+    status = Status.valueOf((String) entity.getProperty("status"));
     users = (HashSet<Long>) entity.getProperty("users");
     subtasks = (HashSet<Long>) entity.getProperty("subtasks");
   }
@@ -52,7 +52,7 @@ public final class TaskData {
     entity.setProperty("projectID", projectID);
     entity.setProperty("name", name);
     entity.setProperty("description", description);
-    entity.setProperty("status", status);
+    entity.setProperty("status", status.name());
     entity.setProperty("users", users);
     entity.setProperty("subtasks", subtasks);
     return entity;
