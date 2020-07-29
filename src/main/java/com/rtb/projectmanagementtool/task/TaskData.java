@@ -130,8 +130,7 @@ public final class TaskData implements Comparable<TaskData> {
   @Override
   public int compareTo(TaskData task) {
     long dif = this.taskID - task.taskID;
-    int iDif = (int) dif;
-    return iDif;
+    return (int) dif;
   }
 
   @Override

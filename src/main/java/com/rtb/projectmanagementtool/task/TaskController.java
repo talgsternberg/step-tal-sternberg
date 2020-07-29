@@ -18,8 +18,8 @@ public final class TaskController {
 
   private DatastoreService datastore;
 
-  public TaskController() {
-    datastore = DatastoreServiceFactory.getDatastoreService();
+  public TaskController(datastore) {
+    this.datastore = datastore;
   }
 
   public HashSet<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {

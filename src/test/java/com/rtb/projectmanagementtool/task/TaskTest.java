@@ -179,7 +179,7 @@ public class TaskTest {
     Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
 
     // Get task entities with TaskController
-    TaskController taskController = new TaskController();
+    TaskController taskController = new TaskController(ds);
     HashSet<TaskData> tasks = taskController.getTasks(3, "taskID", "ascending");
 
     // Assert no entities were retrieved
@@ -243,7 +243,7 @@ public class TaskTest {
     tasks.add(task3);
 
     // Get task entities with TaskController
-    TaskController taskController = new TaskController();
+    TaskController taskController = new TaskController(ds);
     HashSet<TaskData> getTasks = taskController.getTasks(5, "name", "ascending");
 
     // Sort getTasks by taskID
