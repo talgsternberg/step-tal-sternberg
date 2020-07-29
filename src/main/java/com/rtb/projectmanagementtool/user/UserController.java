@@ -25,8 +25,7 @@ public final class UserController {
     return users;
   }
 
-  public void addUser(
-    DatastoreService datastore, UserData user) {
+  public void addUser(DatastoreService datastore, UserData user) {
     datastore.put(user.toEntity());
-    }
+  }
 }

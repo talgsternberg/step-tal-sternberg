@@ -110,7 +110,7 @@ public final class UserData {
   }
 
   public void setUserMajors(ArrayList<String> userMajors) {
-      this.userMajors = userMajors;
+    this.userMajors = userMajors;
   }
 
   /* public void setUserSkills(Skills skills) {
