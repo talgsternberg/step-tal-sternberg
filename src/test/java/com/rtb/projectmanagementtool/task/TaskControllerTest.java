@@ -60,7 +60,7 @@ public class TaskControllerTest {
   public void tearDown() {
     helper.tearDown();
   }
-  
+
   @Test
   public void testGetTasksFromEmptyDs() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
