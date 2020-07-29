@@ -18,7 +18,7 @@ public final class TaskController {
 
   private DatastoreService datastore;
 
-  public TaskController(datastore) {
+  public TaskController(DatastoreService datastore) {
     this.datastore = datastore;
   }
 
