@@ -2,7 +2,6 @@ package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /** Enum containing status options for a task. */
 enum Status {
@@ -18,8 +17,8 @@ public final class TaskData implements Comparable<TaskData> {
   private String name;
   private String description;
   private Status status;
-  private HashSet<Long> users;
-  private HashSet<Long> subtasks;
+  private ArrayList<Long> users;
+  private ArrayList<Long> subtasks;
 
   public TaskData(
       long taskID,
@@ -27,8 +26,8 @@ public final class TaskData implements Comparable<TaskData> {
       String name,
       String description,
       Status status,
-      HashSet<Long> users,
-      HashSet<Long> subtasks) {
+      ArrayList<Long> users,
+      ArrayList<Long> subtasks) {
     this.taskID = taskID;
     this.projectID = projectID;
     this.name = name;
@@ -44,19 +43,15 @@ public final class TaskData implements Comparable<TaskData> {
     name = (String) entity.getProperty("name");
     description = (String) entity.getProperty("description");
     status = Status.valueOf((String) entity.getProperty("status"));
-    try {
-      users = new HashSet<Long>((ArrayList<Long>) entity.getProperty("users"));
-    } catch (ClassCastException e) {
-      users = (HashSet<Long>) entity.getProperty("users");
-    } catch (NullPointerException e) {
-      users = new HashSet<Long>();
+    if (entity.getProperty("users") == null) {
+      users = new ArrayList<Long>();
+    } else {
+      users = (ArrayList<Long>) entity.getProperty("users");
     }
-    try {
-      subtasks = new HashSet<Long>((ArrayList<Long>) entity.getProperty("subtasks"));
-    } catch (ClassCastException e) {
-      subtasks = (HashSet<Long>) entity.getProperty("subtasks");
-    } catch (NullPointerException e) {
-      subtasks = new HashSet<Long>();
+    if (entity.getProperty("subtasks") == null) {
+      subtasks = new ArrayList<Long>();
+    } else {
+      subtasks = (ArrayList<Long>) entity.getProperty("subtasks");
     }
   }
 
@@ -66,8 +61,12 @@ public final class TaskData implements Comparable<TaskData> {
     entity.setProperty("name", name);
     entity.setProperty("description", description);
     entity.setProperty("status", status.name());
-    entity.setProperty("users", users);
-    entity.setProperty("subtasks", subtasks);
+    if (!users.isEmpty()) {
+      entity.setProperty("users", users);
+    }
+    if (!subtasks.isEmpty()) {
+      entity.setProperty("subtasks", subtasks);
+    }
     return entity;
   }
 
@@ -91,11 +90,11 @@ public final class TaskData implements Comparable<TaskData> {
     return status;
   }
 
-  public HashSet<Long> getUsers() {
+  public ArrayList<Long> getUsers() {
     return users;
   }
 
-  public HashSet<Long> getSubtasks() {
+  public ArrayList<Long> getSubtasks() {
     return subtasks;
   }
 
@@ -119,11 +118,11 @@ public final class TaskData implements Comparable<TaskData> {
     this.status = status;
   }
 
-  public void setUsers(HashSet<Long> users) {
+  public void setUsers(ArrayList<Long> users) {
     this.users = users;
   }
 
-  public void setSubtasks(HashSet<Long> subtasks) {
+  public void setSubtasks(ArrayList<Long> subtasks) {
     this.subtasks = subtasks;
   }
 

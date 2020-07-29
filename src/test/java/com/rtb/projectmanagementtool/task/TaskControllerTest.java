@@ -25,8 +25,8 @@ public class TaskControllerTest {
   private static final String name1 = "Task 1";
   private static final String description1 = "Task 1 description...";
   private static final Status status1 = Status.INCOMPLETE;
-  private static final HashSet<Long> users1 = new HashSet<>(Arrays.asList(1l, 2l));
-  private static final HashSet<Long> subtasks1 = new HashSet<>(Arrays.asList(3l));
+  private static final ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+  private static final ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
 
   // Task 2 attributes
   private static final long taskID2 = 2l;
@@ -34,8 +34,8 @@ public class TaskControllerTest {
   private static final String name2 = "Task 2";
   private static final String description2 = "Task 2 description...";
   private static final Status status2 = Status.COMPLETE;
-  private static final HashSet<Long> users2 = new HashSet<>(Arrays.asList(1l, 3l));
-  private static final HashSet<Long> subtasks2 = new HashSet<>();
+  private static final ArrayList<Long> users2 = new ArrayList<>(Arrays.asList(1l, 3l));
+  private static final ArrayList<Long> subtasks2 = new ArrayList<>();
 
   // Task 3 attributes
   private static final long taskID3 = 3l;
@@ -43,8 +43,8 @@ public class TaskControllerTest {
   private static final String name3 = "Task 3";
   private static final String description3 = "Task 3 description...";
   private static final Status status3 = Status.INCOMPLETE;
-  private static final HashSet<Long> users3 = new HashSet<>(Arrays.asList(3l));
-  private static final HashSet<Long> subtasks3 = new HashSet<>();
+  private static final ArrayList<Long> users3 = new ArrayList<>(Arrays.asList(3l));
+  private static final ArrayList<Long> subtasks3 = new ArrayList<>();
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
@@ -70,10 +70,10 @@ public class TaskControllerTest {
 
     // Get task entities with TaskController
     TaskController taskController = new TaskController(ds);
-    HashSet<TaskData> tasks = taskController.getTasks(3, "taskID", "ascending");
+    ArrayList<TaskData> tasks = taskController.getTasks(3, "taskID", "ascending");
 
     // Assert no entities were retrieved
-    Assert.assertEquals("getTasks", new HashSet<TaskData>(), tasks);
+    Assert.assertEquals("getTasks", new ArrayList<TaskData>(), tasks);
   }
 
   @Test
@@ -134,16 +134,11 @@ public class TaskControllerTest {
 
     // Get task entities with TaskController
     TaskController taskController = new TaskController(ds);
-    HashSet<TaskData> getTasks = taskController.getTasks(5, "name", "ascending");
-
-    // Sort getTasks by taskID
-    ArrayList<TaskData> getTasksArrayList = new ArrayList<>();
-    getTasksArrayList.addAll(getTasks);
-    Collections.sort(getTasksArrayList);
+    ArrayList<TaskData> getTasks = taskController.getTasks(5, "name", "ascending");
 
     // Assert all 3 entities were retrieved
     for (int i = 0; i < 3; i++) {
-      Assert.assertTrue("getTask", getTasksArrayList.get(i).equals(tasks.get(i)));
+      Assert.assertTrue("getTask", getTasks.get(i).equals(tasks.get(i)));
     }
   }
 }
