@@ -45,4 +45,5 @@ public class UserControllerTest {
     HashSet<UserData> users = ctl.getEveryUser(ds);
     Assert.assertEquals(users.size(), 2);
   }
+
 } 
