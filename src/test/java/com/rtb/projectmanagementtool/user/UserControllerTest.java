@@ -39,12 +39,18 @@ public class UserControllerTest {
         user2Majors.add("English");
         user2Majors.add("Religion");
         // Add 2 initially
-        ctl.addUser(
+        /* ctl.addUser(
             ds, new UserData(1l, 2l, "Sarah", 2022,
             user1Majors, Skills.LEADERSHIP.name(), 3));
         ctl.addUser(
             ds, new UserData(2l, 3l, "Joe", 2024,
-            user2Majors, Skills.ORGANIZATION.name(),5));
+            user2Majors, Skills.ORGANIZATION.name(),5)); */
+        ctl.addUser(
+            ds, new UserData(1l, 2l, "Sarah", 2023,
+            user1Majors, 5));
+        ctl.addUser(
+            ds, new UserData(2l, 3l, "Joe", 2021,
+            user2Majors, 3));
 
         // Should have 2 now
         HashSet<UserData> users = ctl.getEveryUser(ds);

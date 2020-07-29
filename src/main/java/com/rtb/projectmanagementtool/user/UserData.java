@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Entity;
 import java.util.HashSet;
 
 /** Enum containing skills for user. */
-enum Skills {
+enum Skills { // ignore for now. conflict w/ testing
   LEADERSHIP,
   ORGANIZATION,
   WRITING,
@@ -21,8 +21,8 @@ public final class UserData {
   private String userName;
   private int userYear;
   private HashSet<String> userMajors;
-  private Skills skills;
-  private String skillsString;
+  // private Skills skills;
+  // private String skillsString;
   private int userTotalCompTasks;
 
   public UserData(
@@ -31,16 +31,16 @@ public final class UserData {
       String userName,
       int userYear,
       HashSet<String> userMajors,
-      //Skills skills,
-      String skillString,
+      // Skills skills,
+      // String skillString,
       int userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
-    this.skills = skills;
-    this.skillsString = skillsString;
+    // this.skills = skills;
+    // this.skillsString = skillsString;
     this.userTotalCompTasks = userTotalCompTasks;
   }
 
@@ -50,9 +50,7 @@ public final class UserData {
     userName = (String) entity.getProperty("userName");
     userYear = (int) entity.getProperty("userYear");
     userMajors = (HashSet<String>) entity.getProperty("userMajors");
-    //skills = (String) entity.getProperty("skills");
-    //skillsString = (String) skills.name();
-    skills = Skills.valueOf((String) entity.getProperty("skills"));
+    // skills = Skills.valueOf((String) entity.getProperty("skills"));
     userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
   }
 
@@ -62,7 +60,7 @@ public final class UserData {
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
-    entity.setProperty("skills", skills.name());
+    // entity.setProperty("skills", skills.name());
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
     return entity;
   }
@@ -87,9 +85,9 @@ public final class UserData {
     return userMajors;
   }
 
-  public Skills getUserSkills() {
+  /* public Skills getUserSkills() {
     return skills;
-  }
+  } */
 
   public int getUserTotal() {
     return userTotalCompTasks;
@@ -111,9 +109,9 @@ public final class UserData {
     this.userYear = userYear;
   }
 
-  public void setUserSkills(Skills skills) {
+  /* public void setUserSkills(Skills skills) {
     this.skills = skills;
-  }
+  } */
 
   public void setUserTotal(int userTotalCompTasks) {
     this.userTotalCompTasks = userTotalCompTasks;
