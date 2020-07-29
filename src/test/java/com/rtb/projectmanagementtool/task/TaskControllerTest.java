@@ -164,4 +164,42 @@ public class TaskControllerTest {
     // Assert all entities were retrieved
     Assert.assertEquals("getTask", tasks, getTasks);
   }
+
+  @Test
+  public void testAddTasks() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Add task entities with TaskController
+    TaskController taskController = new TaskController(ds);
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1, task2, task3)));
+
+    // Assert 3 entities were added
+    Assert.assertEquals(3, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+  }
+
+  @Test
+  public void testDeleteTasks() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Add task entities to ds
+    ds.put(task1.toEntity());
+    ds.put(task2.toEntity());
+    ds.put(task3.toEntity());
+
+    // Assert 3 entities were added
+    Assert.assertEquals(3, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Delete task entities with TaskController
+    TaskController taskController = new TaskController(ds);
+    taskController.deleteTasks(new ArrayList<>(Arrays.asList(taskID1, taskID2, taskID3)));
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+  }
 }
