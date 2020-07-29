@@ -39,7 +39,7 @@ public final class UserData {
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
-    //this.skills = skills;
+    this.skills = skills;
     this.skillsString = skillsString;
     this.userTotalCompTasks = userTotalCompTasks;
   }
@@ -50,9 +50,9 @@ public final class UserData {
     userName = (String) entity.getProperty("userName");
     userYear = (int) entity.getProperty("userYear");
     userMajors = (HashSet<String>) entity.getProperty("userMajors");
-    //skills = (Skills) entity.getProperty("skills");
-    skillsString = (String) skills.name();
-    //skills = Skills.valueOf((String) entity.getProperty("skills"));
+    //skills = (String) entity.getProperty("skills");
+    //skillsString = (String) skills.name();
+    skills = Skills.valueOf((String) entity.getProperty("skills"));
     userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
   }
 
@@ -62,7 +62,7 @@ public final class UserData {
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
-    entity.setProperty("skillsString", skillsString);
+    entity.setProperty("skills", skills.name());
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
     return entity;
   }
