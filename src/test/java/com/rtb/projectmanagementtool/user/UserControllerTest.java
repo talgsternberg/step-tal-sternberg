@@ -40,15 +40,11 @@ public class UserControllerTest {
         user2Majors.add("Religion");
         // Add 2 initially
         ctl.addUser(
-            ds, /*userID=*/ 1l, /*AuthID=*/ 2l,
-            /*userName=*/ "Sarah", /*userYear=*/ 2022,
-            /*userMajors=*/ user1Majors, /*skills=*/ Skills.LEADERSHIP.name(),
-            /*userTotalCompTasks=*/ 3);
+            ds, new UserData(1l, 2l, "Sarah", 2022,
+            user1Majors, Skills.LEADERSHIP.name(), 3));
         ctl.addUser(
-            ds, /*userID=*/ 2l, /*AuthID=*/ 3l,
-            /*userName=*/ "Joe", /*userYear=*/ 2024,
-            /*userMajors=*/ user2Majors, /*skills=*/ Skills.ORGANIZATION.name(),
-            /*userTotalCompTasks=*/ 5);
+            ds, new UserData(2l, 3l, "Joe", 2024,
+            user2Majors, Skills.ORGANIZATION.name(),5));
 
         // Should have 2 now
         HashSet<UserData> users = ctl.getEveryUser(ds);

@@ -26,14 +26,7 @@ public final class UserController {
   }
 
   public void addUser(
-      DatastoreService datastore, long userID,
-      long AuthID, String userName,
-      int userYear, HashSet<String> userMajors,
-      Skills skills, int userTotalCompTasks) {
-      UserData user = new UserData(
-          userID, AuthID, userName, userYear, userMajors,
-          skills, userTotalCompTasks);
-      datastore.put(user.toEntity());
-        
-      }
+    DatastoreService datastore, UserData user) {
+    datastore.put(user.toEntity());
+    }
 }

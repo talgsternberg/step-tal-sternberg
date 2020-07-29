@@ -22,6 +22,7 @@ public final class UserData {
   private int userYear;
   private HashSet<String> userMajors;
   private Skills skills;
+  private String skillsString;
   private int userTotalCompTasks;
 
   public UserData(
@@ -30,14 +31,16 @@ public final class UserData {
       String userName,
       int userYear,
       HashSet<String> userMajors,
-      Skills skills,
+      //Skills skills,
+      String skillString,
       int userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
-    this.skills = skills;
+    //this.skills = skills;
+    this.skillsString = skillsString;
     this.userTotalCompTasks = userTotalCompTasks;
   }
 
@@ -48,7 +51,8 @@ public final class UserData {
     userYear = (int) entity.getProperty("userYear");
     userMajors = (HashSet<String>) entity.getProperty("userMajors");
     //skills = (Skills) entity.getProperty("skills");
-    skills = Skills.valueOf((String) entity.getProperty("skills"));
+    skillsString = (String) skills.name();
+    //skills = Skills.valueOf((String) entity.getProperty("skills"));
     userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
   }
 
@@ -58,7 +62,7 @@ public final class UserData {
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
-    entity.setProperty("skills", skills);
+    entity.setProperty("skillsString", skillsString);
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
     return entity;
   }
