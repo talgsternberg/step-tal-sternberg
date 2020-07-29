@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /** Class testing tasks */
-public class TaskTest {
+public class TaskDataTest {
 
   // Task 1 attributes
   private static final long taskID1 = 1l;
@@ -169,91 +169,5 @@ public class TaskTest {
     Assert.assertEquals("status", status3, entityStatus);
     Assert.assertEquals("users", users3, entityUsers);
     Assert.assertEquals("subtasks", subtasks3, entitySubtasks);
-  }
-
-  @Test
-  public void testGetTasksFromEmptyDs() {
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-
-    // Assert no task entities are found
-    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
-
-    // Get task entities with TaskController
-    TaskController taskController = new TaskController(ds);
-    HashSet<TaskData> tasks = taskController.getTasks(3, "taskID", "ascending");
-
-    // Assert no entities were retrieved
-    Assert.assertEquals("getTasks", new HashSet<TaskData>(), tasks);
-  }
-
-  @Test
-  public void testGetTasksFromDs() {
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-
-    // Assert no task entities are found
-    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
-
-    // Build task entity 1
-    Entity entity1 = new Entity("Task", taskID1);
-    entity1.setProperty("projectID", projectID1);
-    entity1.setProperty("name", name1);
-    entity1.setProperty("description", description1);
-    entity1.setProperty("status", status1.toString());
-    entity1.setProperty("users", users1);
-    entity1.setProperty("subtasks", subtasks1);
-
-    // Build task entity 2
-    Entity entity2 = new Entity("Task", taskID2);
-    entity2.setProperty("projectID", projectID2);
-    entity2.setProperty("name", name2);
-    entity2.setProperty("description", description2);
-    entity2.setProperty("status", status2.toString());
-    entity2.setProperty("users", users2);
-    entity2.setProperty("subtasks", subtasks2);
-
-    // Build task entity 2
-    Entity entity3 = new Entity("Task", taskID3);
-    entity3.setProperty("projectID", projectID3);
-    entity3.setProperty("name", name3);
-    entity3.setProperty("description", description3);
-    entity3.setProperty("status", status3.toString());
-    entity3.setProperty("users", users3);
-    entity3.setProperty("subtasks", subtasks3);
-
-    // Add task entities to ds
-    ds.put(entity1);
-    ds.put(entity2);
-    ds.put(entity3);
-
-    // Assert 3 entities were added
-    Assert.assertEquals(3, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
-
-    // Build TaskData objects
-    TaskData task1 =
-        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
-    TaskData task2 =
-        new TaskData(taskID2, projectID2, name2, description2, status2, users2, subtasks2);
-    TaskData task3 =
-        new TaskData(taskID3, projectID3, name3, description3, status3, users3, subtasks3);
-
-    // Create ArrayList of TaskData objects
-    ArrayList<TaskData> tasks = new ArrayList<>();
-    tasks.add(task1);
-    tasks.add(task2);
-    tasks.add(task3);
-
-    // Get task entities with TaskController
-    TaskController taskController = new TaskController(ds);
-    HashSet<TaskData> getTasks = taskController.getTasks(5, "name", "ascending");
-
-    // Sort getTasks by taskID
-    ArrayList<TaskData> getTasksArrayList = new ArrayList<>();
-    getTasksArrayList.addAll(getTasks);
-    Collections.sort(getTasksArrayList);
-
-    // Assert all 3 entities were retrieved
-    for (int i = 0; i < 3; i++) {
-      Assert.assertTrue("getTask", getTasksArrayList.get(i).equals(tasks.get(i)));
-    }
   }
 }
