@@ -2,10 +2,8 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
-public class ProjectControllerTest {
+public class ProjectTest {
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
@@ -18,19 +16,4 @@ public class ProjectControllerTest {
   public void tearDown() {
     helper.tearDown();
   }
-
-  @Ignore
-  public void noProjects() {}
-
-  @Ignore
-  public void getProjectsWithUser() {}
-
-  @Ignore
-  public void addProjects() {}
-
-  @Ignore
-  public void removeProject() {}
-
-  @Ignore
-  public void saveProjects() {}
 }

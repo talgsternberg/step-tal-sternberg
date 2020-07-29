@@ -4,35 +4,23 @@
  */
 package com.rtb.projectmanagementtool.project;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
 enum User {
-  CREATOR,
-  ADMIN,
+  CREATOR, // has admin capabilities and more, like deleting the project and add & remove admins
+  ADMIN, // can add users to the project/perform other administrative tasks
   REGULAR;
 }
 
 public class ProjectData {
-  /**
-   * constant variables used to specify the names of each property of the Project entity. Used to
-   * minimize redundancy and also make renaming properties easy if needed
-   */
   private final String PROPERTY_NAME = "name";
-
   private final String PROPERTY_DESCRIPTION = "description";
   private final String PROPERTY_USER_IDS = "userIds";
   private final String PROPERTY_TASK_IDS = "taskIds";
-
-  private DatastoreService datastore;
 
   private long id;
   private String name;
@@ -48,16 +36,12 @@ public class ProjectData {
    * @param creatorId the id of the user who created the project
    */
   public ProjectData(String name, String description, long creatorId) {
-    datastore = DatastoreServiceFactory.getDatastoreService();
-    this.id = datastore.put(new Entity("Project")).getId();
     this.name = name;
     this.description = description;
+    this.taskIds = new HashSet<Long>();
 
     this.userIds = new HashMap<Long, User>();
     this.userIds.put(creatorId, User.CREATOR);
-
-    this.taskIds = new HashSet<Long>();
-    toEntity();
   }
 
   /**
@@ -66,38 +50,43 @@ public class ProjectData {
    * @param entity the datastore entity to parse object from
    */
   public ProjectData(Entity entity) {
-    datastore = DatastoreServiceFactory.getDatastoreService();
-
     this.id = (Long) entity.getKey().getId();
     this.name = (String) entity.getProperty(PROPERTY_NAME);
     this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
 
-    Gson gson = new Gson();
+    Object userIdProperty;
+    if ((userIdProperty = entity.getProperty(PROPERTY_TASK_IDS)) != null) {
+      this.taskIds = new HashSet<Long>((ArrayList<Long>) userIdProperty);
+    } else {
+      this.taskIds = new HashSet<Long>();
+    }
 
-    // sets the type of containers to store parsed JSON in
-    Type mapType = new TypeToken<HashMap<Long, User>>() {}.getType();
-    Type setType = new TypeToken<HashSet<Long>>() {}.getType();
-
-    this.userIds = gson.fromJson((String) entity.getProperty(PROPERTY_USER_IDS), mapType);
-    this.taskIds = gson.fromJson((String) entity.getProperty(PROPERTY_TASK_IDS), setType);
+    this.userIds = new HashMap<Long, User>();
+    // can store map in datastore entities using EmbeddedEntity
+    EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty(PROPERTY_USER_IDS);
+    if (ee != null) {
+      for (String key : ee.getProperties().keySet()) {
+        this.userIds.put(Long.parseLong(key), User.valueOf((String) ee.getProperty(key)));
+      }
+    }
   }
 
-  /** Saves the object as a datastore entity. */
-  private void toEntity() {
-    Gson gson = new Gson();
-    try {
-      Key entityKey = KeyFactory.createKey("Project", this.id);
-      Entity entity = datastore.get(entityKey);
+  /**
+  * @return the entity representation of this class 
+  */
+  public Entity toEntity() {
+    Entity entity = new Entity("Project");
+    entity.setProperty(PROPERTY_NAME, this.name);
+    entity.setProperty(PROPERTY_DESCRIPTION, this.description);
+    entity.setProperty(PROPERTY_TASK_IDS, this.taskIds);
 
-      entity.setProperty(PROPERTY_NAME, this.name);
-      entity.setProperty(PROPERTY_DESCRIPTION, this.description);
-      entity.setProperty(PROPERTY_USER_IDS, gson.toJson(this.userIds));
-      entity.setProperty(PROPERTY_TASK_IDS, gson.toJson(this.taskIds));
-
-      datastore.put(entity);
-    } catch (Exception exception) {
-      System.out.println("Error: Project not found.");
+    EmbeddedEntity userIdsEntity = new EmbeddedEntity();
+    for (Long key : this.userIds.keySet()) {
+      userIdsEntity.setProperty(key.toString(), this.userIds.get(key).name());
     }
+    entity.setProperty(PROPERTY_USER_IDS, userIdsEntity);
+
+    return entity;
   }
 
   /** @return project id */
@@ -126,13 +115,21 @@ public class ProjectData {
   }
 
   /**
+   * Changes the id of this project
+   *
+   * @param id the new id of the project
+   */
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  /**
    * Changes the name of this project
    *
    * @param name the new name of the project
    */
   public void setName(String name) {
     this.name = name;
-    toEntity();
   }
 
   /**
@@ -142,22 +139,32 @@ public class ProjectData {
    */
   public void setDescription(String description) {
     this.description = description;
-    toEntity();
   }
 
   /**
-   * Adds a user to the project ? separate this into addAdminUser and addRegularUser?
+   * Adds an admin user to project
    *
-   * @param isAdmin is this user an admin?
    * @param userId id of the user to add
    */
-  public void addUser(boolean isAdmin, long userId) {
-    if (isAdmin) {
-      this.userIds.put(userId, User.ADMIN);
-    } else {
-      this.userIds.put(userId, User.REGULAR);
+  public void addAdminUser(long userId) {
+    // remove user if they're already in project
+    if (this.userIds.keySet().contains(userId)) {
+      removeUser(userId);
     }
-    toEntity();
+    this.userIds.put(userId, User.ADMIN);
+  }
+
+  /**
+   * Adds a regular user to the project
+   *
+   * @param userId id of the user to add
+   */
+  public void addRegularUser(long userId) {
+    // remove user if they're already in project
+    if (this.userIds.keySet().contains(userId)) {
+      removeUser(userId);
+    }
+    this.userIds.put(userId, User.REGULAR);
   }
 
   /**
@@ -167,7 +174,6 @@ public class ProjectData {
    */
   public void removeUser(long userId) {
     this.userIds.remove(userId);
-    toEntity();
   }
 
   /**
@@ -177,7 +183,6 @@ public class ProjectData {
    */
   public void addTask(long taskId) {
     this.taskIds.add(taskId);
-    toEntity();
   }
 
   /**
@@ -187,10 +192,9 @@ public class ProjectData {
    */
   public void removeTask(long taskId) {
     this.taskIds.remove(taskId);
-    toEntity();
   }
 
-  /** @return the string representation of this project. */
+  /** @return the string representation of this class. */
   @Override
   public String toString() {
     String returnString = "{\n";
