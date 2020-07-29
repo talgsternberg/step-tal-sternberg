@@ -1,14 +1,11 @@
 package com.rtb.projectmanagementtool.user;
 
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
-
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,11 +42,11 @@ public class UserControllerTest {
       ds, new UserData(1l, 2l, "Sarah", 2022,
       user1Majors, Skills.LEADERSHIP.name(), 3));*/
     ctl.addUser(
-      ds, new UserData(1l, 2l, "Sarah", 2023,
-      user1Majors, 5));
+        ds, new UserData(1l, 2l, "Sarah", 2023,
+        user1Majors, 5));
     ctl.addUser(
-      ds, new UserData(2l, 3l, "Joe", 2022,
-      user2Majors, 3));
+        ds, new UserData(2l, 3l, "Joe", 2022,
+        user2Majors, 3));
 
     // Should have 2 now
     HashSet<UserData> users = ctl.getEveryUser(ds);
