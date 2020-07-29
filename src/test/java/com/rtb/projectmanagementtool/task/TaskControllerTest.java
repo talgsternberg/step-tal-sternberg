@@ -110,10 +110,42 @@ public class TaskControllerTest {
     TaskData task =
         new TaskData(taskID2, projectID2, name2, description2, status2, users2, subtasks2);
 
+    // Get task with TaskController
     TaskController taskController = new TaskController(ds);
     TaskData getTask = taskController.getTaskByID(taskID2);
 
+    // Assert task retrieved is correct
     Assert.assertEquals("getTask", task, getTask);
+
+  }
+
+  @Test
+  public void testGetSubtasks() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    // Subtasks - task1 will contain task2 and task3 as subtasks
+    ArrayList<Long> subtasksParameter = new ArrayList<>(Arrays.asList(2l, 3l));
+
+    // Build TaskData objects
+    TaskData task1 =
+        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasksParameter);
+    TaskData task2 =
+        new TaskData(taskID2, projectID2, name2, description2, status2, users2, subtasks2);
+    TaskData task3 =
+        new TaskData(taskID3, projectID3, name3, description3, status3, users3, subtasks3);
+
+    // Create ArrayList of task1's subtasks
+    ArrayList<TaskData> subtasks = new ArrayList<>();
+    subtasks.add(task2);
+    subtasks.add(task3);
+
+    // Get subtasks with TaskController
+    TaskController taskController = new TaskController(ds);
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task1, task2, task3)));
+    ArrayList<TaskData> getSubtasks = taskController.getSubtasks(task1);
+
+    // Assert subtasks retrieved are accurate
+    Assert.assertEquals("getSubtasks", subtasks, getSubtasks);
 
   }
 

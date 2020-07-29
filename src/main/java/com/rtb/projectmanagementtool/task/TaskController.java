@@ -18,8 +18,23 @@ public final class TaskController {
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asIterable().iterator().next();
     TaskData task = new TaskData(entity);
-    System.out.println("\n\n" + taskID + "\n" + query + "\n" + results + "\n" + entity + "\n" + task + "\n\n");
     return task;
+  }
+
+  public ArrayList<TaskData> getSubtasks(TaskData task) {
+    ArrayList<TaskData> subtasks = new ArrayList<>();
+    System.out.println("\n\n\n" + task + "\n\n" + task.getSubtasks() + "\n\n\n");
+    if (!task.getSubtasks().isEmpty()) {
+      Query query = new Query("Task").addFilter("taskID", FilterOperator.IN, task.getSubtasks());
+      PreparedQuery results = datastore.prepare(query);
+      System.out.println("\n\n" + query + "\n" + results + "\n\n");
+      for (Entity entity : results.asIterable()) {
+        TaskData subtask = new TaskData(entity);
+        System.out.println("\n\n" + entity + "\n" + subtask + "\n\n");
+        subtasks.add(subtask);
+      }
+    }
+    return subtasks;
   }
 
   public ArrayList<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
