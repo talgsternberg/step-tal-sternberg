@@ -71,9 +71,7 @@ public class ProjectData {
     }
   }
 
-  /**
-  * @return the entity representation of this class 
-  */
+  /** @return the entity representation of this class */
   public Entity toEntity() {
     Entity entity = new Entity("Project");
     entity.setProperty(PROPERTY_NAME, this.name);
