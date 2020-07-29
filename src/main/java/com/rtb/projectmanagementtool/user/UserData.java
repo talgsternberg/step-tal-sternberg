@@ -1,7 +1,7 @@
 package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.Entity;
-import java.util.HashSet;
+import java.util.*;
 
 /** Enum containing skills for user. */
 enum Skills { // ignore for now. conflict w/ testing
@@ -19,21 +19,21 @@ public final class UserData {
   private long userID;
   private long AuthID; // this will be the ID from API
   private String userName;
-  private int userYear;
-  private HashSet<String> userMajors;
+  private long userYear;
+  private ArrayList<String> userMajors;
   // private Skills skills;
   // private String skillsString;
-  private int userTotalCompTasks;
+  private long userTotalCompTasks;
 
   public UserData(
       long userID,
       long AuthID,
       String userName,
-      int userYear,
-      HashSet<String> userMajors,
+      long userYear,
+      ArrayList<String> userMajors,
       // Skills skills,
       // String skillString,
-      int userTotalCompTasks) {
+      long userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
     this.userName = userName;
@@ -48,10 +48,10 @@ public final class UserData {
     userID = (long) entity.getKey().getId();
     AuthID = (long) entity.getProperty("AuthID");
     userName = (String) entity.getProperty("userName");
-    userYear = (int) entity.getProperty("userYear");
-    userMajors = (HashSet<String>) entity.getProperty("userMajors");
+    userYear = (long) entity.getProperty("userYear");
+    userMajors = (ArrayList<String>) entity.getProperty("userMajors");
     // skills = Skills.valueOf((String) entity.getProperty("skills"));
-    userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
+    userTotalCompTasks = (long) entity.getProperty("userTotalCompTasks");
   }
 
   public Entity toEntity() {
@@ -77,11 +77,11 @@ public final class UserData {
     return userName;
   }
 
-  public int getUserYear() {
+  public long getUserYear() {
     return userYear;
   }
 
-  public HashSet<String> getUserMajors() {
+  public ArrayList<String> getUserMajors() {
     return userMajors;
   }
 
@@ -89,7 +89,7 @@ public final class UserData {
     return skills;
   } */
 
-  public int getUserTotal() {
+  public long getUserTotal() {
     return userTotalCompTasks;
   }
 
@@ -105,15 +105,19 @@ public final class UserData {
     this.userName = userName;
   }
 
-  public void setUserYear(int userYear) {
+  public void setUserYear(long userYear) {
     this.userYear = userYear;
+  }
+
+  public void setUserMajors(ArrayList<String> userMajors) {
+      this.userMajors = userMajors;
   }
 
   /* public void setUserSkills(Skills skills) {
     this.skills = skills;
   } */
 
-  public void setUserTotal(int userTotalCompTasks) {
+  public void setUserTotal(long userTotalCompTasks) {
     this.userTotalCompTasks = userTotalCompTasks;
   }
 }
