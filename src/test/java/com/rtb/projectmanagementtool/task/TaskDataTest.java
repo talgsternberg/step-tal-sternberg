@@ -67,6 +67,7 @@ public class TaskDataTest {
 
     // Build task entity 1
     Entity entity1 = new Entity("Task", taskID1);
+    entity1.setProperty("taskID", taskID1);
     entity1.setProperty("projectID", projectID1);
     entity1.setProperty("name", name1);
     entity1.setProperty("description", description1);
@@ -76,6 +77,7 @@ public class TaskDataTest {
 
     // Build task entity 2
     Entity entity2 = new Entity("Task", taskID2);
+    entity1.setProperty("taskID", taskID2);
     entity2.setProperty("projectID", projectID2);
     entity2.setProperty("name", name2);
     entity2.setProperty("description", description2);
@@ -121,6 +123,7 @@ public class TaskDataTest {
   public void testCreateTaskFromEntity() {
     // Build entity
     Entity entity = new Entity("Task", taskID2);
+    entity.setProperty("taskID", taskID2);
     entity.setProperty("projectID", projectID2);
     entity.setProperty("name", name2);
     entity.setProperty("description", description2);
@@ -151,7 +154,7 @@ public class TaskDataTest {
     Entity entity = task.toEntity();
 
     // Get task entity attributes
-    long entityTaskID = (long) entity.getKey().getId();
+    long entityTaskID = (long) entity.getProperty("taskID");
     long entityProjectID = (long) entity.getProperty("projectID");
     String entityName = (String) entity.getProperty("name");
     String entityDescription = (String) entity.getProperty("description");

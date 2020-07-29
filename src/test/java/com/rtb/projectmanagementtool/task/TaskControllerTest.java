@@ -62,6 +62,62 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testGetTaskByID() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Build task entity 1
+    Entity entity1 = new Entity("Task", taskID1);
+    entity1.setProperty("taskID", taskID1);
+    entity1.setProperty("projectID", projectID1);
+    entity1.setProperty("name", name1);
+    entity1.setProperty("description", description1);
+    entity1.setProperty("status", status1.toString());
+    entity1.setProperty("users", users1);
+    entity1.setProperty("subtasks", subtasks1);
+
+    // Build task entity 2
+    Entity entity2 = new Entity("Task", taskID2);
+    entity2.setProperty("taskID", taskID2);
+    entity2.setProperty("projectID", projectID2);
+    entity2.setProperty("name", name2);
+    entity2.setProperty("description", description2);
+    entity2.setProperty("status", status2.toString());
+    entity2.setProperty("users", users2);
+    entity2.setProperty("subtasks", subtasks2);
+
+    // Build task entity 2
+    Entity entity3 = new Entity("Task", taskID3);
+    entity3.setProperty("taskID", taskID3);
+    entity3.setProperty("projectID", projectID3);
+    entity3.setProperty("name", name3);
+    entity3.setProperty("description", description3);
+    entity3.setProperty("status", status3.toString());
+    entity3.setProperty("users", users3);
+    entity3.setProperty("subtasks", subtasks3);
+
+    // Add task entities to ds
+    ds.put(entity1);
+    ds.put(entity2);
+    ds.put(entity3);
+
+    // Assert 3 entities were added
+    Assert.assertEquals(3, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Build TaskData objects
+    TaskData task =
+        new TaskData(taskID2, projectID2, name2, description2, status2, users2, subtasks2);
+
+    TaskController taskController = new TaskController(ds);
+    TaskData getTask = taskController.getTaskByID(taskID2);
+
+    Assert.assertEquals("getTask", task, getTask);
+
+  }
+
+  @Test
   public void testGetTasksFromEmptyDs() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
@@ -85,6 +141,7 @@ public class TaskControllerTest {
 
     // Build task entity 1
     Entity entity1 = new Entity("Task", taskID1);
+    entity1.setProperty("taskID", taskID1);
     entity1.setProperty("projectID", projectID1);
     entity1.setProperty("name", name1);
     entity1.setProperty("description", description1);
@@ -94,6 +151,7 @@ public class TaskControllerTest {
 
     // Build task entity 2
     Entity entity2 = new Entity("Task", taskID2);
+    entity2.setProperty("taskID", taskID2);
     entity2.setProperty("projectID", projectID2);
     entity2.setProperty("name", name2);
     entity2.setProperty("description", description2);
@@ -103,6 +161,7 @@ public class TaskControllerTest {
 
     // Build task entity 2
     Entity entity3 = new Entity("Task", taskID3);
+    entity3.setProperty("taskID", taskID3);
     entity3.setProperty("projectID", projectID3);
     entity3.setProperty("name", name3);
     entity3.setProperty("description", description3);

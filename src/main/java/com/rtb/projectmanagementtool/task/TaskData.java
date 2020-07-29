@@ -38,7 +38,7 @@ public final class TaskData implements Comparable<TaskData> {
   }
 
   public TaskData(Entity entity) {
-    taskID = (long) entity.getKey().getId();
+    taskID = (long) entity.getProperty("taskID");
     projectID = (long) entity.getProperty("projectID");
     name = (String) entity.getProperty("name");
     description = (String) entity.getProperty("description");
@@ -57,6 +57,7 @@ public final class TaskData implements Comparable<TaskData> {
 
   public Entity toEntity() {
     Entity entity = new Entity("Task", taskID);
+    entity.setProperty("taskID", taskID);
     entity.setProperty("projectID", projectID);
     entity.setProperty("name", name);
     entity.setProperty("description", description);

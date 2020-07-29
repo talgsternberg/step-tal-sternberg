@@ -13,6 +13,15 @@ public final class TaskController {
     this.datastore = datastore;
   }
 
+  public TaskData getTaskByID(long taskID) {
+    Query query = new Query("Task").addFilter("taskID", FilterOperator.EQUAL, taskID);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asIterable().iterator().next();
+    TaskData task = new TaskData(entity);
+    System.out.println("\n\n" + taskID + "\n" + query + "\n" + results + "\n" + entity + "\n" + task + "\n\n");
+    return task;
+  }
+
   public ArrayList<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
     ArrayList<TaskData> tasks = new ArrayList<>();
     Query query;
