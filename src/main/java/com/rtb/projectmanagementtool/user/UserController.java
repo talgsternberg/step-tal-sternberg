@@ -12,8 +12,8 @@ public final class UserController {
   }
 
   // get users+data to direct/display user's profiles later
-  public HashSet<UserData> getEveryUser() {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  public HashSet<UserData> getEveryUser(DatastoreService datastore) {
+    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     HashSet<UserData> users = new HashSet<>();
     Query query = new Query("User");
     PreparedQuery results = datastore.prepare(query);
@@ -23,5 +23,9 @@ public final class UserController {
       users.add(user);
     }
     return users;
+  }
+
+  public void addUser(DatastoreService datastore, UserData user) {
+    datastore.put(user.toEntity());
   }
 }

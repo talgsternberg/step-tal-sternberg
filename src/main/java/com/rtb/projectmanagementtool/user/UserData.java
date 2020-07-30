@@ -1,10 +1,10 @@
 package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.Entity;
-import java.util.HashSet;
+import java.util.*;
 
 /** Enum containing skills for user. */
-enum Skills {
+enum Skills { // ignore for now. conflict w/ testing
   LEADERSHIP,
   ORGANIZATION,
   WRITING,
@@ -19,25 +19,28 @@ public final class UserData {
   private long userID;
   private long AuthID; // this will be the ID from API
   private String userName;
-  private int userYear;
-  private HashSet<String> userMajors;
-  private Skills skills;
-  private int userTotalCompTasks;
+  private long userYear;
+  private ArrayList<String> userMajors;
+  // private Skills skills;
+  // private String skillsString;
+  private long userTotalCompTasks;
 
   public UserData(
       long userID,
       long AuthID,
       String userName,
-      int userYear,
-      HashSet<String> userMajors,
-      Skills skills,
-      int userTotalCompTasks) {
+      long userYear,
+      ArrayList<String> userMajors,
+      // Skills skills,
+      // String skillString,
+      long userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
-    this.skills = skills;
+    // this.skills = skills;
+    // this.skillsString = skillsString;
     this.userTotalCompTasks = userTotalCompTasks;
   }
 
@@ -45,10 +48,10 @@ public final class UserData {
     userID = (long) entity.getKey().getId();
     AuthID = (long) entity.getProperty("AuthID");
     userName = (String) entity.getProperty("userName");
-    userYear = (int) entity.getProperty("userYear");
-    userMajors = (HashSet<String>) entity.getProperty("userMajors");
-    skills = (Skills) entity.getProperty("skills");
-    userTotalCompTasks = (int) entity.getProperty("userTotalCompTasks");
+    userYear = (long) entity.getProperty("userYear");
+    userMajors = (ArrayList<String>) entity.getProperty("userMajors");
+    // skills = Skills.valueOf((String) entity.getProperty("skills"));
+    userTotalCompTasks = (long) entity.getProperty("userTotalCompTasks");
   }
 
   public Entity toEntity() {
@@ -57,7 +60,7 @@ public final class UserData {
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
-    entity.setProperty("skills", skills);
+    // entity.setProperty("skills", skills.name());
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
     return entity;
   }
@@ -74,19 +77,19 @@ public final class UserData {
     return userName;
   }
 
-  public int getUserYear() {
+  public long getUserYear() {
     return userYear;
   }
 
-  public HashSet<String> getUserMajors() {
+  public ArrayList<String> getUserMajors() {
     return userMajors;
   }
 
-  public Skills getUserSkills() {
+  /* public Skills getUserSkills() {
     return skills;
-  }
+  } */
 
-  public int getUserTotal() {
+  public long getUserTotal() {
     return userTotalCompTasks;
   }
 
@@ -102,15 +105,19 @@ public final class UserData {
     this.userName = userName;
   }
 
-  public void setUserYear(int userYear) {
+  public void setUserYear(long userYear) {
     this.userYear = userYear;
   }
 
-  public void setUserSkills(Skills skills) {
-    this.skills = skills;
+  public void setUserMajors(ArrayList<String> userMajors) {
+    this.userMajors = userMajors;
   }
 
-  public void setUserTotal(int userTotalCompTasks) {
+  /* public void setUserSkills(Skills skills) {
+    this.skills = skills;
+  } */
+
+  public void setUserTotal(long userTotalCompTasks) {
     this.userTotalCompTasks = userTotalCompTasks;
   }
 }
