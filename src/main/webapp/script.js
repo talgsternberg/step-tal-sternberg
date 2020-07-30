@@ -315,3 +315,26 @@ function createUserLiElement(user) {
   liElement.appendChild(buttonElement);
   return liElement;
 }
+
+/** Creates an element that represents a task, including its delete button. */
+function createUserElement(user) {
+  const userElement = document.createElement('li');
+  userElement.className = 'user';
+
+  const nameElement = document.createElement('span');
+  nameElement.innerText = user.userName;
+
+  userElement.appendChild(nameElement);
+  return userElement;
+}
+
+/** Fetches users from the server and adds them to the DOM. */
+function loadUsers() {
+  fetch('/user').then(response => response.json()).then((Users) => {
+  const UserListElement = document.getElementById('user-list');
+  UserListElement.innerHTML = "";
+  Users.forEach((user) => {
+    UserListElement.appendChild(createUserElement(user));
+    })
+  });
+}

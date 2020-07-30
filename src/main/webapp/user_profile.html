@@ -47,6 +47,13 @@
           <button class="complete" type="button" onclick="goToTask(4)">Task 4</button>
         </li>
       </ul>
+      <form method="GET" action="/user">
+        <button type = "submit" id="button" onClick="loadAllUsers() return false;">Get Users</button>
+      </form>
+      <div id="test-user-section">
+          <p>Display Users For Testing Purposes:</p>
+          <ul id="user-list"></ul>
+      </div>
     </div>
     <div id="footer"><!-- should come up with a footer here --></div>
   </body>
