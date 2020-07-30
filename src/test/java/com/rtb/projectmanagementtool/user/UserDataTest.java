@@ -67,8 +67,7 @@ public class UserDataTest {
   @Test
   public void testCreateFromEntity() {
     // create entity
-    Entity entity = new Entity("UserData");
-    entity.setProperty("userID", userID2);
+    Entity entity = new Entity("UserData", userID2);
     entity.setProperty("AuthID", AuthID2);
     entity.setProperty("userName", name2);
     entity.setProperty("userYear", year2);
