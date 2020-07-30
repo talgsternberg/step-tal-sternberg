@@ -316,7 +316,10 @@ function createUserLiElement(user) {
   return liElement;
 }
 
-/** Creates an element that represents a task, including its delete button. */
+/** Creates an element that represents a task, including its delete button. 
+  * @param {Hashmap} user
+  * @return {Element} HTML
+  */
 function createUserElement(user) {
   const userElement = document.createElement('li');
   userElement.className = 'user';
@@ -332,7 +335,7 @@ function createUserElement(user) {
 function loadUsers() {
   fetch('/user').then(response => response.json()).then((Users) => {
   const UserListElement = document.getElementById('user-list');
-  UserListElement.innerHTML = "";
+  UserListElement.innerHTML = '';
   Users.forEach((user) => {
     UserListElement.appendChild(createUserElement(user));
     })

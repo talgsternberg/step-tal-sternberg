@@ -5,15 +5,22 @@ import com.google.appengine.api.datastore.Query.*;
 import java.util.HashSet;
 
 public final class UserController {
-  private HashSet<UserData> users;
 
-  public UserController(HashSet<UserData> users) {
-    this.users = users;
+  private DatastoreService datastore;
+
+  public UserController(Datastore datastore) {
+    this.datastore = datastore;
+  }
+
+  public UserData getUserByID(long userID) {
+    Query query = new Query("User").addFilter("userID", FilterOperator.EQUAL, taskID);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    UserData user = new UserData(entity);
   }
 
   // get users+data to direct/display user's profiles later
-  public HashSet<UserData> getEveryUser(DatastoreService datastore) {
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  public HashSet<UserData> getEveryUser() {
     HashSet<UserData> users = new HashSet<>();
     Query query = new Query("User");
     PreparedQuery results = datastore.prepare(query);
@@ -25,7 +32,7 @@ public final class UserController {
     return users;
   }
 
-  public void addUser(DatastoreService datastore, UserData user) {
+  public void addUser(UserData user) {
     datastore.put(user.toEntity());
   }
 }

@@ -31,7 +31,7 @@ public class UserControllerTest {
   @Test
   public void testAddUsers() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    UserController ctl = new UserController(testUsers);
+    UserController ctl = new UserController(ds);
     ArrayList<String> user1Majors = new ArrayList<String>();
     ArrayList<String> user2Majors = new ArrayList<String>();
     user1Majors.add("Biology");
