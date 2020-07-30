@@ -37,13 +37,13 @@ public class UserControllerTest {
     user1Majors.add("Biology");
     user2Majors.add("English");
     user2Majors.add("Religion");
-    
+
     // Add 2 initially
     ctl.addUser(ds, new UserData(1l, 2l, "Sarah", 2023, user1Majors, 5));
     ctl.addUser(ds, new UserData(2l, 3l, "Joe", 2022, user2Majors, 3));
-    
+
     // Should have 2 now
     HashSet<UserData> users = ctl.getEveryUser(ds);
     Assert.assertEquals(users.size(), 2);
   }
-} 
+}
