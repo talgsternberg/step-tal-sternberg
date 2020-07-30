@@ -7,8 +7,8 @@ import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,8 +23,8 @@ public class TaskDataTest {
   private static final String name1 = "Task 1";
   private static final String description1 = "Task 1 description...";
   private static final Status status1 = Status.INCOMPLETE;
-  private static final HashSet<Long> users1 = new HashSet<>(Arrays.asList(1l, 2l));
-  private static final HashSet<Long> subtasks1 = new HashSet<>(Arrays.asList(3l));
+  private static final ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+  private static final ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
 
   // Task 2 attributes
   private static final long taskID2 = 2l;
@@ -32,8 +32,8 @@ public class TaskDataTest {
   private static final String name2 = "Task 2";
   private static final String description2 = "Task 2 description...";
   private static final Status status2 = Status.COMPLETE;
-  private static final HashSet<Long> users2 = new HashSet<>(Arrays.asList(1l, 3l));
-  private static final HashSet<Long> subtasks2 = new HashSet<>();
+  private static final ArrayList<Long> users2 = new ArrayList<>(Arrays.asList(1l, 3l));
+  private static final ArrayList<Long> subtasks2 = new ArrayList<>();
 
   // Task 3 attributes
   private static final long taskID3 = 3l;
@@ -41,8 +41,8 @@ public class TaskDataTest {
   private static final String name3 = "Task 3";
   private static final String description3 = "Task 3 description...";
   private static final Status status3 = Status.INCOMPLETE;
-  private static final HashSet<Long> users3 = new HashSet<>(Arrays.asList(3l));
-  private static final HashSet<Long> subtasks3 = new HashSet<>();
+  private static final ArrayList<Long> users3 = new ArrayList<>(Arrays.asList(3l));
+  private static final ArrayList<Long> subtasks3 = new ArrayList<>();
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
@@ -67,6 +67,7 @@ public class TaskDataTest {
 
     // Build task entity 1
     Entity entity1 = new Entity("Task", taskID1);
+    entity1.setProperty("taskID", taskID1);
     entity1.setProperty("projectID", projectID1);
     entity1.setProperty("name", name1);
     entity1.setProperty("description", description1);
@@ -76,6 +77,7 @@ public class TaskDataTest {
 
     // Build task entity 2
     Entity entity2 = new Entity("Task", taskID2);
+    entity1.setProperty("taskID", taskID2);
     entity2.setProperty("projectID", projectID2);
     entity2.setProperty("name", name2);
     entity2.setProperty("description", description2);
@@ -121,6 +123,7 @@ public class TaskDataTest {
   public void testCreateTaskFromEntity() {
     // Build entity
     Entity entity = new Entity("Task", taskID2);
+    entity.setProperty("taskID", taskID2);
     entity.setProperty("projectID", projectID2);
     entity.setProperty("name", name2);
     entity.setProperty("description", description2);
@@ -151,13 +154,13 @@ public class TaskDataTest {
     Entity entity = task.toEntity();
 
     // Get task entity attributes
-    long entityTaskID = (long) entity.getKey().getId();
+    long entityTaskID = (long) entity.getProperty("taskID");
     long entityProjectID = (long) entity.getProperty("projectID");
     String entityName = (String) entity.getProperty("name");
     String entityDescription = (String) entity.getProperty("description");
     Status entityStatus = Status.valueOf((String) entity.getProperty("status"));
-    HashSet<Long> entityUsers = (HashSet<Long>) entity.getProperty("users");
-    HashSet<Long> entitySubtasks = (HashSet<Long>) entity.getProperty("subtasks");
+    ArrayList<Long> entityUsers = (ArrayList<Long>) entity.getProperty("users");
+    ArrayList<Long> entitySubtasks = (ArrayList<Long>) entity.getProperty("subtasks");
 
     // Assert task entity attributes equal TaskData attributes
     Assert.assertEquals("taskID", taskID3, entityTaskID);
@@ -166,6 +169,6 @@ public class TaskDataTest {
     Assert.assertEquals("description", description3, entityDescription);
     Assert.assertEquals("status", status3, entityStatus);
     Assert.assertEquals("users", users3, entityUsers);
-    Assert.assertEquals("subtasks", subtasks3, entitySubtasks);
+    Assert.assertEquals("subtasks", null, entitySubtasks);
   }
 }
