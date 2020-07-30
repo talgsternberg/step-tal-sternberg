@@ -145,13 +145,13 @@ function getTaskInfo() {
   // Create variables to create the URL
   console.log('/task?taskID=' + taskID);
   fetch('/task?taskID=' + taskID)
-    .then(response => response.json())
+      .then((response) => response.json())
       .then((response) => {
-        let task = response.task[0];
-        // let project = response.project[0];
-        // let subtasks = response.subtask;
-        // let users = response.users;
-        // let comments = response.comments;
+        const task = response.task[0];
+        // const project = response.project[0];
+        // const subtasks = response.subtask;
+        // const users = response.users;
+        // const comments = response.comments;
         // Fill up task page
         const title = document.getElementById('task-title-container');
         title.innerHTML = '<h1>' + task.name + '</h1>';
@@ -166,9 +166,10 @@ function getTaskInfo() {
         // subtaskList.appendChild(getTasks(subtasks));
         const userList = document.getElementById('task-users-container');
         // userList.appendChild(getUsers(users));
-        // const commentList = document.getElementById('task-comments-container');
+        // const commentList =
+        //   document.getElementById('task-comments-container');
         // commentList.appendChild(getComments(comments));
-    });
+      });
 }
 
 /**
