@@ -1,7 +1,5 @@
 package com.rtb.projectmanagementtool.task;
 
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
-
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
