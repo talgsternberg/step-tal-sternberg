@@ -95,11 +95,11 @@ public class TaskControllerTest {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
     // Subtasks of task1
-    ArrayList<Long> subtasksParameter = new ArrayList<>(Arrays.asList(2l, 3l));
+    ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(2l, 3l));
 
     // Build task1 object with task2 and task3 as subtasks
     TaskData task1 =
-        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasksParameter);
+        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
 
     // Create ArrayList of task1's subtasks
     ArrayList<TaskData> subtasks = new ArrayList<>();
@@ -195,9 +195,12 @@ public class TaskControllerTest {
 
     // Delete task entities with TaskController
     TaskController taskController = new TaskController(ds);
-    taskController.deleteTasks(new ArrayList<>(Arrays.asList(taskID1, taskID2, taskID3)));
+    taskController.deleteTasks(new ArrayList<>(Arrays.asList(taskID1, taskID3)));
 
-    // Assert no task entities are found
-    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+    // Assert 1 task entity remains
+    Assert.assertEquals(1, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Assert the correct task entity remains
+    Assert.assertEquals(task2, new TaskData(ds.prepare(new Query("Task")).asSingleEntity()));
   }
 }
