@@ -120,6 +120,20 @@ public class TaskDataTest {
   }
 
   @Test
+  public void testCreateTaskFromConstructorWithoutTaskID() {
+    // Build TaskData object
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
+
+    // Assert TaskData parameters were stored correctly
+    Assert.assertEquals("projectID", projectID1, task.getProjectID());
+    Assert.assertEquals("name", name1, task.getName());
+    Assert.assertEquals("description", description1, task.getDescription());
+    Assert.assertEquals("status", status1, task.getStatus());
+    Assert.assertEquals("users", users1, task.getUsers());
+    Assert.assertEquals("subtasks", subtasks1, task.getSubtasks());
+  }
+
+  @Test
   public void testCreateTaskFromEntity() {
     // Build entity
     Entity entity = new Entity("Task", taskID2);
