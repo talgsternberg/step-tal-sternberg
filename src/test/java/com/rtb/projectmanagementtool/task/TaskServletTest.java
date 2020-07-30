@@ -59,7 +59,8 @@ public class TaskServletTest extends Mockito {
 
     // Expected results
     String expectedResult =
-        "{\"task\":[{\"taskID\":1,\"projectID\":1,\"name\":\"Task 1\",\"description\":\"Task 1 description...\",\"status\":\"INCOMPLETE\",\"users\":[1,2],\"subtasks\":[3]}]}";
+        "{\"task\":[{\"taskID\":1,\"projectID\":1,\"name\":\"Task 1\",\"description\":\"Task 1"
+            + " description...\",\"status\":\"INCOMPLETE\",\"users\":[1,2],\"subtasks\":[3]}]}";
 
     // Assert results are as expected
     Assert.assertEquals("doGet", result, expectedResult);
