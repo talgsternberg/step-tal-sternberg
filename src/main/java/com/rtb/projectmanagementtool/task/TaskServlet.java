@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /** Servlet that returns task data */
 @WebServlet("/task")
 public class TaskServlet extends HttpServlet {
@@ -21,27 +20,50 @@ public class TaskServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
+    // Temporary/Default task to display
+    long taskID1 = 1l;
+    long projectID1 = 1l;
+    String name1 = "Task 1";
+    String description1 = "Task 1 description...";
+    Status status1 = Status.INCOMPLETE;
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+    ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
+    TaskData task1 =
+        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
+
     // Get Task
     long taskID = Long.parseLong(request.getParameter("taskID"));
     TaskController taskController = new TaskController(datastore);
-    TaskData task = taskController.getTaskByID(taskID);
+    // TaskData task = taskController.getTaskByID(taskID);
     // ArrayList is for HashMap below. Is there a better way to do this?
-    ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task));
+    ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
 
-    // Get Subtasks
-    ArrayList<TaskData> subtasks = taskController.getSubtasks(task);
+    // // Get Parent Project
+    // ProjectController projectController = new ProjectController(datastore);
+    // ProjectData project = projectController.getProjectByID(task.getProjectID);
+    // ArrayList<ProjectData> projectInArrayList = new ArrayList<>(Arrays.asList(project));
+
+    // // Get Subtasks
+    // ArrayList<TaskData> subtasks = taskController.getSubtasks(task);
 
     // // Get Comments
     // int quantity = Integer.parseInt(request.getParameter("quantity"));
     // String sortBy = request.getParameter("sortBy");
     // String sortDirection = request.getParameter("sortDirection");
 
+    // // Get Task Users
+    // UserController userController = new UserController(datastore);
+    // ArrayList<UserData> users = userController.getUsers(task.getUsers());
+
     // Convert data to JSON
     Gson gson = new Gson();
     response.setContentType("application/json;");
     HashMap<String, ArrayList> data = new HashMap<>();
     data.put("task", taskInArrayList);
-    data.put("subtasks", subtasks);
+    // data.put("project", projectInArrayList);
+    // data.put("subtasks", subtasks);
+    // data.put("comments", comments);
+    // data.put("users", users);
     response.getWriter().println(gson.toJson(data));
   }
 
@@ -55,8 +77,7 @@ public class TaskServlet extends HttpServlet {
     Status status = Status.valueOf(request.getParameter("status").toUpperCase());
     ArrayList<Long> users = new ArrayList<>();
     ArrayList<Long> subtasks = new ArrayList<>();
-    TaskData task =
-        new TaskData(taskID, projectID, name, description, status, users, subtasks);
+    TaskData task = new TaskData(taskID, projectID, name, description, status, users, subtasks);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
