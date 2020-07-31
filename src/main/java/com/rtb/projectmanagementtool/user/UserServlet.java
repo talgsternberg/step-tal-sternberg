@@ -31,7 +31,7 @@ public class UserServlet extends HttpServlet {
     // get the User
     long userID = Long.parseLong(request.getParameter("userID"));
     UserController userController = new UserController(datastore);
-    UserData user = UserController.getUserByID(userID);
+    UserData user = userController.getUserByID(userID);
 
     // add to list of users
     ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user));

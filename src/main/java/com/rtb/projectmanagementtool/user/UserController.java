@@ -34,6 +34,7 @@ public final class UserController {
   }
 
   public void addUser(UserData user) {
-    datastore.put(user.toEntity());
+    Entity entity = user.toEntity();
+    datastore.put(entity);
   }
 }
