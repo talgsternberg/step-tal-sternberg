@@ -45,7 +45,18 @@ public final class UserData {
   }
 
   public UserData(Entity entity) {
+    System.out.println("Print userID before assignment: ");
+    System.out.println(userID);
+    System.out.println("entity.getKey().getId() after assignment: ");
+    System.out.println(entity.getKey().getId());
+
     userID = (long) entity.getKey().getId();
+
+    System.out.println("userID after assignment: ");
+    System.out.println(userID);
+    System.out.println("entity.getKey().getId() after assignment: ");
+    System.out.println(entity.getKey().getId());
+
     AuthID = (long) entity.getProperty("AuthID");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
