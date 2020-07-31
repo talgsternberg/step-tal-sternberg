@@ -334,10 +334,10 @@ function createUserElement(user) {
 /** Fetches users from the server and adds them to the DOM. */
 function loadUsers() {
   fetch('/user').then(response => response.json()).then((Users) => {
-  const UserListElement = document.getElementById('user-list');
-  UserListElement.innerHTML = '';
-  Users.forEach((user) => {
-    UserListElement.appendChild(createUserElement(user));
-    })
+    const UserListElement = document.getElementById('user-list');
+    UserListElement.innerHTML = '';
+    Users.forEach((user) => {
+      UserListElement.appendChild(createUserElement(user));
+    });
   });
 }
