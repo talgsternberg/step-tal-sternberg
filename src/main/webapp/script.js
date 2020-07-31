@@ -316,7 +316,7 @@ function createUserLiElement(user) {
   return liElement;
 }
 
-/** Creates an element that represents a task, including its delete button. 
+/** Creates an element that represents a task, including its delete button.
   * @param {Hashmap} user
   * @return {Element} HTML
   */
