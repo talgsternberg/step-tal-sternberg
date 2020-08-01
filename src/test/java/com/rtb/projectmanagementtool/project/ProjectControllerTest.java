@@ -108,7 +108,6 @@ public class ProjectControllerTest {
 
     // Test retrieving projects USER1 created
     ArrayList<ProjectData> actualUser1CreatorProjects = projectController.getCreatorProjects(USER1);
-    System.out.println("PROJECTS: " + actualUser1CreatorProjects);
     Assert.assertEquals(
         expectedUser1CreatorProjects.toString(), actualUser1CreatorProjects.toString());
 
