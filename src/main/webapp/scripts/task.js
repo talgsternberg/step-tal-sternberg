@@ -1,34 +1,11 @@
-import {
-    goToHub as importGoToHub,
-    goToSettings as importGoToSettings,
-    goToUser as importGoToUser,
-    goToProject as importGoToProject,
-    goToTask as importGoToTask} from './script.js';
-
-window.goToHub = function goToHub() {
-  importGoToHub();
-}
-window.goToSettings = function goToSettings() {
-  importGoToSettings();
-}
-window.goToUser = function goToUser() {
-  importGoToUser();
-}
-window.goToProject = function goToProject() {
-  importGoToProject();
-}
-window.goToTask = function goToTask() {
-  importGoToTask();
-}
-
-
 /**
- * When the Task Page loads, get task info. If no taskID is provided in the URL,
- * default values will be shown.
+ * When the Task Page loads, fetch from server to get task info. If no taskID
+ * is provided in the URL, default values will be shown.
  */
-window.getTaskInfo = function getTaskInfo() {
+function getTaskInfo() {
   // Can get taskID from param, or maybe just get it from the button that was
-  // pressed to arrive on task page.
+  // pressed to arrive on task page (if we keep onclick() functions instead of
+  // <a href=''> route).
   const params = new URLSearchParams(location.search);
   const taskID = params.get('taskID');
   // const tasks = JSON.parse(gJSONtasks);
@@ -39,7 +16,7 @@ window.getTaskInfo = function getTaskInfo() {
       .then((response) => {
         const task = response.task[0];
         // const project = response.project[0];
-        // const subtasks = response.subtask;
+        // const subtasks = response.subtasks;
         // const users = response.users;
         // const comments = response.comments;
         // Fill up task page
@@ -59,5 +36,6 @@ window.getTaskInfo = function getTaskInfo() {
         // const commentList =
         //   document.getElementById('task-comments-container');
         // commentList.appendChild(getComments(comments));
+        doStuff(); // Test calling a function in another file
       });
 }
