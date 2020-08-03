@@ -19,23 +19,26 @@ public class UserServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // Test user
-    // long userID1 = 1l;
-    // long AuthID1 = 1l;
-    // String userName1 = "Jake";
-    // long userYear1 = 2023;
-    // ArrayList<String> userMajors1 = new ArrayList<>(Arrays.asList("Geology", "Physics"));
-    // long userTotalCompTasks1 = 8;
-    // UserData user1 =
-    // new UserData(userID1, AuthID1, userName1, userYear1, userMajors1, userTotalCompTasks1);
+    long userID1 = 3l;
+    long AuthID1 = 3l;
+    String userName1 = "Sarah";
+    long userYear1 = 2023;
+    ArrayList<String> userMajors1 = new ArrayList<>(Arrays.asList("Psychology"));
+    Skills skills1 = Skills.OOP;
+    long userTotalCompTasks1 = 3;
+    UserData user1 =
+        new UserData(
+            userID1, AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
 
     // get the User
     long userID = Long.parseLong(request.getParameter("userID"));
     UserController userController = new UserController(datastore);
-    UserData user = userController.getUserByID(userID);
+
+    // UserData user = userController.getUserByID(userID);
 
     // add to list of users
-    ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user));
-    // ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user1));
+    // ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user));
+    ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user1));
 
     // convert to JSON
     Gson gson = new Gson();
