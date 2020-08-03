@@ -1,4 +1,25 @@
 /**
+ * This file currently contains the original JavaScript file.
+ * 
+ * TODO:
+ * 1. Create a file for each type of server fetch (e.g. task, project, user).
+ * 2. Create functions in those files to connect to the server.
+ * 3. Remove the goToPage() navigation functions and use <a href=''> in the HTML
+ *    pages instead.
+ * 4. Add functions shared between files to here (e.g. createTaskLiElement()
+ *    which both getTaskInfo() and getProjectInfo() can use to add tasks to
+ *    display on their pages).
+ */
+
+
+/**
+ * Function used to test calling a function in this file from another file.
+ */
+function doStuff() {
+  console.log("did stuff");
+}
+
+/**
  * Redirect to Main Hub Page.
  */
 function goToHub() {

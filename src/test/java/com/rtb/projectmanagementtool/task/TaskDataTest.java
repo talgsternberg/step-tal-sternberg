@@ -120,6 +120,20 @@ public class TaskDataTest {
   }
 
   @Test
+  public void testCreateTaskFromConstructorWithoutTaskID() {
+    // Build TaskData object
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
+
+    // Assert TaskData parameters were stored correctly
+    Assert.assertEquals("projectID", projectID1, task.getProjectID());
+    Assert.assertEquals("name", name1, task.getName());
+    Assert.assertEquals("description", description1, task.getDescription());
+    Assert.assertEquals("status", status1, task.getStatus());
+    Assert.assertEquals("users", users1, task.getUsers());
+    Assert.assertEquals("subtasks", subtasks1, task.getSubtasks());
+  }
+
+  @Test
   public void testCreateTaskFromEntity() {
     // Build entity
     Entity entity = new Entity("Task", taskID2);
@@ -145,7 +159,7 @@ public class TaskDataTest {
   }
 
   @Test
-  public void testCreateEntityFromTask() {
+  public void testCreateEntityFromTaskWithTaskID() {
     // Build TaskData object
     TaskData task =
         new TaskData(taskID3, projectID3, name3, description3, status3, users3, subtasks3);
@@ -164,6 +178,32 @@ public class TaskDataTest {
 
     // Assert task entity attributes equal TaskData attributes
     Assert.assertEquals("taskID", taskID3, entityTaskID);
+    Assert.assertEquals("projectID", projectID3, entityProjectID);
+    Assert.assertEquals("name", name3, entityName);
+    Assert.assertEquals("description", description3, entityDescription);
+    Assert.assertEquals("status", status3, entityStatus);
+    Assert.assertEquals("users", users3, entityUsers);
+    Assert.assertEquals("subtasks", null, entitySubtasks);
+  }
+
+  @Test
+  public void testCreateEntityFromTaskWithoutTaskID() {
+    // Build TaskData object
+    TaskData task = new TaskData(projectID3, name3, description3, status3, users3, subtasks3);
+
+    // Create task entity from TaskData object
+    Entity entity = task.toEntity();
+
+    // Get task entity attributes
+    long entityTaskID = (long) entity.getProperty("taskID");
+    long entityProjectID = (long) entity.getProperty("projectID");
+    String entityName = (String) entity.getProperty("name");
+    String entityDescription = (String) entity.getProperty("description");
+    Status entityStatus = Status.valueOf((String) entity.getProperty("status"));
+    ArrayList<Long> entityUsers = (ArrayList<Long>) entity.getProperty("users");
+    ArrayList<Long> entitySubtasks = (ArrayList<Long>) entity.getProperty("subtasks");
+
+    // Assert task entity attributes equal TaskData attributes
     Assert.assertEquals("projectID", projectID3, entityProjectID);
     Assert.assertEquals("name", name3, entityName);
     Assert.assertEquals("description", description3, entityDescription);
