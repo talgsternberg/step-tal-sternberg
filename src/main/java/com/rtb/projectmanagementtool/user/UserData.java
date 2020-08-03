@@ -46,8 +46,6 @@ public final class UserData {
 
   public UserData(Entity entity) {
     userID = (long) entity.getKey().getId();
-    System.out.println("userID() in UserData:");
-    System.out.println(userID);
     AuthID = (long) entity.getProperty("AuthID");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
@@ -127,5 +125,31 @@ public final class UserData {
 
   public void setUserTotal(long userTotalCompTasks) {
     this.userTotalCompTasks = userTotalCompTasks;
+  }
+
+  @Override
+  public String toString() {
+    String returnString = "{\n";
+    returnString += "User ID: " + userID + "\n";
+    returnString += "Auth ID: " + AuthID + "\n";
+    returnString += "User Name: " + userName + "\n";
+    returnString += "Year: " + userYear + "\n";
+    returnString += "Majors: " + userMajors.toString() + "\n";
+    returnString += "Completed Tasks: " + userTotalCompTasks + "\n}";
+    return returnString;
+  }
+
+  public boolean equals(UserData a, UserData b) {
+    return a.userID == b.userID
+        && a.AuthID == b.AuthID
+        && a.userName.equals(b.userName)
+        && a.userYear == b.userYear
+        && a.userMajors.equals(b.userMajors)
+        && a.userTotalCompTasks == b.userTotalCompTasks;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof UserData && equals(this, (UserData) other);
   }
 }

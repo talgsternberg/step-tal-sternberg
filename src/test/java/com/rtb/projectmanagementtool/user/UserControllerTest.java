@@ -76,9 +76,9 @@ public class UserControllerTest {
     UserData getUser = userController.getUserByID(userID1);
 
     System.out.println("in test: getUser");
-    System.out.println(getUser);
+    System.out.println(getUser.toString());
     System.out.println("in test: user1");
-    System.out.println(user1);
+    System.out.println(user1.toString());
 
     // Assert task retrieved is correct
     Assert.assertEquals("getUser", user1, getUser);
