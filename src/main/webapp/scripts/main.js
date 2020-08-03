@@ -1,6 +1,5 @@
 /**
  * This file currently contains the original JavaScript file.
- * 
  * TODO:
  * 1. Create a file for each type of server fetch (e.g. task, project, user).
  * 2. Create functions in those files to connect to the server.
@@ -16,7 +15,7 @@
  * Function used to test calling a function in this file from another file.
  */
 function doStuff() {
-  console.log("did stuff");
+  console.log('did stuff');
 }
 
 /**
