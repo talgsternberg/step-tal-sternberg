@@ -7,7 +7,11 @@ import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.gson.Gson;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import org.junit.After;
@@ -57,10 +61,23 @@ public class TaskServletTest extends Mockito {
     // Get results of doGet()
     String result = stringWriter.getBuffer().toString().trim();
 
-    // Expected results
-    String expectedResult =
-        "{\"task\":[{\"taskID\":1,\"projectID\":1,\"name\":\"Task 1\",\"description\":\"Task 1"
-            + " description...\",\"status\":\"INCOMPLETE\",\"users\":[1,2],\"subtasks\":[3]}]}";
+    // Expected default task
+    long taskID1 = 1l;
+    long projectID1 = 1l;
+    String name1 = "Task 1";
+    String description1 = "Task 1 description...";
+    Status status1 = Status.INCOMPLETE;
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+    ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
+    TaskData task1 =
+        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
+
+    // Create expected results
+    ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
+    HashMap<String, ArrayList> data = new HashMap<>();
+    data.put("task", taskInArrayList);
+    Gson gson = new Gson();
+    String expectedResult = gson.toJson(data);
 
     // Assert results are as expected
     Assert.assertEquals("doGet", result, expectedResult);
@@ -68,6 +85,7 @@ public class TaskServletTest extends Mockito {
 
   @Test
   public void testDoPost() throws IOException, ServletException {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
     // When parameters are requested, return test values
     when(request.getParameter("projectID")).thenReturn("1");
@@ -80,7 +98,16 @@ public class TaskServletTest extends Mockito {
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(response.getWriter()).thenReturn(printWriter);
 
-    // Run doGet()
+    // Get quantity of tasks before posting
+    int quantityBefore = ds.prepare(new Query("Task")).countEntities();
+
+    // Run doPost()
     servlet.doPost(request, response);
+
+    // Get quantity of tasks after posting
+    int quantityAfter = ds.prepare(new Query("Task")).countEntities();
+
+    // Assert a task entity was added to datastore
+    Assert.assertEquals("doPost", quantityAfter, quantityBefore + 1);
   }
 }

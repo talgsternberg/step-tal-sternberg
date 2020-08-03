@@ -80,4 +80,18 @@ public class TaskServlet extends HttpServlet {
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
   }
+
+  public void doPost(
+      HttpServletRequest request, HttpServletResponse response, DatastoreService datastore)
+      throws IOException {
+    long projectID = Long.parseLong(request.getParameter("projectID"));
+    String name = request.getParameter("name").trim();
+    String description = request.getParameter("description").trim();
+    Status status = Status.valueOf(request.getParameter("status").toUpperCase());
+    ArrayList<Long> users = new ArrayList<>();
+    ArrayList<Long> subtasks = new ArrayList<>();
+    TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
+    TaskController taskController = new TaskController(datastore);
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+  }
 }
