@@ -319,7 +319,7 @@ function createTaskLiElement(task) {
 
 /**
  * Build li element for a user.
- * @param {Hashmap} user Details of the user.
+ * @param {UserData} user Details of the user.
  * @return {Element} HTML li element containing user button.
  */
 function createUserLiElement(user) {
@@ -334,21 +334,6 @@ function createUserLiElement(user) {
   buttonElement.innerText = user.name;
   liElement.appendChild(buttonElement);
   return liElement;
-}
-
-/** Creates an element that represents a task, including its delete button.
-  * @param {Hashmap} user
-  * @return {Element} HTML
-  */
-function createUserElement(user) {
-  const userElement = document.createElement('li');
-  userElement.className = 'user';
-
-  const nameElement = document.createElement('span');
-  nameElement.innerText = user.userName;
-
-  userElement.appendChild(nameElement);
-  return userElement;
 }
 
 /** Fetches users from the server and adds them to the DOM. */

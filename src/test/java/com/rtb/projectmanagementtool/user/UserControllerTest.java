@@ -19,7 +19,7 @@ public class UserControllerTest {
   private static final String name1 = "Anna";
   private static final long year1 = 2023;
   private static final ArrayList<String> majors1 = new ArrayList<>(Arrays.asList("Biology", "Gov"));
-  private static final long total1 = 3;
+  private static final long totalCompTasks1 = 3;
 
   // User 2
   private static final long userID2 = 2l;
@@ -28,7 +28,7 @@ public class UserControllerTest {
   private static final long year2 = 2023;
   private static final ArrayList<String> majors2 =
       new ArrayList<>(Arrays.asList("Comp Sci", "Earth Sciences"));
-  private static final long total2 = 0;
+  private static final long totalCompTasks2 = 0;
 
   // User 3
   private static final long userID3 = 3l;
@@ -36,16 +36,16 @@ public class UserControllerTest {
   private static final String name3 = "Eddie";
   private static final long year3 = 2022;
   private static final ArrayList<String> majors3 = new ArrayList<>(Arrays.asList("Film", "Econ"));
-  private static final long total3 = 10;
+  private static final long totalCompTasks3 = 10;
   private HashSet<UserData> testUsers;
 
   // UserData
   private static final UserData user1 =
-      new UserData(userID1, AuthID1, name1, year1, majors1, total1);
+      new UserData(userID1, AuthID1, name1, year1, majors1, totalCompTasks1);
   private static final UserData user2 =
-      new UserData(userID2, AuthID2, name2, year2, majors2, total2);
+      new UserData(userID2, AuthID2, name2, year2, majors2, totalCompTasks2);
   private static final UserData user3 =
-      new UserData(userID3, AuthID3, name3, year3, majors3, total3);
+      new UserData(userID3, AuthID3, name3, year3, majors3, totalCompTasks3);
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
