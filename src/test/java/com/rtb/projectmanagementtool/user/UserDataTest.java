@@ -17,6 +17,7 @@ public class UserDataTest {
   private static final String name1 = "Anna";
   private static final long year1 = 2023;
   private static final ArrayList<String> majors1 = new ArrayList<>(Arrays.asList("Biology", "Gov"));
+  private static final Skills skills1 = Skills.ORGANIZATION;
   private static final long total1 = 3;
 
   // User 2
@@ -26,6 +27,7 @@ public class UserDataTest {
   private static final long year2 = 2023;
   private static final ArrayList<String> majors2 =
       new ArrayList<>(Arrays.asList("Comp Sci", "Earth Sciences"));
+  private static final Skills skills2 = Skills.LEADERSHIP;
   private static final long total2 = 0;
 
   // User 3
@@ -34,6 +36,7 @@ public class UserDataTest {
   private static final String name3 = "Eddie";
   private static final long year3 = 2022;
   private static final ArrayList<String> majors3 = new ArrayList<>(Arrays.asList("Film", "Econ"));
+  private static final Skills skills3 = Skills.WRITING;
   private static final long total3 = 10;
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
@@ -53,7 +56,7 @@ public class UserDataTest {
   @Test
   public void testCreateFromConstructor() {
     // create user by passing paramets to constructor
-    UserData user1 = new UserData(userID1, AuthID1, name1, year1, majors1, total1);
+    UserData user1 = new UserData(userID1, AuthID1, name1, year1, majors1, skills1, total1);
 
     // ensure values are stored correct
     Assert.assertEquals("userID", userID1, user1.getUserID());
@@ -61,6 +64,7 @@ public class UserDataTest {
     Assert.assertEquals("userName", name1, user1.getUserName());
     Assert.assertEquals("userYear", year1, user1.getUserYear());
     Assert.assertEquals("userMajors", majors1, user1.getUserMajors());
+    Assert.assertEquals("skills", skills1, user1.getUserSkills());
     Assert.assertEquals("userTotalCompTasks", total1, user1.getUserTotal());
   }
 
@@ -72,6 +76,7 @@ public class UserDataTest {
     entity.setProperty("userName", name2);
     entity.setProperty("userYear", year2);
     entity.setProperty("userMajors", majors2);
+    entity.setProperty("skills", skills2.toString());
     entity.setProperty("userTotalCompTasks", total2);
 
     // create user by passing entity
@@ -83,13 +88,14 @@ public class UserDataTest {
     Assert.assertEquals("userName", name2, user2.getUserName());
     Assert.assertEquals("userYear", year2, user2.getUserYear());
     Assert.assertEquals("userMajors", majors2, user2.getUserMajors());
+    Assert.assertEquals("skills", skills2, user2.getUserSkills());
     Assert.assertEquals("userTotalCompTasks", total2, user2.getUserTotal());
   }
 
   @Test
   public void testCreateEntityFromUser() {
     // Build UserData object
-    UserData user3 = new UserData(userID3, AuthID3, name3, year3, majors3, total3);
+    UserData user3 = new UserData(userID3, AuthID3, name3, year3, majors3, skills3, total3);
 
     // Create user entity
     Entity entity2 = user3.toEntity();
@@ -100,6 +106,7 @@ public class UserDataTest {
     String entityName = (String) entity2.getProperty("userName");
     long entityYear = (long) entity2.getProperty("userYear");
     ArrayList<String> entityMajors = (ArrayList<String>) entity2.getProperty("userMajors");
+    Skills entitySkills = Skills.valueOf((String) entity2.getProperty("skills"));
     long entityTotal = (long) entity2.getProperty("userTotalCompTasks");
 
     // Assert user entity attributes equal UserData attributes
@@ -108,6 +115,7 @@ public class UserDataTest {
     Assert.assertEquals("userName", name3, entityName);
     Assert.assertEquals("userName", year3, entityYear);
     Assert.assertEquals("userMajors", majors3, entityMajors);
+    Assert.assertEquals("skills", skills3, entitySkills);
     Assert.assertEquals("userTotalCompTasks", total3, entityTotal);
   }
 }

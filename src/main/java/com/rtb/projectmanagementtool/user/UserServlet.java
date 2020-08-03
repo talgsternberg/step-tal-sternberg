@@ -54,10 +54,11 @@ public class UserServlet extends HttpServlet {
     long userYear = Long.parseLong(request.getParameter("userYear"));
     ArrayList<String> userMajors =
         (ArrayList<String>) Arrays.asList(request.getParameterValues("userMajors"));
+    Skills skills = Skills.valueOf(request.getParameter("skills").toUpperCase());
     long userTotal = Long.parseLong(request.getParameter("userTotalCompTasks"));
 
     // create new user. Set up datastore
-    UserData user = new UserData(userID, AuthID, userName, userYear, userMajors, userTotal);
+    UserData user = new UserData(userID, AuthID, userName, userYear, userMajors, skills, userTotal);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // new UserController. Add UserData to it.
