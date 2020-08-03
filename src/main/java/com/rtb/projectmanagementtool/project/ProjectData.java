@@ -4,17 +4,13 @@
  */
 package com.rtb.projectmanagementtool.project;
 
-import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
-enum User {
-  CREATOR, // has admin capabilities and more, like deleting the project and add & remove admins
-  ADMIN, // can add users to the project/perform other administrative tasks
-  REGULAR;
-}
 
 public class ProjectData {
   private final String PROPERTY_NAME = "name";
@@ -25,7 +21,7 @@ public class ProjectData {
   private long id;
   private String name;
   private String description;
-  private HashMap<Long, User> userIds;
+  private HashMap<Long, UserProjectRole> userIds;
   private HashSet<Long> taskIds;
 
   /**
@@ -39,9 +35,8 @@ public class ProjectData {
     this.name = name;
     this.description = description;
     this.taskIds = new HashSet<Long>();
-
-    this.userIds = new HashMap<Long, User>();
-    this.userIds.put(creatorId, User.CREATOR);
+    this.userIds = new HashMap<Long, UserProjectRole>();
+    this.userIds.put(creatorId, UserProjectRole.CREATOR);
   }
 
   /**
@@ -61,14 +56,10 @@ public class ProjectData {
       this.taskIds = new HashSet<Long>();
     }
 
-    this.userIds = new HashMap<Long, User>();
-    // can store map in datastore entities using EmbeddedEntity
-    EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty(PROPERTY_USER_IDS);
-    if (ee != null) {
-      for (String key : ee.getProperties().keySet()) {
-        this.userIds.put(Long.parseLong(key), User.valueOf((String) ee.getProperty(key)));
-      }
-    }
+    // Convert json to HashMap for userIds
+    Gson gson = new Gson();
+    Type mapType = new TypeToken<HashMap<Long, UserProjectRole>>() {}.getType();
+    this.userIds = gson.fromJson((String) entity.getProperty(PROPERTY_USER_IDS), mapType);
   }
 
   /** @return the entity representation of this class */
@@ -77,13 +68,8 @@ public class ProjectData {
     entity.setProperty(PROPERTY_NAME, this.name);
     entity.setProperty(PROPERTY_DESCRIPTION, this.description);
     entity.setProperty(PROPERTY_TASK_IDS, this.taskIds);
-
-    EmbeddedEntity userIdsEntity = new EmbeddedEntity();
-    for (Long key : this.userIds.keySet()) {
-      userIdsEntity.setProperty(key.toString(), this.userIds.get(key).name());
-    }
-    entity.setProperty(PROPERTY_USER_IDS, userIdsEntity);
-
+    Gson gson = new Gson();
+    entity.setProperty(PROPERTY_USER_IDS, gson.toJson(this.userIds));
     return entity;
   }
 
@@ -102,18 +88,18 @@ public class ProjectData {
     return this.description;
   }
 
-  /** @return returns user ids */
-  public HashMap<Long, User> getUsers() {
+  /** @return users */
+  public HashMap<Long, UserProjectRole> getUsers() {
     return this.userIds;
   }
 
   /** @return task ids */
-  public HashSet<Long> getTaskIds() {
+  public HashSet<Long> getTasks() {
     return this.taskIds;
   }
 
   /**
-   * Changes the id of this project
+   * Set the id of this project
    *
    * @param id the new id of the project
    */
@@ -122,7 +108,7 @@ public class ProjectData {
   }
 
   /**
-   * Changes the name of this project
+   * Set the name of this project
    *
    * @param name the new name of the project
    */
@@ -131,7 +117,7 @@ public class ProjectData {
   }
 
   /**
-   * Changes the description of this project
+   * Set the description of this project
    *
    * @param description the new description of the project
    */
@@ -140,56 +126,120 @@ public class ProjectData {
   }
 
   /**
-   * Adds an admin user to project
-   *
-   * @param userId id of the user to add
-   */
-  public void addAdminUser(long userId) {
-    // remove user if they're already in project
-    if (this.userIds.keySet().contains(userId)) {
-      removeUser(userId);
-    }
-    this.userIds.put(userId, User.ADMIN);
-  }
-
-  /**
-   * Adds a regular user to the project
+   * Add a regular user to the project
    *
    * @param userId id of the user to add
    */
   public void addRegularUser(long userId) {
+    addUser(userId, false);
+  }
+
+  /**
+   * Add an admin user to the project
+   *
+   * @param userId id of the user to add
+   */
+  public void addAdminUser(long userId) {
+    addUser(userId, true);
+  }
+
+  /**
+   * Helper function for addRegularUser() and addAdminUser() to add any user to the project. Can
+   * only add regular/admin users
+   *
+   * @param userId id of the user to add
+   * @param isAdmin is the user an admin?
+   */
+  private void addUser(long userId, boolean isAdmin) {
     // remove user if they're already in project
-    if (this.userIds.keySet().contains(userId)) {
+    if (hasUser(userId)) {
       removeUser(userId);
     }
-    this.userIds.put(userId, User.REGULAR);
+
+    if (isAdmin) {
+      this.userIds.put(userId, UserProjectRole.ADMIN);
+    } else {
+      this.userIds.put(userId, UserProjectRole.REGULAR);
+    }
   }
 
   /**
    * Removes a user from the project
    *
    * @param userId id of the user to remove
+   * @return true if operation is successful
    */
-  public void removeUser(long userId) {
-    this.userIds.remove(userId);
+  public boolean removeUser(long userId) {
+    // don't remove creator
+    if (userType(userId) != UserProjectRole.CREATOR.name()) {
+      this.userIds.remove(userId);
+      return true;
+    }
+    return false;
   }
 
   /**
    * Adds a task to the project
    *
    * @param taskId id of the task to add
+   * @return true if operation successful
    */
-  public void addTask(long taskId) {
-    this.taskIds.add(taskId);
+  public boolean addTask(long taskId) {
+    return this.taskIds.add(taskId);
   }
 
   /**
    * Removes a task from the project
    *
    * @param taskId id of the task to remove
+   * @return true if operation successful
    */
-  public void removeTask(long taskId) {
-    this.taskIds.remove(taskId);
+  public boolean removeTask(long taskId) {
+    return this.taskIds.remove(taskId);
+  }
+
+  /**
+   * Check if user is in the project
+   *
+   * @param userId the userId
+   * @return true if the user is in project
+   */
+  public boolean hasUser(long userId) {
+    return userType(userId) != null;
+  }
+
+  /**
+   * Check if user exists as an admin in the project
+   *
+   * @param userId the userId
+   * @return true if the user is in project
+   */
+  public boolean hasAdmin(long userId) {
+    return userType(userId) == UserProjectRole.ADMIN.name();
+  }
+
+  /**
+   * Check if this is the project creator
+   *
+   * @param userId the userId
+   * @return true if the user is the creator
+   */
+  public boolean isCreator(long userId) {
+    return userType(userId) == UserProjectRole.CREATOR.name();
+  }
+
+  /**
+   * Returns the type of the user
+   *
+   * @param userId the userId
+   * @return the type of user (CREATOR / ADMIN / REGULAR)
+   */
+  private String userType(long userId) {
+    UserProjectRole userRole = this.userIds.get(userId);
+    if (userRole != null) {
+      return userRole.name();
+    }
+    return null;
   }
 
   /** @return the string representation of this class. */

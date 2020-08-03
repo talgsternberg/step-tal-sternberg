@@ -5,16 +5,12 @@
 package com.rtb.projectmanagementtool.project;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 
 public class ProjectController {
   private final String PROPERTY_USER_IDS = "userIds";
@@ -26,19 +22,56 @@ public class ProjectController {
   }
 
   /**
-   * Gets all the projects in datastore that all specified users are in
+   * Gets all the projects in datastore that all users are in
    *
    * @param userIds the collection of userIds whose projects are to be retrieved
    * @return HashSet containing desired projects
    */
-  public HashSet<ProjectData> getProjects(Collection userIds) {
+  public ArrayList<ProjectData> getAllProjects() {
+    return getProjects(0l, false);
+  }
 
-    HashSet<ProjectData> projectContainer = new HashSet<ProjectData>();
+  /**
+   * Gets all the projects in datastore that the specified user is in
+   *
+   * @param userId the id of user whose projects to retrieve
+   * @return HashSet containing desired projects
+   */
+  public ArrayList<ProjectData> getUserProjects(long userId) {
+    return getProjects(userId, false);
+  }
+
+  /**
+   * Gets all the projects in datastore created by user
+   *
+   * @param userId the id of owner whose projects to retrieve
+   * @return HashSet containing desired projects
+   */
+  public ArrayList<ProjectData> getCreatorProjects(long userId) {
+    return getProjects(userId, true);
+  }
+
+  /**
+   * Helper function for getAllProjects(), getUserProjects(), and getCreatorProjects()
+   *
+   * @param userId the id of user whose projects to retrieve
+   * @param getCreatorProjects boolean representing the user's role in project (owner or otherwise)
+   * @return HashSet containing desired projects
+   */
+  private ArrayList<ProjectData> getProjects(long userId, boolean getCreatorProjects) {
+    ArrayList<ProjectData> projectContainer = new ArrayList<ProjectData>();
 
     PreparedQuery results = datastore.prepare(new Query("Project"));
     for (Entity entity : results.asIterable()) {
-      if (entityContainsUser(entity, userIds)) {
-        ProjectData project = new ProjectData(entity);
+      ProjectData project = new ProjectData(entity);
+
+      if (
+      // query wants every user
+      userId == 0l
+          // or query wants projects by a creator
+          || getCreatorProjects && project.isCreator(userId)
+          // or query wants projects with a user
+          || !getCreatorProjects && project.hasUser(userId)) {
         projectContainer.add(project);
       }
     }
@@ -47,39 +80,12 @@ public class ProjectController {
   }
 
   /**
-   * Checks if the Project entity has at least one userId contained in userIds
+   * Adds a Project to database.
    *
-   * @param entity the project entity
-   * @param userIds the collection of userIds
-   * @return true if userIds param and entity's userIds property share at least one user
+   * @param project the project to add
    */
-  private boolean entityContainsUser(Entity entity, Collection userIds) {
-    // userIds is empty, so get all projects in database
-    if (userIds.size() == 0) {
-      return true;
-    }
-
-    ArrayList<Long> entityUserIds = new ArrayList<Long>();
-    EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty(PROPERTY_USER_IDS);
-    if (ee != null) {
-      for (String key : ee.getProperties().keySet()) {
-        entityUserIds.add(Long.parseLong(key));
-      }
-    }
-
-    // Collections.disjoint() returns true if the two specified
-    // collections have no elements in common.
-    return !Collections.disjoint(entityUserIds, userIds);
-  }
-
-  /**
-   * Saves a project to datastore.
-   *
-   * @param project the project to save
-   */
-  public void saveProject(ProjectData project) {
-    Entity projectEntity = project.toEntity();
-    datastore.put(projectEntity);
+  public void addProject(ProjectData project) {
+    datastore.put(project.toEntity());
   }
 
   /**
