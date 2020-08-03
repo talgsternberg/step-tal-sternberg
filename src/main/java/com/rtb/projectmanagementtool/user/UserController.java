@@ -22,10 +22,9 @@ public final class UserController {
 
   // get users+data to direct/display user's profiles later
   public ArrayList<UserData> getEveryUser() {
-    ArrayList<UserData> users = new ArrayList<>();
     Query query = new Query("User");
+    ArrayList<UserData> users = new ArrayList<>();
     PreparedQuery results = datastore.prepare(query);
-    // create new user object and add to users
     for (Entity entity : results.asIterable()) {
       UserData user = new UserData(entity);
       users.add(user);

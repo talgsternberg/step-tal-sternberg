@@ -46,6 +46,8 @@ public final class UserData {
 
   public UserData(Entity entity) {
     userID = (long) entity.getKey().getId();
+    System.out.println("userID() in UserData:");
+    System.out.println(userID);
     AuthID = (long) entity.getProperty("AuthID");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
@@ -55,7 +57,13 @@ public final class UserData {
   }
 
   public Entity toEntity() {
-    Entity entity = new Entity("User", userID);
+    Entity entity;
+    if (userID != 0) {
+      entity = new Entity("User", userID);
+    } else {
+      entity = new Entity("User");
+    }
+    entity.setProperty("userID", entity.getKey().getId());
     entity.setProperty("AuthID", AuthID);
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);

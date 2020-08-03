@@ -74,13 +74,14 @@ public class UserControllerTest {
     // Get user with UserController
     UserController userController = new UserController(ds);
     UserData getUser = userController.getUserByID(userID1);
-    System.out.println("getUser.getUserID()");
-    System.out.println(getUser.getUserID());
-    System.out.println("user1.getUserID()");
-    System.out.println(user1.getUserID());
+
+    System.out.println("in test: getUser");
+    System.out.println(getUser);
+    System.out.println("in test: user1");
+    System.out.println(user1);
 
     // Assert task retrieved is correct
-    Assert.assertEquals(user1, getUser);
+    Assert.assertEquals("getUser", user1, getUser);
   }
 
   @Test
