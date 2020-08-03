@@ -37,6 +37,22 @@ public final class TaskData implements Comparable<TaskData> {
     this.subtasks = subtasks;
   }
 
+  public TaskData(
+      long projectID,
+      String name,
+      String description,
+      Status status,
+      ArrayList<Long> users,
+      ArrayList<Long> subtasks) {
+    this.taskID = 0;
+    this.projectID = projectID;
+    this.name = name;
+    this.description = description;
+    this.status = status;
+    this.users = users;
+    this.subtasks = subtasks;
+  }
+
   public TaskData(Entity entity) {
     taskID = (long) entity.getProperty("taskID");
     projectID = (long) entity.getProperty("projectID");
@@ -56,8 +72,13 @@ public final class TaskData implements Comparable<TaskData> {
   }
 
   public Entity toEntity() {
-    Entity entity = new Entity("Task", taskID);
-    entity.setProperty("taskID", taskID);
+    Entity entity;
+    if (taskID != 0) {
+      entity = new Entity("Task", taskID);
+    } else {
+      entity = new Entity("Task");
+    }
+    entity.setProperty("taskID", entity.getKey().getId());
     entity.setProperty("projectID", projectID);
     entity.setProperty("name", name);
     entity.setProperty("description", description);
