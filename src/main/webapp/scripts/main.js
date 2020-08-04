@@ -1,6 +1,5 @@
 /**
  * This file currently contains the original JavaScript file.
- * 
  * TODO:
  * 1. Create a file for each type of server fetch (e.g. task, project, user).
  * 2. Create functions in those files to connect to the server.
@@ -16,7 +15,7 @@
  * Function used to test calling a function in this file from another file.
  */
 function doStuff() {
-  console.log("did stuff");
+  console.log('did stuff');
 }
 
 /**
@@ -320,7 +319,7 @@ function createTaskLiElement(task) {
 
 /**
  * Build li element for a user.
- * @param {Hashmap} user Details of the user.
+ * @param {UserData} user Details of the user.
  * @return {Element} HTML li element containing user button.
  */
 function createUserLiElement(user) {
@@ -335,4 +334,15 @@ function createUserLiElement(user) {
   buttonElement.innerText = user.name;
   liElement.appendChild(buttonElement);
   return liElement;
+}
+
+/** Fetches users from the server and adds them to the DOM. */
+function loadUsers() {
+  fetch('/user').then((response) => (response.json())).then((Users) => {
+    const UserListElement = document.getElementById('user-list');
+    UserListElement.innerHTML = '';
+    Users.forEach((user) => {
+      UserListElement.appendChild(createUserElement(user));
+    });
+  });
 }

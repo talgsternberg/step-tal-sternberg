@@ -2,22 +2,29 @@ package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public final class UserController {
-  private HashSet<UserData> users;
 
-  public UserController(HashSet<UserData> users) {
-    this.users = users;
+  private DatastoreService datastore;
+
+  public UserController(DatastoreService datastore) {
+    this.datastore = datastore;
+  }
+
+  public UserData getUserByID(long userID) {
+    Query query = new Query("User").addFilter("userID", FilterOperator.EQUAL, userID);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    UserData user = new UserData(entity);
+    return user;
   }
 
   // get users+data to direct/display user's profiles later
-  public HashSet<UserData> getEveryUser(DatastoreService datastore) {
-    // DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    HashSet<UserData> users = new HashSet<>();
+  public ArrayList<UserData> getEveryUser() {
     Query query = new Query("User");
+    ArrayList<UserData> users = new ArrayList<>();
     PreparedQuery results = datastore.prepare(query);
-    // create new user object and add to users
     for (Entity entity : results.asIterable()) {
       UserData user = new UserData(entity);
       users.add(user);
@@ -25,7 +32,8 @@ public final class UserController {
     return users;
   }
 
-  public void addUser(DatastoreService datastore, UserData user) {
-    datastore.put(user.toEntity());
+  public void addUser(UserData user) {
+    Entity entity = user.toEntity();
+    datastore.put(entity);
   }
 }

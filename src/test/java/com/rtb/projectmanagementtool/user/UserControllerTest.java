@@ -12,7 +12,41 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class UserControllerTest {
+
+  // User 1
+  private static final long userID1 = 1l;
+  private static final long AuthID1 = 1l;
+  private static final String name1 = "Anna";
+  private static final long year1 = 2023;
+  private static final ArrayList<String> majors1 = new ArrayList<>(Arrays.asList("Biology", "Gov"));
+  private static final long totalCompTasks1 = 3;
+
+  // User 2
+  private static final long userID2 = 2l;
+  private static final long AuthID2 = 2l;
+  private static final String name2 = "Tal";
+  private static final long year2 = 2023;
+  private static final ArrayList<String> majors2 =
+      new ArrayList<>(Arrays.asList("Comp Sci", "Earth Sciences"));
+  private static final long totalCompTasks2 = 0;
+
+  // User 3
+  private static final long userID3 = 3l;
+  private static final long AuthID3 = 3l;
+  private static final String name3 = "Eddie";
+  private static final long year3 = 2022;
+  private static final ArrayList<String> majors3 = new ArrayList<>(Arrays.asList("Film", "Econ"));
+  private static final long totalCompTasks3 = 10;
   private HashSet<UserData> testUsers;
+
+  // UserData
+  private static final UserData user1 =
+      new UserData(userID1, AuthID1, name1, year1, majors1, totalCompTasks1);
+  private static final UserData user2 =
+      new UserData(userID2, AuthID2, name2, year2, majors2, totalCompTasks2);
+  private static final UserData user3 =
+      new UserData(userID3, AuthID3, name3, year3, majors3, totalCompTasks3);
+
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
           new LocalDatastoreServiceTestConfig()
@@ -29,21 +63,38 @@ public class UserControllerTest {
   }
 
   @Test
+  public void testGetUserByID() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    // Add user entities
+    ds.put(user1.toEntity());
+    ds.put(user2.toEntity());
+    ds.put(user3.toEntity());
+
+    // Get user with UserController
+    UserController userController = new UserController(ds);
+    UserData getUser = userController.getUserByID(userID1);
+
+    System.out.println("in test: getUser");
+    System.out.println(getUser.toString());
+    System.out.println("in test: user1");
+    System.out.println(user1.toString());
+
+    // Assert task retrieved is correct
+    Assert.assertEquals("getUser", user1, getUser);
+  }
+
+  @Test
   public void testAddUsers() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    UserController ctl = new UserController(testUsers);
-    ArrayList<String> user1Majors = new ArrayList<String>();
-    ArrayList<String> user2Majors = new ArrayList<String>();
-    user1Majors.add("Biology");
-    user2Majors.add("English");
-    user2Majors.add("Religion");
 
-    // Add 2 initially
-    ctl.addUser(ds, new UserData(1l, 2l, "Sarah", 2023, user1Majors, 5));
-    ctl.addUser(ds, new UserData(2l, 3l, "Joe", 2022, user2Majors, 3));
+    // Add user entities with UserController
+    UserController userController = new UserController(ds);
+    userController.addUser(user1);
+    userController.addUser(user2);
 
-    // Should have 2 now
-    HashSet<UserData> users = ctl.getEveryUser(ds);
+    // Assert an entity was added
+    ArrayList<UserData> users = userController.getEveryUser();
     Assert.assertEquals(users.size(), 2);
   }
 }
