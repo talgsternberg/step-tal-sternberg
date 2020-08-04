@@ -56,12 +56,8 @@ public class UserServlet extends HttpServlet {
     long AuthID = Long.parseLong(request.getParameter("AuthID"));
     String userName = request.getParameter("userName").trim();
     long userYear = Long.parseLong(request.getParameter("userYear"));
-
-    // error is here
-    // request.getParameterValues(userMajors) is null
     ArrayList<String> userMajors =
-        (ArrayList<String>) Arrays.asList(request.getParameterValues("userMajors"));
-
+        new ArrayList<String>(Arrays.asList(request.getParameterValues("userMajors")));
     Skills skills = Skills.valueOf(request.getParameter("skills").toUpperCase());
     long userTotal = Long.parseLong(request.getParameter("userTotalCompTasks"));
 

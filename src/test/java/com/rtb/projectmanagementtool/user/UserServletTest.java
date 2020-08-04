@@ -8,6 +8,7 @@ import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.io.*;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import org.junit.After;
@@ -71,7 +72,9 @@ public class UserServletTest extends Mockito {
     when(request.getParameter("AuthID")).thenReturn("3");
     when(request.getParameter("userName")).thenReturn("Sarah");
     when(request.getParameter("userYear")).thenReturn("2023");
-    when(request.getParameterValues("userMajors")).thenReturn("['Psychology']");
+    Mockito.when(request.getParameterValues("userMajors")).thenReturn(new String[] {"Psychology"});
+    // when(request.getParameterValues("userMajors"))
+    //    .thenReturn(new ArrayList<>(Arrays.asList("Psychology")));
     when(request.getParameter("skills")).thenReturn("OOP");
     when(request.getParameter("userTotalCompTasks")).thenReturn("3");
 
