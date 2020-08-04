@@ -18,7 +18,6 @@ import org.junit.Test;
 public class TaskDataTest {
 
   // Task 1 attributes
-  //   private static final long taskID1 = 1l;
   private static final long projectID1 = 1l;
   private static final String name1 = "Task 1";
   private static final String description1 = "Task 1 description...";
@@ -27,7 +26,6 @@ public class TaskDataTest {
   private static final ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
 
   // Task 2 attributes
-  //   private static final long taskID2 = 2l;
   private static final long projectID2 = 1l;
   private static final String name2 = "Task 2";
   private static final String description2 = "Task 2 description...";
@@ -36,7 +34,6 @@ public class TaskDataTest {
   private static final ArrayList<Long> subtasks2 = new ArrayList<>();
 
   // Task 3 attributes
-  //   private static final long taskID3 = 3l;
   private static final long projectID3 = 1l;
   private static final String name3 = "Task 3";
   private static final String description3 = "Task 3 description...";
@@ -66,9 +63,7 @@ public class TaskDataTest {
     Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
 
     // Build task entity 1
-    // Entity entity1 = new Entity("Task", taskID1);
     Entity entity1 = new Entity("Task");
-    // entity1.setProperty("taskID", taskID1);
     entity1.setProperty("projectID", projectID1);
     entity1.setProperty("name", name1);
     entity1.setProperty("description", description1);
@@ -77,9 +72,7 @@ public class TaskDataTest {
     entity1.setProperty("subtasks", subtasks1);
 
     // Build task entity 2
-    // Entity entity2 = new Entity("Task", taskID2);
     Entity entity2 = new Entity("Task");
-    // entity1.setProperty("taskID", taskID2);
     entity2.setProperty("projectID", projectID2);
     entity2.setProperty("name", name2);
     entity2.setProperty("description", description2);
@@ -108,9 +101,7 @@ public class TaskDataTest {
   @Test
   public void testCreateTaskFromConstructor() {
     // Build TaskData object
-    TaskData task =
-        // new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
-        new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
 
     // Assert TaskData parameters were stored correctly
     // Assert.assertEquals("taskID", taskID1, task.getTaskID());
@@ -139,9 +130,7 @@ public class TaskDataTest {
   @Test
   public void testCreateTaskFromEntity() {
     // Build entity
-    // Entity entity = new Entity("Task", taskID2);
     Entity entity = new Entity("Task");
-    // entity.setProperty("taskID", taskID2);
     entity.setProperty("projectID", projectID2);
     entity.setProperty("name", name2);
     entity.setProperty("description", description2);
@@ -153,7 +142,6 @@ public class TaskDataTest {
     TaskData task = new TaskData(entity);
 
     // Assert TaskData parameters were stored correctly
-    // Assert.assertEquals("taskID", taskID2, task.getTaskID());
     Assert.assertEquals("projectID", projectID2, task.getProjectID());
     Assert.assertEquals("name", name2, task.getName());
     Assert.assertEquals("description", description2, task.getDescription());
@@ -165,15 +153,12 @@ public class TaskDataTest {
   @Test
   public void testCreateEntityFromTaskWithTaskID() {
     // Build TaskData object
-    TaskData task =
-        // new TaskData(taskID3, projectID3, name3, description3, status3, users3, subtasks3);
-        new TaskData(projectID3, name3, description3, status3, users3, subtasks3);
+    TaskData task = new TaskData(projectID3, name3, description3, status3, users3, subtasks3);
 
     // Create task entity from TaskData object
     Entity entity = task.toEntity();
 
     // Get task entity attributes
-    // long entityTaskID = (long) entity.getProperty("taskID");
     long entityProjectID = (long) entity.getProperty("projectID");
     String entityName = (String) entity.getProperty("name");
     String entityDescription = (String) entity.getProperty("description");
@@ -182,7 +167,6 @@ public class TaskDataTest {
     ArrayList<Long> entitySubtasks = (ArrayList<Long>) entity.getProperty("subtasks");
 
     // Assert task entity attributes equal TaskData attributes
-    // Assert.assertEquals("taskID", taskID3, entityTaskID);
     Assert.assertEquals("projectID", projectID3, entityProjectID);
     Assert.assertEquals("name", name3, entityName);
     Assert.assertEquals("description", description3, entityDescription);
@@ -200,7 +184,6 @@ public class TaskDataTest {
     Entity entity = task.toEntity();
 
     // Get task entity attributes
-    // long entityTaskID = (long) entity.getProperty("taskID");
     long entityProjectID = (long) entity.getProperty("projectID");
     String entityName = (String) entity.getProperty("name");
     String entityDescription = (String) entity.getProperty("description");

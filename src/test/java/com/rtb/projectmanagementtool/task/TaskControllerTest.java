@@ -19,7 +19,6 @@ import org.junit.Test;
 public class TaskControllerTest {
 
   // Task 1 attributes
-  //   private static final long taskID1 = 1l;
   private static final long projectID1 = 1l;
   private static final String name1 = "Task 1";
   private static final String description1 = "Task 1 description...";
@@ -28,7 +27,6 @@ public class TaskControllerTest {
   private static final ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
 
   // Task 2 attributes
-  //   private static final long taskID2 = 2l;
   private static final long projectID2 = 1l;
   private static final String name2 = "Task 2";
   private static final String description2 = "Task 2 description...";
@@ -37,7 +35,6 @@ public class TaskControllerTest {
   private static final ArrayList<Long> subtasks2 = new ArrayList<>();
 
   // Task 3 attributes
-  //   private static final long taskID3 = 3l;
   private static final long projectID3 = 1l;
   private static final String name3 = "Task 3";
   private static final String description3 = "Task 3 description...";
@@ -47,13 +44,10 @@ public class TaskControllerTest {
 
   // TaskData objects
   private static final TaskData task1 =
-      //   new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
       new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
   private static final TaskData task2 =
-      //   new TaskData(taskID2, projectID2, name2, description2, status2, users2, subtasks2);
       new TaskData(projectID2, name2, description2, status2, users2, subtasks2);
   private static final TaskData task3 =
-      //   new TaskData(taskID3, projectID3, name3, description3, status3, users3, subtasks3);
       new TaskData(projectID3, name3, description3, status3, users3, subtasks3);
 
   private final LocalServiceTestHelper helper =

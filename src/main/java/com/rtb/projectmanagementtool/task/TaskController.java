@@ -13,6 +13,24 @@ public final class TaskController {
     this.datastore = datastore;
   }
 
+  public ArrayList<Key> addTasks(ArrayList<TaskData> tasks) {
+    ArrayList<Entity> taskEntities = new ArrayList<>();
+    for (TaskData task : tasks) {
+      taskEntities.add(task.toEntity());
+    }
+    return new ArrayList<>(datastore.put(taskEntities));
+  }
+
+  public ArrayList<Key> addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
+    ArrayList<Key> keys = addTasks(subtasks);
+    ArrayList<Long> taskSubtasks = task.getSubtasks();
+    for (Key key : keys) {
+      taskSubtasks.add(key.getId());
+    }
+    task.setSubtasks(taskSubtasks);
+    return keys;
+  }
+
   public TaskData getTaskByID(long taskID) {
     Query query =
         new Query("Task")
@@ -21,26 +39,6 @@ public final class TaskController {
     Entity entity = results.asSingleEntity();
     TaskData task = new TaskData(entity);
     return task;
-  }
-
-  public ArrayList<Key> addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
-    ArrayList<Key> keys = addTasks(subtasks);
-    ArrayList<Long> taskSubtasks = task.getSubtasks();
-    for (Key key : keys) {
-      long taskID = key.getId();
-      taskSubtasks.add(taskID);
-    }
-    task.setSubtasks(taskSubtasks);
-    return keys;
-  }
-
-  public ArrayList<TaskData> getSubtasks(TaskData task) {
-    ArrayList<Key> subtaskKeys = getKeysFromTaskIDs(task.getSubtasks());
-    if (!task.getSubtasks().isEmpty()) {
-      Query query = new Query("Task").addFilter("__key__", FilterOperator.IN, subtaskKeys);
-      return getTasks(query, Integer.MAX_VALUE);
-    }
-    return new ArrayList<>();
   }
 
   public ArrayList<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
@@ -52,6 +50,15 @@ public final class TaskController {
       query = new Query("Task").addSort(sortBy, SortDirection.ASCENDING);
     }
     return getTasks(query, quantity);
+  }
+
+  public ArrayList<TaskData> getSubtasks(TaskData task) {
+    ArrayList<Key> subtaskKeys = getKeysFromTaskIDs(task.getSubtasks());
+    if (!task.getSubtasks().isEmpty()) {
+      Query query = new Query("Task").addFilter("__key__", FilterOperator.IN, subtaskKeys);
+      return getTasks(query, Integer.MAX_VALUE);
+    }
+    return new ArrayList<>();
   }
 
   private ArrayList<TaskData> getTasks(Query query, int quantity) {
@@ -66,15 +73,6 @@ public final class TaskController {
       tasks.add(task);
     }
     return tasks;
-  }
-
-  public ArrayList<Key> addTasks(ArrayList<TaskData> tasks) {
-    ArrayList<Entity> taskEntities = new ArrayList<>();
-    for (TaskData task : tasks) {
-      Entity entity = task.toEntity();
-      taskEntities.add(entity);
-    }
-    return new ArrayList<>(datastore.put(taskEntities));
   }
 
   public void deleteTasks(ArrayList<Long> taskIDs) {

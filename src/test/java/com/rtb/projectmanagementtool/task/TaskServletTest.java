@@ -69,9 +69,7 @@ public class TaskServletTest extends Mockito {
     Status status1 = Status.INCOMPLETE;
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
     ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
-    TaskData task1 =
-        // new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
-        new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
+    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
 
     // Create expected results
     ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
