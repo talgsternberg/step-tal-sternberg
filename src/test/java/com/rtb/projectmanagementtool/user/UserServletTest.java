@@ -79,10 +79,6 @@ public class UserServletTest extends Mockito {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(response.getWriter()).thenReturn(printWriter);
-    System.out.println("request");
-    System.out.println(request);
-    System.out.println("response");
-    System.out.println(response);
 
     // Run doPost()
     servlet.doPost(request, response);

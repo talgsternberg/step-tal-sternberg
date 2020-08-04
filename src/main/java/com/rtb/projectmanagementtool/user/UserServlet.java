@@ -49,14 +49,19 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity entity = new Entity("User");
+    System.out.println("no error yet: 1");
 
     // params from request
     long userID = (long) entity.getKey().getId();
     long AuthID = Long.parseLong(request.getParameter("AuthID"));
     String userName = request.getParameter("userName").trim();
     long userYear = Long.parseLong(request.getParameter("userYear"));
+
+    // error is here
+    // request.getParameterValues(userMajors) is null
     ArrayList<String> userMajors =
         (ArrayList<String>) Arrays.asList(request.getParameterValues("userMajors"));
+
     Skills skills = Skills.valueOf(request.getParameter("skills").toUpperCase());
     long userTotal = Long.parseLong(request.getParameter("userTotalCompTasks"));
 
