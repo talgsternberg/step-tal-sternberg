@@ -25,7 +25,7 @@ public class AuthServlet extends HttpServlet {
     List<Log> Logs = new ArrayList<>();
     String status; // logged in or out
     String userEmail;
-    long AuthID; // ID to track user for storing their info in datastore
+    String AuthID; // ID to track user for storing their info in datastore
     String urlToRedirectToAfterUserLogsIn; // go to index (all user data should load)
     String urlToRedirectToAfterUserLogsOut; // go to index with other pages blocked
     String loginUrl;
@@ -35,20 +35,19 @@ public class AuthServlet extends HttpServlet {
     if (userService.isUserLoggedIn()) {
       status = "In";
       userEmail = userService.getCurrentUser().getEmail();
-      AuthID = userService.getCurrentUser().getId();
+      AuthID = userService.getCurrentUser().getUserId();
       urlToRedirectToAfterUserLogsOut = "/";
-      urlToRedirectToAfterUserLogsIn =
-          "/"; // somehow modify to load scripts for user's specific data on pages
+      urlToRedirectToAfterUserLogsIn = "/"; // temporary
       logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
     } else {
       status = "Out";
       urlToRedirectToAfterUserLogsOut = "/";
-      urlToRedirectToAfterUserLogsIn = "/";
+      urlToRedirectToAfterUserLogsIn = "/"; // temporary
       loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
       logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       userEmail = ""; // empty email
-      AuthID = 0; // "empty" AuthID
+      AuthID = ""; // empty AuthID
     }
 
     // create new log object
@@ -70,7 +69,7 @@ public class AuthServlet extends HttpServlet {
     String loginUrl = request.getParameter("loginUrl");
     String logoutUrl = request.getParameter("logoutUrl");
     String userEmail = request.getParameter("userEmail");
-    String userEmail = request.getParameter("AuthID");
+    String AuthID = request.getParameter("AuthID");
 
     // setup new Entity to store
     Entity logEntity = new Entity("Log");
