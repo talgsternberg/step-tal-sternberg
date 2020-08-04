@@ -37,7 +37,7 @@ function getTaskInfo() {
         //     project.projectName,
         //     task.taskID,
         //     task.name));
-        addSubtask.appendChild(getCreateTaskButton(1, 'Project Name 1'));
+        addSubtask.appendChild(createTaskButton(1, 'Project Name 1'));
         const userList = document.getElementById('task-users-container');
         // userList.appendChild(getUsers(users));
         // const commentList =
@@ -49,11 +49,13 @@ function getTaskInfo() {
 
 /**
  * Build create task button.
- * @param {long} projectID project ID.
- * @param {long} taskID taskID.
+ * @param {number} projectID
+ * @param {String} projectName
+ * @param {number} taskID If not provided, set to 0.
+ * @param {String} taskName If not provided, set to 'null'.
  * @return {Element} HTML button element containing goToAddTask() function.
  */
-function getCreateTaskButton(projectID, projectName, taskID=0, taskName='null') {
+function createTaskButton(projectID, projectName, taskID=0, taskName='null') {
   buttonElement = document.createElement('button');
   buttonElement.setAttribute('type', 'button');
   buttonElement.setAttribute('onclick', 'goToAddTask(' +
@@ -78,7 +80,11 @@ function getCreateTaskButton(projectID, projectName, taskID=0, taskName='null') 
  * @param {String} taskName If not provided, set to 'null'.
  */
 function goToAddTask(projectID, projectName, taskID=0, taskName='null') {
-  const url = 'add_task.html?projectID=' + projectID + '&projectName=' + projectName + '&taskID=' + taskID + '&taskName=' + taskName;
+  const url =
+      'add_task.html?projectID=' + projectID +
+      '&projectName=' + projectName +
+      '&taskID=' + taskID +
+      '&taskName=' + taskName;
   console.log(url);
   location.href = url;
 }

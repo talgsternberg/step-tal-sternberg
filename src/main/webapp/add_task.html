@@ -20,14 +20,14 @@
       <div id="addtask-project-container"><p>This task will be under project: Default Parent Project</p></div>
       <div id="addtask-task-container"><p>This task will be under task: Default Parent Task</p></div>
       <br>
-      <form id="post-addtask-form" action="/task" method="POST">
-        <div id="post-addtask">
+      <form id="addtask-post-form" action="/task" method="POST">
+        <div id="addtask-post-container">
           <input type="hidden" id="projectID" name="projectID">
           <input type="hidden" name="status" value="incomplete">
-          <input type="text" name="name" required placeholder="Enter name of task..." maxlength=40>
+          <input type="text" name="name" required placeholder="Enter name of task..." maxlength="40">
           <br>
           <br>
-          <textarea type="text" name="description" required style="height:150px" placeholder="Enter task description..."></textarea>
+          <textarea type="text" name="description" required placeholder="Enter task description..."></textarea>
           <br>
           <button type="submit">Add Task</button>
         </div>
