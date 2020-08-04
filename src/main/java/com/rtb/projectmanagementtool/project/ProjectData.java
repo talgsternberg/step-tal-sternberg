@@ -5,24 +5,19 @@
 package com.rtb.projectmanagementtool.project;
 
 import com.google.appengine.api.datastore.Entity;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public class ProjectData {
   private final String PROPERTY_NAME = "name";
   private final String PROPERTY_DESCRIPTION = "description";
-  private final String PROPERTY_USER_IDS = "userIds";
-  private final String PROPERTY_TASK_IDS = "taskIds";
+  private final String PROPERTY_USERS = "users";
+  private final String PROPERTY_TASKS = "tasks";
 
   private long id;
   private String name;
   private String description;
-  private HashMap<Long, UserProjectRole> userIds;
-  private HashSet<Long> taskIds;
+  private ArrayList<Long> tasks;
+  private ArrayList<String> users;
 
   /**
    * Class constructor with the minimum requirements for creating a project.
@@ -34,9 +29,9 @@ public class ProjectData {
   public ProjectData(String name, String description, long creatorId) {
     this.name = name;
     this.description = description;
-    this.taskIds = new HashSet<Long>();
-    this.userIds = new HashMap<Long, UserProjectRole>();
-    this.userIds.put(creatorId, UserProjectRole.CREATOR);
+    this.tasks = new ArrayList<Long>();
+    this.users = new ArrayList<String>();
+    this.users.add(createUserString(creatorId, UserProjectRole.CREATOR));
   }
 
   /**
@@ -49,17 +44,20 @@ public class ProjectData {
     this.name = (String) entity.getProperty(PROPERTY_NAME);
     this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
 
-    Object userIdProperty;
-    if ((userIdProperty = entity.getProperty(PROPERTY_TASK_IDS)) != null) {
-      this.taskIds = new HashSet<Long>((ArrayList<Long>) userIdProperty);
+    // Tasks
+    Object entityProperty;
+    if ((entityProperty = entity.getProperty(PROPERTY_TASKS)) != null) {
+      this.tasks = (ArrayList<Long>) entityProperty;
     } else {
-      this.taskIds = new HashSet<Long>();
+      this.tasks = new ArrayList<Long>();
     }
 
-    // Convert json to HashMap for userIds
-    Gson gson = new Gson();
-    Type mapType = new TypeToken<HashMap<Long, UserProjectRole>>() {}.getType();
-    this.userIds = gson.fromJson((String) entity.getProperty(PROPERTY_USER_IDS), mapType);
+    // Users
+    if ((entityProperty = entity.getProperty(PROPERTY_USERS)) != null) {
+      this.users = (ArrayList<String>) entityProperty;
+    } else {
+      this.users = new ArrayList<String>();
+    }
   }
 
   /** @return the entity representation of this class */
@@ -67,9 +65,8 @@ public class ProjectData {
     Entity entity = new Entity("Project");
     entity.setProperty(PROPERTY_NAME, this.name);
     entity.setProperty(PROPERTY_DESCRIPTION, this.description);
-    entity.setProperty(PROPERTY_TASK_IDS, this.taskIds);
-    Gson gson = new Gson();
-    entity.setProperty(PROPERTY_USER_IDS, gson.toJson(this.userIds));
+    entity.setProperty(PROPERTY_TASKS, this.tasks);
+    entity.setProperty(PROPERTY_USERS, this.users);
     return entity;
   }
 
@@ -89,13 +86,13 @@ public class ProjectData {
   }
 
   /** @return users */
-  public HashMap<Long, UserProjectRole> getUsers() {
-    return this.userIds;
+  public ArrayList<String> getUsers() {
+    return this.users;
   }
 
   /** @return task ids */
-  public HashSet<Long> getTasks() {
-    return this.taskIds;
+  public ArrayList<Long> getTasks() {
+    return this.tasks;
   }
 
   /**
@@ -130,37 +127,10 @@ public class ProjectData {
    *
    * @param userId id of the user to add
    */
-  public void addRegularUser(long userId) {
-    addUser(userId, false);
-  }
-
-  /**
-   * Add an admin user to the project
-   *
-   * @param userId id of the user to add
-   */
-  public void addAdminUser(long userId) {
-    addUser(userId, true);
-  }
-
-  /**
-   * Helper function for addRegularUser() and addAdminUser() to add any user to the project. Can
-   * only add regular/admin users
-   *
-   * @param userId id of the user to add
-   * @param isAdmin is the user an admin?
-   */
-  private void addUser(long userId, boolean isAdmin) {
-    // remove user if they're already in project
-    if (hasUser(userId)) {
-      removeUser(userId);
-    }
-
-    if (isAdmin) {
-      this.userIds.put(userId, UserProjectRole.ADMIN);
-    } else {
-      this.userIds.put(userId, UserProjectRole.REGULAR);
-    }
+  public boolean addUser(long userId, UserProjectRole userRole) {
+    // TODO: add checks for if user already exists
+    this.users.add(createUserString(userId, userRole));
+    return true;
   }
 
   /**
@@ -170,9 +140,8 @@ public class ProjectData {
    * @return true if operation is successful
    */
   public boolean removeUser(long userId) {
-    // don't remove creator
-    if (userType(userId) != UserProjectRole.CREATOR.name()) {
-      this.userIds.remove(userId);
+    if (getUserRole(userId) != UserProjectRole.CREATOR) {
+      users.remove(getUser(userId));
       return true;
     }
     return false;
@@ -185,7 +154,7 @@ public class ProjectData {
    * @return true if operation successful
    */
   public boolean addTask(long taskId) {
-    return this.taskIds.add(taskId);
+    return this.tasks.add(taskId);
   }
 
   /**
@@ -195,7 +164,72 @@ public class ProjectData {
    * @return true if operation successful
    */
   public boolean removeTask(long taskId) {
-    return this.taskIds.remove(taskId);
+    return this.tasks.remove(taskId);
+  }
+
+  /**
+   * Get the string representation of a user ex. "CREATOR-12345"
+   *
+   * @param userId id of the user
+   * @return user string
+   */
+  public String getUser(long userId) {
+    for (String user : users) {
+      if (getUserId(user) == userId) {
+        return user;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get the role of a user given thier id ex. "CREATOR"
+   *
+   * @param userId id of the user
+   * @return user's role
+   */
+  public UserProjectRole getUserRole(long userId) {
+    String user;
+    if ((user = getUser(userId)) != null) {
+      return getUserRole(user);
+    }
+    return null;
+  }
+
+  /**
+   * Get the role of a user given thier user String ex. "CREATOR-12345" -> "CREATOR"
+   *
+   * @param user the user's string representation
+   * @return user's role
+   */
+  public UserProjectRole getUserRole(String user) {
+    String userRole = user.split("-")[0];
+    if (userRole != null) {
+      return UserProjectRole.valueOf(userRole);
+    }
+    return null;
+  }
+
+  /**
+   * Get the id of a user given thier user String ex. "CREATOR-12345" -> 12345
+   *
+   * @param user the user's string representation
+   * @return user's id
+   */
+  public Long getUserId(String user) {
+    return Long.parseLong(user.split("-")[1]);
+  }
+
+  /**
+   * Static method to create the String representation of user's id. Is static in order to allow
+   * easier parsing for external classes that work with the users in this class.
+   *
+   * @param userId the id of user
+   * @param userRole the role of the user
+   * @return string representation of user (ex. "MEMBER-3254622")
+   */
+  public static String createUserString(long userId, UserProjectRole userRole) {
+    return new String(userRole.name() + "-" + userId);
   }
 
   /**
@@ -205,7 +239,7 @@ public class ProjectData {
    * @return true if the user is in project
    */
   public boolean hasUser(long userId) {
-    return userType(userId) != null;
+    return getUser(userId) != null;
   }
 
   /**
@@ -215,7 +249,7 @@ public class ProjectData {
    * @return true if the user is in project
    */
   public boolean hasAdmin(long userId) {
-    return userType(userId) == UserProjectRole.ADMIN.name();
+    return getUserRole(userId) == UserProjectRole.ADMIN;
   }
 
   /**
@@ -225,21 +259,7 @@ public class ProjectData {
    * @return true if the user is the creator
    */
   public boolean isCreator(long userId) {
-    return userType(userId) == UserProjectRole.CREATOR.name();
-  }
-
-  /**
-   * Returns the type of the user
-   *
-   * @param userId the userId
-   * @return the type of user (CREATOR / ADMIN / REGULAR)
-   */
-  private String userType(long userId) {
-    UserProjectRole userRole = this.userIds.get(userId);
-    if (userRole != null) {
-      return userRole.name();
-    }
-    return null;
+    return getUserRole(userId) == UserProjectRole.CREATOR;
   }
 
   /** @return the string representation of this class. */
@@ -249,8 +269,8 @@ public class ProjectData {
     returnString += "Project id: " + this.id + "\n";
     returnString += "Project Name: " + this.name + "\n";
     returnString += "Project Description: " + this.description + "\n";
-    returnString += "Project Users: " + this.userIds.toString() + "\n";
-    returnString += "Tasks: " + this.taskIds.toString() + "\n}";
+    returnString += "Project Users: " + this.users.toString() + "\n";
+    returnString += "Tasks: " + this.tasks.toString() + "\n}";
     return returnString;
   }
 }

@@ -4,12 +4,8 @@
  */
 package com.rtb.projectmanagementtool.project;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
 
 public class ProjectController {
@@ -21,61 +17,69 @@ public class ProjectController {
     this.datastore = datastore;
   }
 
-  /**
-   * Gets all the projects in datastore that all users are in
-   *
-   * @param userIds the collection of userIds whose projects are to be retrieved
-   * @return HashSet containing desired projects
-   */
+  /** @return ArrayList containing all projects in database * Only for testing right now */
   public ArrayList<ProjectData> getAllProjects() {
-    return getProjects(0l, false);
+    return getProjectsByQuery(/* queryList */ null);
   }
 
   /**
-   * Gets all the projects in datastore that the specified user is in
+   * Gets all projects in database with a user
    *
-   * @param userId the id of user whose projects to retrieve
-   * @return HashSet containing desired projects
+   * @param userId the id of the user
+   * @return ArrayList containing desired projects
    */
-  public ArrayList<ProjectData> getUserProjects(long userId) {
-    return getProjects(userId, false);
+  public ArrayList<ProjectData> getProjectsWithUser(Long userId) {
+    ArrayList<String> queryList = new ArrayList<String>();
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.CREATOR));
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.ADMIN));
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.MEMBER));
+    return getProjectsByQuery(queryList);
   }
 
   /**
-   * Gets all the projects in datastore created by user
+   * Gets all projects in database that has a specific admin
    *
-   * @param userId the id of owner whose projects to retrieve
-   * @return HashSet containing desired projects
+   * @param userId the id of the user
+   * @return ArrayList containing desired projects
    */
-  public ArrayList<ProjectData> getCreatorProjects(long userId) {
-    return getProjects(userId, true);
+  public ArrayList<ProjectData> getProjectsWithAdmin(Long userId) {
+    ArrayList<String> queryList = new ArrayList<String>();
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.ADMIN));
+    return getProjectsByQuery(queryList);
   }
 
   /**
-   * Helper function for getAllProjects(), getUserProjects(), and getCreatorProjects()
+   * Gets all projects in database created by specific user
    *
-   * @param userId the id of user whose projects to retrieve
-   * @param getCreatorProjects boolean representing the user's role in project (owner or otherwise)
-   * @return HashSet containing desired projects
+   * @param userId the id of the user
+   * @return ArrayList containing desired projects
    */
-  private ArrayList<ProjectData> getProjects(long userId, boolean getCreatorProjects) {
+  public ArrayList<ProjectData> getProjectsByCreator(Long userId) {
+    ArrayList<String> queryList = new ArrayList<String>();
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.CREATOR));
+    return getProjectsByQuery(queryList);
+  }
+
+  /**
+   * Gets all projects in database that match query list
+   *
+   * @param queryList list of users to fetch. ex string: CREATOR-12345
+   * @return ArrayList containing desired projects
+   */
+  public ArrayList<ProjectData> getProjectsByQuery(ArrayList<String> queryList) {
     ArrayList<ProjectData> projectContainer = new ArrayList<ProjectData>();
 
-    PreparedQuery results = datastore.prepare(new Query("Project"));
-    for (Entity entity : results.asIterable()) {
-      ProjectData project = new ProjectData(entity);
-
-      if (
-      // query wants every user
-      userId == 0l
-          // or query wants projects by a creator
-          || getCreatorProjects && project.isCreator(userId)
-          // or query wants projects with a user
-          || !getCreatorProjects && project.hasUser(userId)) {
-        projectContainer.add(project);
-      }
+    // Only retrieve filtered projects
+    Query query = new Query("Project");
+    if (queryList != null) {
+      query.addFilter("users", FilterOperator.IN, queryList);
     }
 
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      ProjectData project = new ProjectData(entity);
+      projectContainer.add(project);
+    }
     return projectContainer;
   }
 
@@ -98,7 +102,7 @@ public class ProjectController {
   }
 
   /**
-   * Removes a Project from database given its projectIdd
+   * Removes a Project from database given its projectId
    *
    * @param projectId the id of the project to remove
    */
