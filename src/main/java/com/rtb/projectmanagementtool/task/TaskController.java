@@ -14,16 +14,30 @@ public final class TaskController {
   }
 
   public TaskData getTaskByID(long taskID) {
-    Query query = new Query("Task").addFilter("taskID", FilterOperator.EQUAL, taskID);
+    Query query =
+        new Query("Task")
+            .addFilter("__key__", FilterOperator.EQUAL, KeyFactory.createKey("Task", taskID));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
     TaskData task = new TaskData(entity);
     return task;
   }
 
+  public ArrayList<Key> addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
+    ArrayList<Key> keys = addTasks(subtasks);
+    ArrayList<Long> taskSubtasks = task.getSubtasks();
+    for (Key key : keys) {
+      long taskID = key.getId();
+      taskSubtasks.add(taskID);
+    }
+    task.setSubtasks(taskSubtasks);
+    return keys;
+  }
+
   public ArrayList<TaskData> getSubtasks(TaskData task) {
+    ArrayList<Key> subtaskKeys = getKeysFromTaskIDs(task.getSubtasks());
     if (!task.getSubtasks().isEmpty()) {
-      Query query = new Query("Task").addFilter("taskID", FilterOperator.IN, task.getSubtasks());
+      Query query = new Query("Task").addFilter("__key__", FilterOperator.IN, subtaskKeys);
       return getTasks(query, Integer.MAX_VALUE);
     }
     return new ArrayList<>();
@@ -54,21 +68,33 @@ public final class TaskController {
     return tasks;
   }
 
-  public void addTasks(ArrayList<TaskData> tasks) {
+  public ArrayList<Key> addTasks(ArrayList<TaskData> tasks) {
     ArrayList<Entity> taskEntities = new ArrayList<>();
     for (TaskData task : tasks) {
       Entity entity = task.toEntity();
       taskEntities.add(entity);
     }
-    datastore.put(taskEntities);
+    return new ArrayList<>(datastore.put(taskEntities));
   }
 
   public void deleteTasks(ArrayList<Long> taskIDs) {
+    ArrayList<Key> keys = getKeysFromTaskIDs(taskIDs);
+    datastore.delete(keys);
+  }
+
+  public ArrayList<Long> getTaskIDsFromKeys(ArrayList<Key> keys) {
+    ArrayList<Long> taskIDs = new ArrayList<>();
+    for (Key key : keys) {
+      taskIDs.add(key.getId());
+    }
+    return taskIDs;
+  }
+
+  public ArrayList<Key> getKeysFromTaskIDs(ArrayList<Long> taskIDs) {
     ArrayList<Key> keys = new ArrayList<>();
     for (long taskID : taskIDs) {
-      Key key = KeyFactory.createKey("Task", taskID);
-      keys.add(key);
+      keys.add(KeyFactory.createKey("Task", taskID));
     }
-    datastore.delete(keys);
+    return keys;
   }
 }
