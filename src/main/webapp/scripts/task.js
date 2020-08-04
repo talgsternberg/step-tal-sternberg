@@ -106,6 +106,6 @@ function getAddTaskInfo() {
   } else {
     parentTask.innerText = '';
   }
-  const inputProjectID = document.getElementById('projectID');
+  const inputProjectID = document.getElementById('addtask-project-input');
   inputProjectID.setAttribute('value', projectID);
 }
