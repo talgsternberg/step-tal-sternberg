@@ -19,23 +19,26 @@ public class UserServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // Test user
-    // long userID1 = 1l;
-    // long AuthID1 = 1l;
-    // String userName1 = "Jake";
-    // long userYear1 = 2023;
-    // ArrayList<String> userMajors1 = new ArrayList<>(Arrays.asList("Geology", "Physics"));
-    // long userTotalCompTasks1 = 8;
-    // UserData user1 =
-    // new UserData(userID1, AuthID1, userName1, userYear1, userMajors1, userTotalCompTasks1);
+    long userID1 = 3l;
+    long AuthID1 = 3l;
+    String userName1 = "Sarah";
+    long userYear1 = 2023;
+    ArrayList<String> userMajors1 = new ArrayList<>(Arrays.asList("Psychology"));
+    Skills skills1 = Skills.OOP;
+    long userTotalCompTasks1 = 3;
+    UserData user1 =
+        new UserData(
+            userID1, AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
 
     // get the User
     long userID = Long.parseLong(request.getParameter("userID"));
     UserController userController = new UserController(datastore);
-    UserData user = userController.getUserByID(userID);
+
+    // UserData user = userController.getUserByID(userID);
 
     // add to list of users
-    ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user));
-    // ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user1));
+    // ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user));
+    ArrayList<UserData> usersList = new ArrayList<>(Arrays.asList(user1));
 
     // convert to JSON
     Gson gson = new Gson();
@@ -46,6 +49,7 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity entity = new Entity("User");
+    System.out.println("no error yet: 1");
 
     // params from request
     long userID = (long) entity.getKey().getId();
@@ -53,11 +57,12 @@ public class UserServlet extends HttpServlet {
     String userName = request.getParameter("userName").trim();
     long userYear = Long.parseLong(request.getParameter("userYear"));
     ArrayList<String> userMajors =
-        (ArrayList<String>) Arrays.asList(request.getParameterValues("userMajors"));
+        new ArrayList<String>(Arrays.asList(request.getParameterValues("userMajors")));
+    Skills skills = Skills.valueOf(request.getParameter("skills").toUpperCase());
     long userTotal = Long.parseLong(request.getParameter("userTotalCompTasks"));
 
     // create new user. Set up datastore
-    UserData user = new UserData(userID, AuthID, userName, userYear, userMajors, userTotal);
+    UserData user = new UserData(userID, AuthID, userName, userYear, userMajors, skills, userTotal);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // new UserController. Add UserData to it.
