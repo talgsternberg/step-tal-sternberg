@@ -21,8 +21,7 @@ public final class UserData {
   private String userName;
   private long userYear;
   private ArrayList<String> userMajors;
-  // private Skills skills;
-  // private String skillsString;
+  private Skills skills;
   private long userTotalCompTasks;
 
   public UserData(
@@ -31,16 +30,14 @@ public final class UserData {
       String userName,
       long userYear,
       ArrayList<String> userMajors,
-      // Skills skills,
-      // String skillString,
+      Skills skills,
       long userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
-    // this.skills = skills;
-    // this.skillsString = skillsString;
+    this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
   }
 
@@ -50,7 +47,7 @@ public final class UserData {
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
     userMajors = (ArrayList<String>) entity.getProperty("userMajors");
-    // skills = Skills.valueOf((String) entity.getProperty("skills"));
+    skills = Skills.valueOf((String) entity.getProperty("skills"));
     userTotalCompTasks = (long) entity.getProperty("userTotalCompTasks");
   }
 
@@ -66,7 +63,7 @@ public final class UserData {
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
-    // entity.setProperty("skills", skills.name());
+    entity.setProperty("skills", skills.name());
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
     return entity;
   }
@@ -91,9 +88,9 @@ public final class UserData {
     return userMajors;
   }
 
-  /* public Skills getUserSkills() {
+  public Skills getUserSkills() {
     return skills;
-  } */
+  }
 
   public long getUserTotal() {
     return userTotalCompTasks;
@@ -119,9 +116,9 @@ public final class UserData {
     this.userMajors = userMajors;
   }
 
-  /* public void setUserSkills(Skills skills) {
+  public void setUserSkills(Skills skills) {
     this.skills = skills;
-  } */
+  }
 
   public void setUserTotal(long userTotalCompTasks) {
     this.userTotalCompTasks = userTotalCompTasks;
@@ -135,6 +132,7 @@ public final class UserData {
     returnString += "User Name: " + userName + "\n";
     returnString += "Year: " + userYear + "\n";
     returnString += "Majors: " + userMajors.toString() + "\n";
+    returnString += "Skills: " + skills.name() + "\n";
     returnString += "Completed Tasks: " + userTotalCompTasks + "\n}";
     return returnString;
   }
@@ -145,6 +143,7 @@ public final class UserData {
         && a.userName.equals(b.userName)
         && a.userYear == b.userYear
         && a.userMajors.equals(b.userMajors)
+        && a.skills == b.skills
         && a.userTotalCompTasks == b.userTotalCompTasks;
   }
 

@@ -19,6 +19,7 @@ public class UserControllerTest {
   private static final String name1 = "Anna";
   private static final long year1 = 2023;
   private static final ArrayList<String> majors1 = new ArrayList<>(Arrays.asList("Biology", "Gov"));
+  private static final Skills skills1 = Skills.ORGANIZATION;
   private static final long totalCompTasks1 = 3;
 
   // User 2
@@ -28,6 +29,7 @@ public class UserControllerTest {
   private static final long year2 = 2023;
   private static final ArrayList<String> majors2 =
       new ArrayList<>(Arrays.asList("Comp Sci", "Earth Sciences"));
+  private static final Skills skills2 = Skills.LEADERSHIP;
   private static final long totalCompTasks2 = 0;
 
   // User 3
@@ -36,16 +38,17 @@ public class UserControllerTest {
   private static final String name3 = "Eddie";
   private static final long year3 = 2022;
   private static final ArrayList<String> majors3 = new ArrayList<>(Arrays.asList("Film", "Econ"));
+  private static final Skills skills3 = Skills.WRITING;
   private static final long totalCompTasks3 = 10;
   private HashSet<UserData> testUsers;
 
   // UserData
   private static final UserData user1 =
-      new UserData(userID1, AuthID1, name1, year1, majors1, totalCompTasks1);
+      new UserData(userID1, AuthID1, name1, year1, majors1, skills1, totalCompTasks1);
   private static final UserData user2 =
-      new UserData(userID2, AuthID2, name2, year2, majors2, totalCompTasks2);
+      new UserData(userID2, AuthID2, name2, year2, majors2, skills2, totalCompTasks2);
   private static final UserData user3 =
-      new UserData(userID3, AuthID3, name3, year3, majors3, totalCompTasks3);
+      new UserData(userID3, AuthID3, name3, year3, majors3, skills3, totalCompTasks3);
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
@@ -74,11 +77,6 @@ public class UserControllerTest {
     // Get user with UserController
     UserController userController = new UserController(ds);
     UserData getUser = userController.getUserByID(userID1);
-
-    System.out.println("in test: getUser");
-    System.out.println(getUser.toString());
-    System.out.println("in test: user1");
-    System.out.println(user1.toString());
 
     // Assert task retrieved is correct
     Assert.assertEquals("getUser", user1, getUser);
