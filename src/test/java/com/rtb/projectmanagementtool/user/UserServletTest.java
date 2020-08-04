@@ -44,7 +44,7 @@ public class UserServletTest extends Mockito {
   public void testDoGet() throws IOException, ServletException {
 
     // test get ID request with a hardcoded long value
-    when(request.getParameter("userID")).thenReturn("3l");
+    when(request.getParameter("userID")).thenReturn("3");
 
     // Create Writer
     StringWriter stringWriter = new StringWriter();
@@ -58,7 +58,7 @@ public class UserServletTest extends Mockito {
     String result = stringWriter.getBuffer().toString().trim();
 
     String expectedResult =
-        "{\"user\":[{\"userID\":3l,\"AuthID\":3l,\"userName\":\"Sarah\",\"userYear\":2023,\"userMajors\":['Psychology},\"skills\":\"OOP\",\"userTotalCompTasks\":3]}";
+        "[{\"userID\":3,\"AuthID\":3,\"userName\":\"Sarah\",\"userYear\":2023,\"userMajors\":[\"Psychology\"],\"skills\":\"OOP\",\"userTotalCompTasks\":3}]";
 
     // Assert results are as expected
     Assert.assertEquals("doGet", result, expectedResult);
@@ -66,10 +66,9 @@ public class UserServletTest extends Mockito {
 
   @Test
   public void testDoPost() throws IOException, ServletException {
-
     // When parameters are requested, return test values
-    when(request.getParameter("userID")).thenReturn("3l");
-    when(request.getParameter("AuthID")).thenReturn("3l");
+    when(request.getParameter("userID")).thenReturn("3");
+    when(request.getParameter("AuthID")).thenReturn("3");
     when(request.getParameter("userName")).thenReturn("Sarah");
     when(request.getParameter("userYear")).thenReturn("2023");
     when(request.getParameter("userMajors")).thenReturn("['Psychology']");
@@ -80,8 +79,12 @@ public class UserServletTest extends Mockito {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(response.getWriter()).thenReturn(printWriter);
+    System.out.println("request");
+    System.out.println(request);
+    System.out.println("response");
+    System.out.println(response);
 
-    // Run doGet()
+    // Run doPost()
     servlet.doPost(request, response);
   }
 }
