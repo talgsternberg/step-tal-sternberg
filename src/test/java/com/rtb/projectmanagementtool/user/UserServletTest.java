@@ -71,7 +71,7 @@ public class UserServletTest extends Mockito {
     when(request.getParameter("AuthID")).thenReturn("3");
     when(request.getParameter("userName")).thenReturn("Sarah");
     when(request.getParameter("userYear")).thenReturn("2023");
-    when(request.getParameter("userMajors")).thenReturn("['Psychology']");
+    when(request.getParameterValues("userMajors")).thenReturn("['Psychology']");
     when(request.getParameter("skills")).thenReturn("OOP");
     when(request.getParameter("userTotalCompTasks")).thenReturn("3");
 
