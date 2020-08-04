@@ -67,8 +67,7 @@ public class ProjectControllerTest {
 
     projectController.addProject(PROJECT3);
     projectController.addProject(PROJECT4);
-    Assert.assertEquals(
-        expectedProjects.toString(), projectController.getProjects(null).toString());
+    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
   }
 
   // Test querying for specific user's projects, both as owner and admin/regular user
@@ -86,7 +85,7 @@ public class ProjectControllerTest {
     String userString = ProjectData.createUserString(USER1, UserProjectRole.CREATOR);
     queryList.add(userString);
 
-    ArrayList<ProjectData> actualUserProjects = projectController.getProjects(queryList);
+    ArrayList<ProjectData> actualUserProjects = projectController.getProjectsByQuery(queryList);
 
     Assert.assertEquals(expectedUserProjects.toString(), actualUserProjects.toString());
   }
@@ -106,7 +105,7 @@ public class ProjectControllerTest {
     queryList.add(ProjectData.createUserString(USER2, UserProjectRole.ADMIN));
     queryList.add(ProjectData.createUserString(USER2, UserProjectRole.MEMBER));
 
-    ArrayList<ProjectData> actualUserProjects = projectController.getProjects(queryList);
+    ArrayList<ProjectData> actualUserProjects = projectController.getProjectsByQuery(queryList);
     Assert.assertEquals(expectedUserProjects.toString(), actualUserProjects.toString());
   }
 
@@ -121,19 +120,16 @@ public class ProjectControllerTest {
     ArrayList<ProjectData> expectedProjects =
         new ArrayList<ProjectData>(Arrays.asList(PROJECT1, PROJECT2, PROJECT3, PROJECT4));
 
-    Assert.assertEquals(
-        expectedProjects.toString(), projectController.getProjects(null).toString());
+    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
 
     expectedProjects.remove(PROJECT2);
     projectController.removeProject(PROJECT2);
-    Assert.assertEquals(
-        expectedProjects.toString(), projectController.getProjects(null).toString());
+    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
 
     expectedProjects.remove(PROJECT3);
     expectedProjects.remove(PROJECT1);
     projectController.removeProject(PROJECT1);
     projectController.removeProject(PROJECT3);
-    Assert.assertEquals(
-        expectedProjects.toString(), projectController.getProjects(null).toString());
+    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
   }
 }

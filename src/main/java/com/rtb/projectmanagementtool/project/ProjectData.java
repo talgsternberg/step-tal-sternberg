@@ -44,6 +44,7 @@ public class ProjectData {
     this.name = (String) entity.getProperty(PROPERTY_NAME);
     this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
 
+    // Tasks
     Object entityProperty;
     if ((entityProperty = entity.getProperty(PROPERTY_TASKS)) != null) {
       this.tasks = (ArrayList<Long>) entityProperty;
@@ -51,6 +52,7 @@ public class ProjectData {
       this.tasks = new ArrayList<Long>();
     }
 
+    // Users
     if ((entityProperty = entity.getProperty(PROPERTY_USERS)) != null) {
       this.users = (ArrayList<String>) entityProperty;
     } else {
@@ -125,9 +127,10 @@ public class ProjectData {
    *
    * @param userId id of the user to add
    */
-  public void addUser(long userId, UserProjectRole userRole) {
+  public boolean addUser(long userId, UserProjectRole userRole) {
     // TODO: add checks for if user already exists
     this.users.add(createUserString(userId, userRole));
+    return true;
   }
 
   /**
@@ -165,9 +168,10 @@ public class ProjectData {
   }
 
   /**
-   * Get the string representation of user "CREATOR-12345"
+   * Get the string representation of a user ex. "CREATOR-12345"
    *
-   * @return user's id
+   * @param userId id of the user
+   * @return user string
    */
   public String getUser(long userId) {
     for (String user : users) {
@@ -178,6 +182,12 @@ public class ProjectData {
     return null;
   }
 
+  /**
+   * Get the role of a user given thier id ex. "CREATOR"
+   *
+   * @param userId id of the user
+   * @return user's role
+   */
   public UserProjectRole getUserRole(long userId) {
     String user;
     if ((user = getUser(userId)) != null) {
@@ -186,6 +196,12 @@ public class ProjectData {
     return null;
   }
 
+  /**
+   * Get the role of a user given thier user String ex. "CREATOR-12345" -> "CREATOR"
+   *
+   * @param user the user's string representation
+   * @return user's role
+   */
   public UserProjectRole getUserRole(String user) {
     String userRole = user.split("-")[0];
     if (userRole != null) {
@@ -194,14 +210,23 @@ public class ProjectData {
     return null;
   }
 
+  /**
+   * Get the id of a user given thier user String ex. "CREATOR-12345" -> 12345
+   *
+   * @param user the user's string representation
+   * @return user's id
+   */
   public Long getUserId(String user) {
     return Long.parseLong(user.split("-")[1]);
   }
 
   /**
-   * Create the String representation of user's id and role to be put in users ArrayList
+   * Static method to create the String representation of user's id. Is static in order to allow
+   * easier parsing for external classes that work with the users in this class.
    *
-   * @return string representation
+   * @param userId the id of user
+   * @param userRole the role of the user
+   * @return string representation of user (ex. "MEMBER-3254622")
    */
   public static String createUserString(long userId, UserProjectRole userRole) {
     return new String(userRole.name() + "-" + userId);

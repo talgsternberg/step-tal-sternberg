@@ -17,16 +17,59 @@ public class ProjectController {
     this.datastore = datastore;
   }
 
+  /** @return ArrayList containing all projects in database * Only for testing right now */
+  public ArrayList<ProjectData> getAllProjects() {
+    return getProjectsByQuery(/* queryList */ null);
+  }
+
   /**
-   * Gets all projects in database that has users
+   * Gets all projects in database with a user
    *
-   * @param queryList list of users to fetch. ex string: CREATOR-12345 Can be created by calling
-   *     ProjectData's static method, createUserString()
+   * @param userId the id of the user
    * @return ArrayList containing desired projects
    */
-  public ArrayList<ProjectData> getProjects(ArrayList<String> queryList) {
+  public ArrayList<ProjectData> getProjectsWithUser(Long userId) {
+    ArrayList<String> queryList = new ArrayList<String>();
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.CREATOR));
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.ADMIN));
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.MEMBER));
+    return getProjectsByQuery(queryList);
+  }
+
+  /**
+   * Gets all projects in database that has a specific admin
+   *
+   * @param userId the id of the user
+   * @return ArrayList containing desired projects
+   */
+  public ArrayList<ProjectData> getProjectsWithAdmin(Long userId) {
+    ArrayList<String> queryList = new ArrayList<String>();
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.ADMIN));
+    return getProjectsByQuery(queryList);
+  }
+
+  /**
+   * Gets all projects in database created by specific user
+   *
+   * @param userId the id of the user
+   * @return ArrayList containing desired projects
+   */
+  public ArrayList<ProjectData> getProjectsByCreator(Long userId) {
+    ArrayList<String> queryList = new ArrayList<String>();
+    queryList.add(ProjectData.createUserString(userId, UserProjectRole.CREATOR));
+    return getProjectsByQuery(queryList);
+  }
+
+  /**
+   * Gets all projects in database that match query list
+   *
+   * @param queryList list of users to fetch. ex string: CREATOR-12345
+   * @return ArrayList containing desired projects
+   */
+  public ArrayList<ProjectData> getProjectsByQuery(ArrayList<String> queryList) {
     ArrayList<ProjectData> projectContainer = new ArrayList<ProjectData>();
 
+    // Only retrieve filtered projects
     Query query = new Query("Project");
     if (queryList != null) {
       query.addFilter("users", FilterOperator.IN, queryList);
@@ -59,7 +102,7 @@ public class ProjectController {
   }
 
   /**
-   * Removes a Project from database given its projectIdd
+   * Removes a Project from database given its projectId
    *
    * @param projectId the id of the project to remove
    */
