@@ -22,6 +22,7 @@ import org.mockito.*;
 
 public class TaskServletTest extends Mockito {
 
+  private DatastoreService datastore;
   private TaskServlet servlet;
   private HttpServletRequest request;
   private HttpServletResponse response;
@@ -34,7 +35,8 @@ public class TaskServletTest extends Mockito {
   @Before
   public void setUp() {
     helper.setUp();
-    servlet = new TaskServlet();
+    datastore = DatastoreServiceFactory.getDatastoreService();
+    servlet = new TaskServlet(datastore);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
   }
@@ -84,7 +86,6 @@ public class TaskServletTest extends Mockito {
 
   @Test
   public void testDoPost() throws IOException, ServletException {
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
     // When parameters are requested, return test values
     when(request.getParameter("projectID")).thenReturn("1");
@@ -98,13 +99,13 @@ public class TaskServletTest extends Mockito {
     when(response.getWriter()).thenReturn(printWriter);
 
     // Get quantity of tasks before posting
-    int quantityBefore = ds.prepare(new Query("Task")).countEntities();
+    int quantityBefore = datastore.prepare(new Query("Task")).countEntities();
 
     // Run doPost()
     servlet.doPost(request, response);
 
     // Get quantity of tasks after posting
-    int quantityAfter = ds.prepare(new Query("Task")).countEntities();
+    int quantityAfter = datastore.prepare(new Query("Task")).countEntities();
 
     // Assert a task entity was added to datastore
     Assert.assertEquals("doPost", quantityAfter, quantityBefore + 1);

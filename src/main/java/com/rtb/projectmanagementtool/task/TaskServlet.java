@@ -15,10 +15,19 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/task")
 public class TaskServlet extends HttpServlet {
 
+  DatastoreService datastore;
+
+  public TaskServlet() {
+    datastore = DatastoreServiceFactory.getDatastoreService();
+  }
+
+  // For testing only
+  public TaskServlet(DatastoreService datastore) {
+    this.datastore = datastore;
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // Temporary/Default task to display
     long taskID1 = 1l;
@@ -80,34 +89,8 @@ public class TaskServlet extends HttpServlet {
     TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
 
     // Add task to datastore
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
-
-    // Redirect to newly created task page
-    response.sendRedirect("/task.html?taskID=" + task.getTaskID());
-  }
-
-  // for tests
-  public void doPost(
-      HttpServletRequest request, HttpServletResponse response, DatastoreService datastore)
-      throws IOException {
-    // Get and create parameters
-    long projectID = Long.parseLong(request.getParameter("projectID"));
-    String name = request.getParameter("name").trim();
-    String description = request.getParameter("description").trim();
-    Status status = Status.valueOf(request.getParameter("status").toUpperCase());
-    ArrayList<Long> users = new ArrayList<>();
-    ArrayList<Long> subtasks = new ArrayList<>();
-
-    // Create TaskData object
-    TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
-
-    // Add task to datastore
-    TaskController taskController = new TaskController(datastore);
-    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
-    System.out.println("\n\n\n");
-    System.out.println(task);
 
     // Redirect to newly created task page
     response.sendRedirect("/task.html?taskID=" + task.getTaskID());
