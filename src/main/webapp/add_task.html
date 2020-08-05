@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Task</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="scripts/main.js"></script>
+    <script src="scripts/task.js"></script>
+  </head>
+  <body onload="getAddTaskInfo()">
+    <div id="navigation">
+      <a onclick="goToHub()" id="hub">Main Hub</a>
+      <a onclick="goToUser()" id="user">User Profile</a>
+      <a onclick="goToProject()" id="project">Project Page</a>
+      <a onclick="goToTask()" id="task">Task Page</a>
+      <a onclick="goToSettings()" id="settings">Settings Page</a>
+    </div>
+    <div id="content">
+      <h1>Add Task</h1>
+      <div id="addtask-project-container"><p>This task will be under project: Default Parent Project</p></div>
+      <div id="addtask-task-container"><p>This task will be under task: Default Parent Task</p></div>
+      <br>
+      <form id="addtask-post-form" action="/task" method="POST">
+        <div id="addtask-post-container">
+          <input type="hidden" id="addtask-project-input" name="projectID">
+          <input type="hidden" name="status" value="incomplete">
+          <input type="text" name="name" required placeholder="Enter name of task..." maxlength="40">
+          <br>
+          <br>
+          <textarea type="text" name="description" required placeholder="Enter task description..."></textarea>
+          <br>
+          <button type="submit">Add Task</button>
+        </div>
+        <br>
+      </form>
+    </div>
+  </body>
+</html>
