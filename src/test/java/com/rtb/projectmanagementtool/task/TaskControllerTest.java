@@ -108,11 +108,15 @@ public class TaskControllerTest {
             .addFilter("__key__", FilterOperator.IN, taskController.getKeysFromTasks(subtasks));
     PreparedQuery results = ds.prepare(query);
 
-    // Assert correct subtasks were found
+    // Get parent task
+    TaskData parentTask = taskController.getTaskByID(task1.getTaskID());
+
+    // Assert correct subtasks were found in datastore and in the subtasks of the parent task
     TaskData task;
     for (Entity entity : results.asIterable()) {
       task = new TaskData(entity);
       Assert.assertTrue("addSubtasks", subtasks.contains(task));
+      Assert.assertTrue("addSubtasks", parentTask.getSubtasks().contains(task.getTaskID()));
     }
 
     // Assert correct amount of subtasks were found
