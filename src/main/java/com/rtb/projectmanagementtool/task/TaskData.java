@@ -19,7 +19,6 @@ public final class TaskData implements Comparable<TaskData> {
   private String description;
   private Status status;
   private ArrayList<Long> users;
-  //   private ArrayList<Long> subtasks;
 
   public TaskData(
       long taskID,
@@ -29,7 +28,6 @@ public final class TaskData implements Comparable<TaskData> {
       String description,
       Status status,
       ArrayList<Long> users) {
-    //   ArrayList<Long> subtasks) {
     this.taskID = taskID;
     this.parentTaskID = parentTaskID;
     this.projectID = projectID;
@@ -37,7 +35,6 @@ public final class TaskData implements Comparable<TaskData> {
     this.description = description;
     this.status = status;
     this.users = users;
-    // this.subtasks = subtasks;
   }
 
   public TaskData(
@@ -47,7 +44,6 @@ public final class TaskData implements Comparable<TaskData> {
       String description,
       Status status,
       ArrayList<Long> users) {
-    //   ArrayList<Long> subtasks) {
     this.taskID = 0;
     this.parentTaskID = parentTaskID;
     this.projectID = projectID;
@@ -55,12 +51,10 @@ public final class TaskData implements Comparable<TaskData> {
     this.description = description;
     this.status = status;
     this.users = users;
-    // this.subtasks = subtasks;
   }
 
   public TaskData(
       long projectID, String name, String description, Status status, ArrayList<Long> users) {
-    //   ArrayList<Long> subtasks) {
     this.taskID = 0;
     this.parentTaskID = 0;
     this.projectID = projectID;
@@ -83,11 +77,6 @@ public final class TaskData implements Comparable<TaskData> {
     } else {
       users = (ArrayList<Long>) entity.getProperty("users");
     }
-    // if (entity.getProperty("subtasks") == null) {
-    //   subtasks = new ArrayList<Long>();
-    // } else {
-    //   subtasks = (ArrayList<Long>) entity.getProperty("subtasks");
-    // }
   }
 
   public Entity toEntity() {
@@ -105,9 +94,6 @@ public final class TaskData implements Comparable<TaskData> {
     if (!users.isEmpty()) {
       entity.setProperty("users", users);
     }
-    // if (!subtasks.isEmpty()) {
-    //   entity.setProperty("subtasks", subtasks);
-    // }
     return entity;
   }
 
@@ -139,10 +125,6 @@ public final class TaskData implements Comparable<TaskData> {
     return users;
   }
 
-  //   public ArrayList<Long> getSubtasks() {
-  //     return subtasks;
-  //   }
-
   public void setTaskID(long taskID) {
     this.taskID = taskID;
   }
@@ -171,10 +153,6 @@ public final class TaskData implements Comparable<TaskData> {
     this.users = users;
   }
 
-  //   public void setSubtasks(ArrayList<Long> subtasks) {
-  //     this.subtasks = subtasks;
-  //   }
-
   @Override
   public int compareTo(TaskData task) {
     long dif = this.taskID - task.taskID;
@@ -191,7 +169,6 @@ public final class TaskData implements Comparable<TaskData> {
     returnString += "Description: " + description + "\n";
     returnString += "Status: " + status.name() + "\n";
     returnString += "Users: " + users.toString() + "\n}";
-    // returnString += "Subtasks: " + subtasks.toString() + "\n}";
     return returnString;
   }
 
@@ -203,7 +180,6 @@ public final class TaskData implements Comparable<TaskData> {
         && a.description.equals(b.description)
         && a.status == b.status
         && a.users.equals(b.users);
-    // && a.subtasks.equals(b.subtasks);
   }
 
   @Override

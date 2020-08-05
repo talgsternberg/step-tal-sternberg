@@ -26,14 +26,9 @@ public final class TaskController {
       subtask.setParentTaskID(task.getTaskID());
     }
     addTasks(subtasks);
-    // ArrayList<Long> subtaskIDs = task.getSubtasks();
-    // for (TaskData subtask : subtasks) {
-    //   subtaskIDs.add(subtask.getTaskID());
-    // }
-    // task.setSubtasks(subtaskIDs);
   }
 
-  public void addKeysToTasks(ArrayList<TaskData> tasks, ArrayList<Key> keys) {
+  private void addKeysToTasks(ArrayList<TaskData> tasks, ArrayList<Key> keys) {
     if (tasks.size() == keys.size()) {
       for (int i = 0; i < keys.size(); i++) {
         tasks.get(i).setTaskID(keys.get(i).getId());
@@ -62,12 +57,6 @@ public final class TaskController {
   }
 
   public ArrayList<TaskData> getSubtasks(TaskData task) {
-    // ArrayList<Key> subtaskKeys = getKeysFromTaskIDs(task.getSubtasks());
-    // if (!task.getSubtasks().isEmpty()) {
-    //   Query query = new Query("Task").addFilter("__key__", FilterOperator.IN, subtaskKeys);
-    //   return getTasks(query, Integer.MAX_VALUE);
-    // }
-    // return new ArrayList<>();
     Query query =
         new Query("Task").addFilter("parentTaskID", FilterOperator.EQUAL, task.getTaskID());
     return getTasks(query, Integer.MAX_VALUE);
