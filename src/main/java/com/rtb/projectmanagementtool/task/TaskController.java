@@ -13,22 +13,29 @@ public final class TaskController {
     this.datastore = datastore;
   }
 
-  public ArrayList<Key> addTasks(ArrayList<TaskData> tasks) {
+  public void addTasks(ArrayList<TaskData> tasks) {
     ArrayList<Entity> taskEntities = new ArrayList<>();
     for (TaskData task : tasks) {
       taskEntities.add(task.toEntity());
     }
-    return new ArrayList<>(datastore.put(taskEntities));
+    addKeysToTasks(tasks, new ArrayList<>(datastore.put(taskEntities)));
   }
 
-  public ArrayList<Key> addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
-    ArrayList<Key> keys = addTasks(subtasks);
-    ArrayList<Long> taskSubtasks = task.getSubtasks();
-    for (Key key : keys) {
-      taskSubtasks.add(key.getId());
+  public void addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
+    addTasks(subtasks);
+    ArrayList<Long> subtaskIDs = task.getSubtasks();
+    for (TaskData subtask : subtasks) {
+      subtaskIDs.add(subtask.getTaskID());
     }
-    task.setSubtasks(taskSubtasks);
-    return keys;
+    task.setSubtasks(subtaskIDs);
+  }
+
+  public void addKeysToTasks(ArrayList<TaskData> tasks, ArrayList<Key> keys) {
+    if (tasks.size() == keys.size()) {
+      for (int i = 0; i < keys.size(); i++) {
+        tasks.get(i).setTaskID(keys.get(i).getId());
+      }
+    }
   }
 
   public TaskData getTaskByID(long taskID) {
@@ -92,6 +99,14 @@ public final class TaskController {
     ArrayList<Key> keys = new ArrayList<>();
     for (long taskID : taskIDs) {
       keys.add(KeyFactory.createKey("Task", taskID));
+    }
+    return keys;
+  }
+
+  public ArrayList<Key> getKeysFromTasks(ArrayList<TaskData> tasks) {
+    ArrayList<Key> keys = new ArrayList<>();
+    for (TaskData task : tasks) {
+      keys.add(KeyFactory.createKey("Task", task.getTaskID()));
     }
     return keys;
   }

@@ -98,21 +98,21 @@ public class TaskControllerTest {
     TaskController taskController = new TaskController(ds);
 
     // Add task1 and add task2 and task3 as its subtasks with TaskController
-    long taskID1 = taskController.addTasks(new ArrayList<>(Arrays.asList(task1))).get(0).getId();
-    ArrayList<Long> subtaskIDs =
-        taskController.getTaskIDsFromKeys(
-            taskController.addSubtasks(task1, new ArrayList<>(Arrays.asList(task2, task3))));
+    ArrayList<TaskData> subtasks = new ArrayList<>(Arrays.asList(task2, task3));
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1)));
+    taskController.addSubtasks(task1, subtasks);
 
     // Get subtasks
     Query query =
         new Query("Task")
-            .addFilter("__key__", FilterOperator.IN, taskController.getKeysFromTaskIDs(subtaskIDs));
+            .addFilter("__key__", FilterOperator.IN, taskController.getKeysFromTasks(subtasks));
     PreparedQuery results = ds.prepare(query);
 
     // Assert correct subtasks were found
+    TaskData task;
     for (Entity entity : results.asIterable()) {
-      long taskID = entity.getKey().getId();
-      Assert.assertTrue("addSubtasks", subtaskIDs.contains(taskID));
+      task = new TaskData(entity);
+      Assert.assertTrue("addSubtasks", subtasks.contains(task));
     }
 
     // Assert correct amount of subtasks were found
@@ -125,30 +125,9 @@ public class TaskControllerTest {
     TaskController taskController = new TaskController(ds);
 
     // Add task1 and add task2 and task3 as its subtasks with TaskController
-    long taskID1 = taskController.addTasks(new ArrayList<>(Arrays.asList(task1))).get(0).getId();
-    ArrayList<Key> subtaskKeys =
-        taskController.addSubtasks(task1, new ArrayList<>(Arrays.asList(task2, task3)));
-
-    // Build expected subtasks
-    ArrayList<TaskData> subtasks = new ArrayList<>();
-    subtasks.add(
-        new TaskData(
-            subtaskKeys.get(0).getId(),
-            projectID2,
-            name2,
-            description2,
-            status2,
-            users2,
-            subtasks2));
-    subtasks.add(
-        new TaskData(
-            subtaskKeys.get(1).getId(),
-            projectID3,
-            name3,
-            description3,
-            status3,
-            users3,
-            subtasks3));
+    ArrayList<TaskData> subtasks = new ArrayList<>(Arrays.asList(task2, task3));
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1)));
+    taskController.addSubtasks(task1, subtasks);
 
     // Get subtasks with TaskController
     ArrayList<TaskData> getSubtasks = taskController.getSubtasks(task1);

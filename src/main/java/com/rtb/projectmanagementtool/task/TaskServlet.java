@@ -82,10 +82,10 @@ public class TaskServlet extends HttpServlet {
     // Add task to datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(datastore);
-    long taskID = taskController.addTasks(new ArrayList<>(Arrays.asList(task))).get(0).getId();
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
 
     // Redirect to newly created task page
-    response.sendRedirect("/task.html?taskID=" + taskID);
+    response.sendRedirect("/task.html?taskID=" + task.getTaskID());
   }
 
   // for tests
@@ -105,9 +105,11 @@ public class TaskServlet extends HttpServlet {
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);
-    long taskID = taskController.addTasks(new ArrayList<>(Arrays.asList(task))).get(0).getId();
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+    System.out.println("\n\n\n");
+    System.out.println(task);
 
     // Redirect to newly created task page
-    response.sendRedirect("/task.html?taskID=" + taskID);
+    response.sendRedirect("/task.html?taskID=" + task.getTaskID());
   }
 }
