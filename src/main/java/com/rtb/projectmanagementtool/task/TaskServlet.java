@@ -37,7 +37,8 @@ public class TaskServlet extends HttpServlet {
     Status status1 = Status.INCOMPLETE;
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
     ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
-    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
+    // TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
+    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1);
 
     // Get Task
     long taskID = Long.parseLong(request.getParameter("taskID"));
@@ -86,7 +87,8 @@ public class TaskServlet extends HttpServlet {
     ArrayList<Long> subtasks = new ArrayList<>();
 
     // Create TaskData object
-    TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
+    // TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
+    TaskData task = new TaskData(projectID, name, description, status, users);
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);
