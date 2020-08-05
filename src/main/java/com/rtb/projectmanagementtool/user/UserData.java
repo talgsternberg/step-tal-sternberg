@@ -17,7 +17,7 @@ enum Skills { // ignore for now. conflict w/ testing
 public final class UserData {
 
   private long userID;
-  private long AuthID; // this will be the ID from API
+  private String AuthID; // this will be the ID from API
   private String userName;
   private long userYear;
   private ArrayList<String> userMajors;
@@ -26,7 +26,7 @@ public final class UserData {
 
   public UserData(
       long userID,
-      long AuthID,
+      String AuthID,
       String userName,
       long userYear,
       ArrayList<String> userMajors,
@@ -43,7 +43,7 @@ public final class UserData {
 
   public UserData(Entity entity) {
     userID = (long) entity.getKey().getId();
-    AuthID = (long) entity.getProperty("AuthID");
+    AuthID = (String) entity.getProperty("AuthID");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
     userMajors = (ArrayList<String>) entity.getProperty("userMajors");
@@ -72,7 +72,7 @@ public final class UserData {
     return userID;
   }
 
-  public long getAuthID() {
+  public String getAuthID() {
     return AuthID;
   }
 
@@ -100,7 +100,7 @@ public final class UserData {
     this.userID = userID;
   }
 
-  public void setUserEmail(long AuthID) {
+  public void setUserEmail(String AuthID) {
     this.AuthID = AuthID;
   }
 
@@ -139,7 +139,7 @@ public final class UserData {
 
   public boolean equals(UserData a, UserData b) {
     return a.userID == b.userID
-        && a.AuthID == b.AuthID
+        && a.AuthID.equals(b.AuthID)
         && a.userName.equals(b.userName)
         && a.userYear == b.userYear
         && a.userMajors.equals(b.userMajors)

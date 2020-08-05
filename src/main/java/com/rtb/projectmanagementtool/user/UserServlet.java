@@ -20,7 +20,7 @@ public class UserServlet extends HttpServlet {
 
     // Test user
     long userID1 = 3l;
-    long AuthID1 = 3l;
+    String AuthID1 = "abc";
     String userName1 = "Sarah";
     long userYear1 = 2023;
     ArrayList<String> userMajors1 = new ArrayList<>(Arrays.asList("Psychology"));
@@ -53,7 +53,7 @@ public class UserServlet extends HttpServlet {
 
     // params from request
     long userID = (long) entity.getKey().getId();
-    long AuthID = Long.parseLong(request.getParameter("AuthID"));
+    String AuthID = request.getParameter("AuthID").trim();
     String userName = request.getParameter("userName").trim();
     long userYear = Long.parseLong(request.getParameter("userYear"));
     ArrayList<String> userMajors =

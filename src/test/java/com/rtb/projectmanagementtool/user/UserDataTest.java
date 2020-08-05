@@ -13,7 +13,7 @@ import org.junit.Test;
 public class UserDataTest {
   // User 1
   private static final long userID1 = 1l;
-  private static final long AuthID1 = 1l;
+  private static final String AuthID1 = "abc";
   private static final String name1 = "Anna";
   private static final long year1 = 2023;
   private static final ArrayList<String> majors1 = new ArrayList<>(Arrays.asList("Biology", "Gov"));
@@ -22,7 +22,7 @@ public class UserDataTest {
 
   // User 2
   private static final long userID2 = 2l;
-  private static final long AuthID2 = 2l;
+  private static final String AuthID2 = "def";
   private static final String name2 = "Tal";
   private static final long year2 = 2023;
   private static final ArrayList<String> majors2 =
@@ -32,7 +32,7 @@ public class UserDataTest {
 
   // User 3
   private static final long userID3 = 3l;
-  private static final long AuthID3 = 3l;
+  private static final String AuthID3 = "ghi";
   private static final String name3 = "Eddie";
   private static final long year3 = 2022;
   private static final ArrayList<String> majors3 = new ArrayList<>(Arrays.asList("Film", "Econ"));
@@ -102,7 +102,7 @@ public class UserDataTest {
 
     // Get user entity attributes
     long entityUserID = (long) entity2.getKey().getId();
-    long entityAuthID = (long) entity2.getProperty("AuthID");
+    String entityAuthID = (String) entity2.getProperty("AuthID");
     String entityName = (String) entity2.getProperty("userName");
     long entityYear = (long) entity2.getProperty("userYear");
     ArrayList<String> entityMajors = (ArrayList<String>) entity2.getProperty("userMajors");
