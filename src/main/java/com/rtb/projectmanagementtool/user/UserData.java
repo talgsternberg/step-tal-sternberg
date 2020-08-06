@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Entity;
 import java.util.*;
 
 /** Enum containing skills for user. */
-enum Skills { // ignore for now. conflict w/ testing
+enum Skills {
   LEADERSHIP,
   ORGANIZATION,
   WRITING,
