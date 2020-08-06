@@ -28,8 +28,7 @@ public class TaskServlet extends HttpServlet {
     Status status1 = Status.INCOMPLETE;
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
     ArrayList<Long> subtasks1 = new ArrayList<>(Arrays.asList(3l));
-    TaskData task1 =
-        new TaskData(taskID1, projectID1, name1, description1, status1, users1, subtasks1);
+    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1, subtasks1);
 
     // Get Task
     long taskID = Long.parseLong(request.getParameter("taskID"));
@@ -69,15 +68,46 @@ public class TaskServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get and create parameters
     long projectID = Long.parseLong(request.getParameter("projectID"));
     String name = request.getParameter("name").trim();
     String description = request.getParameter("description").trim();
     Status status = Status.valueOf(request.getParameter("status").toUpperCase());
     ArrayList<Long> users = new ArrayList<>();
     ArrayList<Long> subtasks = new ArrayList<>();
+
+    // Create TaskData object
     TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
+
+    // Add task to datastore
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(datastore);
-    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+    long taskID = taskController.addTasks(new ArrayList<>(Arrays.asList(task))).get(0).getId();
+
+    // Redirect to newly created task page
+    response.sendRedirect("/task.html?taskID=" + taskID);
+  }
+
+  // for tests
+  public void doPost(
+      HttpServletRequest request, HttpServletResponse response, DatastoreService datastore)
+      throws IOException {
+    // Get and create parameters
+    long projectID = Long.parseLong(request.getParameter("projectID"));
+    String name = request.getParameter("name").trim();
+    String description = request.getParameter("description").trim();
+    Status status = Status.valueOf(request.getParameter("status").toUpperCase());
+    ArrayList<Long> users = new ArrayList<>();
+    ArrayList<Long> subtasks = new ArrayList<>();
+
+    // Create TaskData object
+    TaskData task = new TaskData(projectID, name, description, status, users, subtasks);
+
+    // Add task to datastore
+    TaskController taskController = new TaskController(datastore);
+    long taskID = taskController.addTasks(new ArrayList<>(Arrays.asList(task))).get(0).getId();
+
+    // Redirect to newly created task page
+    response.sendRedirect("/task.html?taskID=" + taskID);
   }
 }
