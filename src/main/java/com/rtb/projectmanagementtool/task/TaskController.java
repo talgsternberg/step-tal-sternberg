@@ -43,6 +43,21 @@ public final class TaskController {
     }
   }
 
+  // Update methods
+
+  public void addUser(long taskID, long userID) {
+    addUser(getTaskByID(taskID), userID);
+  }
+
+  public void addUser(TaskData task, long userID) {
+    if (!task.getUsers().contains(userID)) {
+      task.getUsers().add(userID);
+      if (task.getTaskID() != 0) {
+        datastore.put(task.toEntity());
+      }
+    }
+  }
+
   // Get methods
 
   public TaskData getTaskByID(long taskID) {

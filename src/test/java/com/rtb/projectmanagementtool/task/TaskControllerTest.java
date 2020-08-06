@@ -112,6 +112,75 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testAddUserBeforePuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users list
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task: { task users: [1, 2] }
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+
+    // Create user
+    long user = 4l;
+
+    // Add user to task with TaskController with TaskData object
+    taskController.addUser(task, user);
+
+    // Update expected users
+    users.add(user);
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("addUser", users, task.getUsers());
+
+    // Attempt to add user to task with TaskController again
+    taskController.addUser(task, user);
+
+    // Assert the user wasn't added to task again
+    Assert.assertEquals("addUser", users, task.getUsers());
+  }
+
+  @Test
+  public void testAddUserAfterPuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users list
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task: { task users: [1, 2] }
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+
+    // Add task to ds with TaskController
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
+
+    // Create user
+    long user = 4l;
+
+    // Add user to task with TaskController with taskID
+    taskController.addUser(task.getTaskID(), user);
+
+    // Update expected users
+    users.add(user);
+
+    // Get users from ds with TaskController
+    ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("addUser", users, getUsers);
+
+    // Attempt to add user to task with TaskController again
+    taskController.addUser(task.getTaskID(), user);
+
+    // Get users from ds with TaskController
+    getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert the user wasn't added to task again
+    Assert.assertEquals("addUser", users, task.getUsers());
+  }
+
+  @Test
   public void testGetTaskByID() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
