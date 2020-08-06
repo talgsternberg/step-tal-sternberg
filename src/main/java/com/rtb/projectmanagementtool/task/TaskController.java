@@ -58,6 +58,19 @@ public final class TaskController {
     }
   }
 
+  public void removeUser(long taskID, long userID) {
+    removeUser(getTaskByID(taskID), userID);
+  }
+
+  public void removeUser(TaskData task, long userID) {
+    if (task.getUsers().contains(userID)) {
+      task.getUsers().remove(userID);
+      if (task.getTaskID() != 0) {
+        datastore.put(task.toEntity());
+      }
+    }
+  }
+
   // Get methods
 
   public TaskData getTaskByID(long taskID) {

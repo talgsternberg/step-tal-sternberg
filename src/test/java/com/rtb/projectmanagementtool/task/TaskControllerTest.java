@@ -181,6 +181,75 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testRemoveUserBeforePuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users list
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task: { task users: [1, 2] }
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+
+    // Create user
+    long user = 2l;
+
+    // Remove user from task with TaskController with TaskData object
+    taskController.removeUser(task, user);
+
+    // Update expected users
+    users.remove(user);
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("addUser", users, task.getUsers());
+
+    // Attempt to remove user from task with TaskController again
+    taskController.removeUser(task, user);
+
+    // Assert users weren't changed
+    Assert.assertEquals("addUser", users, task.getUsers());
+  }
+
+  @Test
+  public void testRemoveUserAfterPuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users list
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task: { task users: [1, 2] }
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+
+    // Add task to ds with TaskController
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
+
+    // Create user
+    long user = 2l;
+
+    // Remove user from task with TaskController with taskID
+    taskController.removeUser(task.getTaskID(), user);
+
+    // Update expected users
+    users.remove(user);
+
+    // Get users from ds with TaskController
+    ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("removeUser", users, getUsers);
+
+    // Attempt to remove user from task with TaskController again
+    taskController.removeUser(task.getTaskID(), user);
+
+    // Get users from ds with TaskController
+    getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert users weren't changed
+    Assert.assertEquals("removeUser", users, task.getUsers());
+  }
+
+  @Test
   public void testGetTaskByID() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
