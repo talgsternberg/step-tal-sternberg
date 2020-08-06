@@ -8,10 +8,15 @@ import java.util.ArrayList;
 public final class TaskController {
 
   private DatastoreService datastore;
+  private static final Filter NO_QUERY_FILTER = null;
+  private static final int NO_QUERY_LIMIT = Integer.MAX_VALUE;
+  private static final SortPredicate NO_QUERY_SORT = null;
 
   public TaskController(DatastoreService datastore) {
     this.datastore = datastore;
   }
+
+  // Add methods
 
   public void addTasks(ArrayList<TaskData> tasks) {
     ArrayList<Entity> taskEntities = new ArrayList<>();
@@ -36,6 +41,8 @@ public final class TaskController {
     }
   }
 
+  // Get methods
+
   public TaskData getTaskByID(long taskID) {
     Query query =
         new Query("Task")
@@ -46,44 +53,50 @@ public final class TaskController {
     return task;
   }
 
-  public ArrayList<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
-    Query query;
-    if (sortDirection.equals("descending")) {
-      query = new Query("Task").addSort(sortBy, SortDirection.DESCENDING);
-    } else {
-      query = new Query("Task").addSort(sortBy, SortDirection.ASCENDING);
-    }
-    return getTasks(query, quantity);
+  public ArrayList<TaskData> getTasks(int limit, String sortBy, String sortDirection) {
+    SortPredicate sort =
+        new SortPredicate(sortBy, SortDirection.valueOf(sortDirection.toUpperCase()));
+    return getTasks(NO_QUERY_FILTER, limit, sort);
   }
 
   public ArrayList<TaskData> getSubtasks(TaskData task) {
-    Query query =
-        new Query("Task").addFilter("parentTaskID", FilterOperator.EQUAL, task.getTaskID());
-    return getTasks(query, Integer.MAX_VALUE);
+    Filter filter = new FilterPredicate("parentTaskID", FilterOperator.EQUAL, task.getTaskID());
+    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
 
-  private ArrayList<TaskData> getTasks(Query query, int quantity) {
+  private ArrayList<TaskData> getTasks(Filter filter, int limit, SortPredicate sort) {
     ArrayList<TaskData> tasks = new ArrayList<>();
+    Query query = new Query("Task");
+    if (filter != null) {
+      query.setFilter(filter);
+    }
+    if (sort != null) {
+      query.addSort(sort.getPropertyName(), sort.getDirection());
+    }
     PreparedQuery results = datastore.prepare(query);
     int count = 0;
     for (Entity entity : results.asIterable()) {
-      if (count++ >= quantity) {
+      if (count >= limit) {
         break;
       }
-      TaskData task = new TaskData(entity);
-      tasks.add(task);
+      tasks.add(new TaskData(entity));
+      count++;
     }
     return tasks;
   }
+
+  // Delete methods
 
   public void deleteTasks(ArrayList<Long> taskIDs) {
     if (taskIDs.isEmpty()) {
       return;
     }
     datastore.delete(getKeysFromTaskIDs(taskIDs));
-    Query query = new Query("Task").addFilter("parentTaskID", FilterOperator.IN, taskIDs);
-    deleteTasks(getTaskIDsFromTasks(getTasks(query, Integer.MAX_VALUE)));
+    Filter filter = new FilterPredicate("parentTaskID", FilterOperator.IN, taskIDs);
+    deleteTasks(getTaskIDsFromTasks(getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT)));
   }
+
+  // Conversion methods
 
   public ArrayList<Long> getTaskIDsFromKeys(ArrayList<Key> keys) {
     ArrayList<Long> taskIDs = new ArrayList<>();

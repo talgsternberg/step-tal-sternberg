@@ -95,13 +95,17 @@ public class TaskControllerTest {
     Query query =
         new Query("Task").addFilter("parentTaskID", FilterOperator.EQUAL, task1.getTaskID());
     PreparedQuery results = ds.prepare(query);
+    ArrayList<TaskData> getSubtasks = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      getSubtasks.add(new TaskData(entity));
+    }
+
+    // Sort lists
+    Collections.sort(subtasks);
+    Collections.sort(getSubtasks);
 
     // Assert correct subtasks were found
-    TaskData task;
-    for (Entity entity : results.asIterable()) {
-      task = new TaskData(entity);
-      Assert.assertTrue("addSubtasks", subtasks.contains(task));
-    }
+    Assert.assertEquals("addSubtasks", subtasks, getSubtasks);
 
     // Assert correct amount of subtasks were found
     Assert.assertEquals(2, results.countEntities(withLimit(10)));
@@ -182,10 +186,19 @@ public class TaskControllerTest {
     // Create ArrayList of expected TaskData objects
     ArrayList<TaskData> tasks = new ArrayList<>(Arrays.asList(task1, task2, task3));
 
-    // Get task entities with TaskController
+    // Get all task entities with TaskController
     ArrayList<TaskData> getTasks = taskController.getTasks(5, "name", "ascending");
 
     // Assert all entities were retrieved
+    Assert.assertEquals("getTask", tasks, getTasks);
+
+    // Remove task3 from expected TaskData objects
+    tasks.remove(task3);
+
+    // Get some task entities with TaskController
+    getTasks = taskController.getTasks(2, "name", "ascending");
+
+    // Assert correct entities were retrieved
     Assert.assertEquals("getTask", tasks, getTasks);
   }
 
