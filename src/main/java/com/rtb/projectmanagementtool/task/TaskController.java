@@ -50,10 +50,13 @@ public final class TaskController {
   }
 
   public void addUser(TaskData task, long userID) {
-    if (!task.getUsers().contains(userID)) {
-      task.getUsers().add(userID);
-      if (task.getTaskID() != 0) {
+    if (task.getTaskID() != 0) {
+      if (!task.getUsers().contains(userID)) {
+        task.getUsers().add(userID);
         datastore.put(task.toEntity());
+        if (task.getParentTaskID() != 0) {
+          addUser(task.getParentTaskID(), userID);
+        }
       }
     }
   }
