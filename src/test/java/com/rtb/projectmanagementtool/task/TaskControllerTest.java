@@ -116,7 +116,10 @@ public class TaskControllerTest {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
 
-    // Create task: { task users: [1, 2] }
+    // Create users
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task
     TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
 
     // Add task to ds with TaskController
@@ -152,9 +155,12 @@ public class TaskControllerTest {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
 
+    // Create users
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l, 3l));
+    ArrayList<Long> users2 = new ArrayList<>(Arrays.asList(1l, 3l));
+    ArrayList<Long> users3 = new ArrayList<>(Arrays.asList(3l));
 
-    // Create tasks: { task1 users: [1, 2, 3]; task2 users: [1, 3]; task3 users: [3] }
+    // Create tasks
     TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1);
     TaskData task2 = new TaskData(projectID2, name2, description2, status2, users2);
     TaskData task3 = new TaskData(projectID3, name3, description3, status3, users3);
@@ -201,45 +207,15 @@ public class TaskControllerTest {
   }
 
   @Test
-  public void testRemoveUserBeforePuttingIntoDs() {
+  public void testRemoveUser() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
 
-    // Create users list
-    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+    // Create users
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
 
-    // Create task: { task users: [1, 2] }
-    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
-
-    // Create user
-    long user = 2l;
-
-    // Remove user from task with TaskController with TaskData object
-    taskController.removeUser(task, user);
-
-    // Update expected users
-    users.remove(user);
-
-    // Assert task has correct userIDs
-    Assert.assertEquals("addUser", users, task.getUsers());
-
-    // Attempt to remove user from task with TaskController again
-    taskController.removeUser(task, user);
-
-    // Assert users weren't changed
-    Assert.assertEquals("addUser", users, task.getUsers());
-  }
-
-  @Test
-  public void testRemoveUserAfterPuttingIntoDs() {
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    TaskController taskController = new TaskController(ds);
-
-    // Create users list
-    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
-
-    // Create task: { task users: [1, 2] }
-    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+    // Create task
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
 
     // Add task to ds with TaskController
     taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
@@ -250,8 +226,8 @@ public class TaskControllerTest {
     // Remove user from task with TaskController with taskID
     taskController.removeUser(task.getTaskID(), user);
 
-    // Update expected users
-    users.remove(user);
+    // Create expected users
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l));
 
     // Get users from ds with TaskController
     ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
@@ -266,7 +242,69 @@ public class TaskControllerTest {
     getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
 
     // Assert users weren't changed
-    Assert.assertEquals("removeUser", users, task.getUsers());
+    Assert.assertEquals("removeUser", users, getUsers);
+  }
+
+  @Test
+  public void testRemoveUserRecursive() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l, 3l));
+    ArrayList<Long> users2 = new ArrayList<>(Arrays.asList(1l, 2l));
+    ArrayList<Long> users3 = new ArrayList<>(Arrays.asList(3l));
+
+    // Create tasks
+    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1);
+    TaskData task2 = new TaskData(projectID2, name2, description2, status2, users2);
+    TaskData task3 = new TaskData(projectID3, name3, description3, status3, users3);
+    TaskData task4 = new TaskData(projectID1, name1, description1, status1, users1);
+
+    // Add task1 and task4 to ds with TaskController
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task1, task4)));
+
+    // Add task2 and task3 as subtasks of task1 to ds with TaskController
+    taskController.addSubtasks(task1, new ArrayList<TaskData>(Arrays.asList(task2, task3)));
+
+    // Create user
+    long user = 2l;
+
+    // Remove user from task with TaskController with TaskData
+    taskController.removeUser(task1, user);
+
+    // Create expected users
+    ArrayList<Long> expectedUsers1 = new ArrayList<>(Arrays.asList(1l, 3l));
+    ArrayList<Long> expectedUsers2 = new ArrayList<>(Arrays.asList(1l));
+    ArrayList<Long> expectedUsers3 = new ArrayList<>(Arrays.asList(3l));
+    ArrayList<Long> expectedUsers4 = new ArrayList<>(Arrays.asList(1l, 2l, 3l));
+
+    // Get users from ds with TaskController
+    ArrayList<Long> getUsers1 = taskController.getTaskByID(task1.getTaskID()).getUsers();
+    ArrayList<Long> getUsers2 = taskController.getTaskByID(task2.getTaskID()).getUsers();
+    ArrayList<Long> getUsers3 = taskController.getTaskByID(task3.getTaskID()).getUsers();
+    ArrayList<Long> getUsers4 = taskController.getTaskByID(task4.getTaskID()).getUsers();
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("removeUser", expectedUsers1, getUsers1);
+    Assert.assertEquals("removeUser", expectedUsers2, getUsers2);
+    Assert.assertEquals("removeUser", expectedUsers3, getUsers3);
+    Assert.assertEquals("removeUser", expectedUsers4, getUsers4);
+
+    // Attempt to remove user to task with TaskController again with taskID
+    taskController.removeUser(task1.getTaskID(), user);
+
+    // Get users from ds with TaskController
+    getUsers1 = taskController.getTaskByID(task1.getTaskID()).getUsers();
+    getUsers2 = taskController.getTaskByID(task2.getTaskID()).getUsers();
+    getUsers3 = taskController.getTaskByID(task3.getTaskID()).getUsers();
+    getUsers4 = taskController.getTaskByID(task4.getTaskID()).getUsers();
+
+    // Assert users weren't changed
+    Assert.assertEquals("removeUser", expectedUsers1, getUsers1);
+    Assert.assertEquals("removeUser", expectedUsers2, getUsers2);
+    Assert.assertEquals("removeUser", expectedUsers3, getUsers3);
+    Assert.assertEquals("removeUser", expectedUsers4, getUsers4);
   }
 
   @Test
