@@ -3,6 +3,7 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Class controlling the TaskData object. */
 public final class TaskController {
@@ -73,14 +74,9 @@ public final class TaskController {
     if (sort != null) {
       query.addSort(sort.getPropertyName(), sort.getDirection());
     }
-    PreparedQuery results = datastore.prepare(query);
-    int count = 0;
-    for (Entity entity : results.asIterable()) {
-      if (count >= limit) {
-        break;
-      }
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(limit));
+    for (Entity entity : results) {
       tasks.add(new TaskData(entity));
-      count++;
     }
     return tasks;
   }
