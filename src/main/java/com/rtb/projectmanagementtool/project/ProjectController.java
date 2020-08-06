@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class ProjectController {
-  private final String PROPERTY_USER_IDS = "userIds";
-
   DatastoreService datastore;
 
   public ProjectController(DatastoreService datastore) {
