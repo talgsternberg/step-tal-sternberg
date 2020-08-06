@@ -35,12 +35,12 @@ public class ProjectControllerTest {
     projectController = new ProjectController(ds);
 
     // Add users to projects
-    PROJECT2.addUser(UserProjectRole.ADMIN, USER2);
-    PROJECT2.addUser(UserProjectRole.MEMBER, USER4);
-    PROJECT2.addUser(UserProjectRole.ADMIN, USER3);
-    PROJECT1.addUser(UserProjectRole.ADMIN, USER4);
-    PROJECT4.addUser(UserProjectRole.MEMBER, USER2);
-    PROJECT3.addUser(UserProjectRole.MEMBER, USER3);
+    PROJECT2.addAdminUser(USER2);
+    PROJECT2.addMemberUser(USER4);
+    PROJECT2.addAdminUser(USER3);
+    PROJECT1.addAdminUser(USER4);
+    PROJECT4.addMemberUser(USER2);
+    PROJECT3.addMemberUser(USER3);
 
     // Set hardcoded ids to mimic expected behavior
     PROJECT1.setId(1l);

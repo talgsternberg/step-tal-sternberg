@@ -6,7 +6,6 @@ package com.rtb.projectmanagementtool.project;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -22,9 +21,8 @@ public class ProjectData {
   private long creatorId;
   private String name;
   private String description;
-  private HashSet<Long> tasks;
-  private HashMap<UserProjectRole, HashSet<Long>> users; // hashmap maps user roles to ids
-  // ex. {UserProjectRole.ADMIN={0,1,2}, UserProjectRole.MEMBER={3,4}, ...
+  private HashSet<Long> members;
+  private HashSet<Long> admins;
 
   /**
    * Class constructor with the minimum requirements for creating a project.
@@ -37,12 +35,8 @@ public class ProjectData {
     this.name = name;
     this.creatorId = creatorId;
     this.description = description;
-    this.tasks = new HashSet<Long>();
-    this.users = new HashMap<UserProjectRole, HashSet<Long>>();
-
-    // add roles to the HashMap with empty id sets
-    this.users.put(UserProjectRole.ADMIN, new HashSet<Long>());
-    this.users.put(UserProjectRole.MEMBER, new HashSet<Long>());
+    this.members = new HashSet<Long>();
+    this.admins = new HashSet<Long>();
   }
 
   /**
@@ -57,13 +51,10 @@ public class ProjectData {
     this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
 
     // Instantiate containers
-    this.tasks = new HashSet<Long>();
-    this.users = new HashMap<UserProjectRole, HashSet<Long>>();
-    this.users.put(UserProjectRole.ADMIN, new HashSet<Long>());
-    this.users.put(UserProjectRole.MEMBER, new HashSet<Long>());
+    this.members = new HashSet<Long>();
+    this.admins = new HashSet<Long>();
 
     // Update containers with entity properties
-    parseEntityHashSets(entity, PROPERTY_TASKS);
     parseEntityHashSets(entity, PROPERTY_ADMINS);
     parseEntityHashSets(entity, PROPERTY_MEMBERS);
   }
@@ -85,11 +76,9 @@ public class ProjectData {
 
     while (iterator.hasNext()) {
       if (propertyName.equals(PROPERTY_ADMINS)) {
-        addUser(UserProjectRole.ADMIN, iterator.next());
+        addAdminUser(iterator.next());
       } else if (propertyName.equals(PROPERTY_MEMBERS)) {
-        addUser(UserProjectRole.MEMBER, iterator.next());
-      } else if (propertyName.equals(PROPERTY_TASKS)) {
-        addTask(iterator.next());
+        addMemberUser(iterator.next());
       }
     }
   }
@@ -100,9 +89,8 @@ public class ProjectData {
     entity.setProperty(PROPERTY_NAME, this.name);
     entity.setProperty(PROPERTY_CREATOR, this.creatorId);
     entity.setProperty(PROPERTY_DESCRIPTION, this.description);
-    entity.setProperty(PROPERTY_TASKS, this.tasks);
-    entity.setProperty(PROPERTY_ADMINS, this.users.get(UserProjectRole.ADMIN));
-    entity.setProperty(PROPERTY_MEMBERS, this.users.get(UserProjectRole.MEMBER));
+    entity.setProperty(PROPERTY_ADMINS, this.admins);
+    entity.setProperty(PROPERTY_MEMBERS, this.members);
     return entity;
   }
 
@@ -126,14 +114,14 @@ public class ProjectData {
     return this.description;
   }
 
-  /** @return users */
-  public HashMap<UserProjectRole, HashSet<Long>> getUsers() {
-    return this.users;
+  /** @return admin users */
+  public HashSet<Long> getAdmins() {
+    return this.admins;
   }
 
-  /** @return task ids */
-  public HashSet<Long> getTasks() {
-    return this.tasks;
+  /** @return member users */
+  public HashSet<Long> getMembers() {
+    return this.members;
   }
 
   /**
@@ -164,16 +152,32 @@ public class ProjectData {
   }
 
   /**
-   * Add a regular user to the project
+   * Add an admin user to the project
    *
    * @param userId id of the user to add
    */
-  public boolean addUser(UserProjectRole userRole, long userId) {
-    if (getUserRole(userId) == null) { // if user doesn't exist
-      this.users.get(userRole).add(userId);
-      return true;
-    }
-    return false;
+  public boolean addAdminUser(long userId) {
+    return this.admins.add(userId);
+  }
+
+  /**
+   * Add a member user to the project
+   *
+   * @param userId id of the user to add
+   */
+  public boolean addMemberUser(long userId) {
+    return this.members.add(userId);
+  }
+
+  /**
+   * Removes an admin from the project
+   *
+   * @param userId id of the user to remove
+   * @return true if operation is successful
+   */
+  public boolean removeAdmin(long userId) {
+    System.out.println("removing admin");
+    return this.admins.remove(userId);
   }
 
   /**
@@ -182,51 +186,9 @@ public class ProjectData {
    * @param userId id of the user to remove
    * @return true if operation is successful
    */
-  public boolean removeUser(long userId) {
-    UserProjectRole userRole = getUserRole(userId);
-    if (userRole != null) {
-      users.get(userRole).remove(userId);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Adds a task to the project
-   *
-   * @param taskId id of the task to add
-   * @return true if operation successful
-   */
-  public boolean addTask(long taskId) {
-    return this.tasks.add(taskId);
-  }
-
-  /**
-   * Removes a task from the project
-   *
-   * @param taskId id of the task to remove
-   * @return true if operation successful
-   */
-  public boolean removeTask(long taskId) {
-    return this.tasks.remove(taskId);
-  }
-
-  /**
-   * Check if user is in the project
-   *
-   * @param userId the userId
-   * @return true if the user is in project
-   */
-  public UserProjectRole getUserRole(long userId) {
-    if (this.creatorId == userId) {
-      return UserProjectRole.CREATOR;
-    } else if (users.get(UserProjectRole.ADMIN).contains(userId)) {
-      return UserProjectRole.ADMIN;
-    } else if (users.get(UserProjectRole.MEMBER).contains(userId)) {
-      return UserProjectRole.MEMBER;
-    } else {
-      return null;
-    }
+  public boolean removeMember(long userId) {
+    removeAdmin(userId);
+    return this.members.remove(userId);
   }
 
   /**
@@ -236,7 +198,9 @@ public class ProjectData {
    * @return true if the user is in project
    */
   public boolean hasUser(long userId) {
-    return getUserRole(userId) != null;
+    return this.creatorId == userId
+        || this.admins.contains(userId)
+        || this.members.contains(userId);
   }
 
   /**
@@ -246,7 +210,7 @@ public class ProjectData {
    * @return true if the user is in project
    */
   public boolean hasAdmin(long userId) {
-    return users.get(UserProjectRole.ADMIN).contains(userId);
+    return this.admins.contains(userId);
   }
 
   /**
@@ -263,8 +227,8 @@ public class ProjectData {
     return a.getId() == b.getId()
         && a.getCreatorId() == b.getCreatorId()
         && a.getDescription().equals(b.getDescription())
-        && a.getTasks().equals(b.getTasks())
-        && a.getUsers().equals(b.getUsers());
+        && a.getAdmins().equals(b.getAdmins())
+        && a.getMembers().equals(b.getMembers());
   }
 
   @Override
@@ -280,8 +244,8 @@ public class ProjectData {
     returnString += "Project creator's id: " + this.creatorId + "\n";
     returnString += "Project Name: " + this.name + "\n";
     returnString += "Project Description: " + this.description + "\n";
-    returnString += "Project Users: " + this.users.toString() + "\n";
-    returnString += "Tasks: " + this.tasks.toString() + "\n}";
+    returnString += "Project Members: " + this.admins.toString() + "\n";
+    returnString += "Project Admins: " + this.members.toString() + "\n";
     return returnString;
   }
 }

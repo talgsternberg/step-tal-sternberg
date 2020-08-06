@@ -35,31 +35,17 @@ public class ProjectController {
             Arrays.asList(UserProjectRole.CREATOR, UserProjectRole.ADMIN, UserProjectRole.MEMBER));
 
     // Create the filter
-    CompositeFilter filter = createUserRoleCompositeFilter(userRoles, userId);
+    ArrayList<FilterPredicate> subFilters = new ArrayList<FilterPredicate>();
+    subFilters.add(new FilterPredicate("creator", FilterOperator.EQUAL, userId));
+    subFilters.add(new FilterPredicate("admins", FilterOperator.IN, Arrays.asList(userId)));
+    subFilters.add(new FilterPredicate("members", FilterOperator.IN, Arrays.asList(userId)));
+    CompositeFilter filter =
+        new Query.CompositeFilter(CompositeFilterOperator.OR, (Collection) subFilters);
 
-    // Call getProjects() with the filter
     return getProjects(filter);
   }
 
-  public CompositeFilter createUserRoleCompositeFilter(
-      ArrayList<UserProjectRole> userRoles, Long userId) {
-
-    ArrayList<FilterPredicate> subFilters = new ArrayList<FilterPredicate>();
-    for (UserProjectRole userRole : userRoles) {
-      if (userRole == UserProjectRole.CREATOR) {
-        subFilters.add(new FilterPredicate("creator", FilterOperator.EQUAL, userId));
-      } else if (userRole == UserProjectRole.ADMIN) {
-        subFilters.add(new FilterPredicate("admins", FilterOperator.IN, Arrays.asList(userId)));
-      } else if (userRole == UserProjectRole.MEMBER) {
-        subFilters.add(new FilterPredicate("members", FilterOperator.IN, Arrays.asList(userId)));
-      }
-    }
-    CompositeFilter filter =
-        new Query.CompositeFilter(CompositeFilterOperator.OR, (Collection) subFilters);
-    return filter;
-  }
-
-  public ArrayList<ProjectData> getProjects(CompositeFilter filter) {
+  private ArrayList<ProjectData> getProjects(CompositeFilter filter) {
     // Only retrieve filtered projects
     Query query = new Query("Project");
     if (filter != null) {
