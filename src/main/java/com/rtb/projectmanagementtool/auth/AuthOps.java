@@ -19,7 +19,7 @@ public final class AuthOps {
   public AuthOps(DatastoreService datastore) {
     this.datastore = datastore;
     cookieName = "sessionUserID";
-    cookieValue = "out"; // "out" if not logged in
+    cookieValue = "out"; // "out" if not logged in, else userID as String
   }
 
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
@@ -50,12 +50,19 @@ public final class AuthOps {
         ArrayList<UserData> users = controller.getEveryUser();
         for (UserData user : users) {
           if (user.getAuthID() == AuthID) {
-            currCookie.setValue(AuthID);
+            String userIDString = String.valueOf(user.getUserID());
+            currCookie.setValue(userIDString);
           }
         }
       }
     }
     // send back cookie to response
     response.addCookie(currCookie);
+  }
+
+  public long whichUserLoggedIn(HttpServletRequest request, HttpServletResponse response) {
+    // get cookie value for user
+    String currUserIDString = currCookie.getValue();
+    return Long.parseLong(currUserIDString);
   }
 }
