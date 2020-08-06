@@ -88,12 +88,25 @@ public final class TaskController {
   // Delete methods
 
   public void deleteTasks(ArrayList<Long> taskIDs) {
+    TransactionOptions options = TransactionOptions.Builder.withXG(true);
+    Transaction transaction = datastore.beginTransaction(options);
+    try {
+      deleteTasksRecursive(taskIDs);
+      transaction.commit();
+    } finally {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+    }
+  }
+
+  private void deleteTasksRecursive(ArrayList<Long> taskIDs) {
     if (taskIDs.isEmpty()) {
       return;
     }
     datastore.delete(getKeysFromTaskIDs(taskIDs));
     Filter filter = new FilterPredicate("parentTaskID", FilterOperator.IN, taskIDs);
-    deleteTasks(getTaskIDsFromTasks(getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT)));
+    deleteTasksRecursive(getTaskIDsFromTasks(getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT)));
   }
 
   // Conversion methods
