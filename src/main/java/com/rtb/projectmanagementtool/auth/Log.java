@@ -1,4 +1,4 @@
-package com.rtb.projectmanagementtool.user;
+package com.rtb.projectmanagementtool.auth;
 
 /** A Login Info Collection */
 public final class Log {

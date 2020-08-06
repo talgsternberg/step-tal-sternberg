@@ -1,4 +1,4 @@
-package com.rtb.projectmanagementtool.user;
+package com.rtb.projectmanagementtool.auth;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
