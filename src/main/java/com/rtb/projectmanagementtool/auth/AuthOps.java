@@ -22,7 +22,7 @@ public final class AuthOps {
     cookieValue = "out"; // "out" if not logged in
   }
 
-  public void loginUser(HttpServletRequest request) {
+  public void loginUser(HttpServletRequest request, HttpServletResponse response) {
 
     // get all cookies from request
     Cookie[] cookies = request.getCookies();
@@ -55,5 +55,7 @@ public final class AuthOps {
         }
       }
     }
+    // send back cookie to response
+    response.addCookie(currCookie);
   }
 }
