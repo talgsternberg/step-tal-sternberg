@@ -51,6 +51,21 @@ public final class TaskController {
 
   public void addUser(TaskData task, long userID) {
     if (task.getTaskID() != 0) {
+      TransactionOptions options = TransactionOptions.Builder.withXG(true);
+      Transaction transaction = datastore.beginTransaction(options);
+      try {
+        addUserRecursive(task, userID);
+        transaction.commit();
+      } finally {
+        if (transaction.isActive()) {
+          transaction.rollback();
+        }
+      }
+    }
+  }
+
+  private void addUserRecursive(TaskData task, long userID) {
+    if (task.getTaskID() != 0) {
       if (!task.getUsers().contains(userID)) {
         task.getUsers().add(userID);
         datastore.put(task.toEntity());
@@ -67,7 +82,16 @@ public final class TaskController {
 
   public void removeUser(TaskData task, long userID) {
     if (task.getTaskID() != 0) {
-      removeUserRecursive(new ArrayList<>(Arrays.asList(task)), userID);
+      TransactionOptions options = TransactionOptions.Builder.withXG(true);
+      Transaction transaction = datastore.beginTransaction(options);
+      try {
+        removeUserRecursive(new ArrayList<>(Arrays.asList(task)), userID);
+        transaction.commit();
+      } finally {
+        if (transaction.isActive()) {
+          transaction.rollback();
+        }
+      }
     }
   }
 
