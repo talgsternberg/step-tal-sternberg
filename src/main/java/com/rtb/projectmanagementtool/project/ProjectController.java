@@ -29,12 +29,7 @@ public class ProjectController {
    * @return ArrayList containing desired projects
    */
   public ArrayList<ProjectData> getProjectsWithUser(Long userId) {
-    // Create ArrayList for all user types to filter by
-    ArrayList<UserProjectRole> userRoles =
-        new ArrayList<UserProjectRole>(
-            Arrays.asList(UserProjectRole.CREATOR, UserProjectRole.ADMIN, UserProjectRole.MEMBER));
-
-    // Create the filter
+    // Create the sub-filters
     ArrayList<FilterPredicate> subFilters = new ArrayList<FilterPredicate>();
     subFilters.add(new FilterPredicate("creator", FilterOperator.EQUAL, userId));
     subFilters.add(new FilterPredicate("admins", FilterOperator.IN, Arrays.asList(userId)));
