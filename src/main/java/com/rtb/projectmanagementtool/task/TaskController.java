@@ -3,6 +3,7 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Class controlling the TaskData object. */
@@ -56,6 +57,16 @@ public final class TaskController {
 
   public ArrayList<TaskData> getTasksByUserID(long userID) {
     Filter filter = new FilterPredicate("users", FilterOperator.EQUAL, userID);
+    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+  }
+
+  public ArrayList<TaskData> getTasksByProjectID(long projectID) {
+    Filter filter =
+        new CompositeFilter(
+            CompositeFilterOperator.AND,
+            Arrays.asList(
+                FilterOperator.EQUAL.of("projectID", projectID),
+                FilterOperator.EQUAL.of("parentTaskID", 0)));
     return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
 

@@ -178,6 +178,42 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testGetTasksByProjectID() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create tasks:
+    TaskData task1 = new TaskData(1l, name1, description1, status1, users1);
+    TaskData task2 = new TaskData(1l, name2, description2, status2, users2);
+    TaskData task3 = new TaskData(2l, name3, description3, status3, users3);
+    TaskData task4 = new TaskData(1l, name1, description1, status1, users1);
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Add task1, task2, and task3 entities with TaskController
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1, task2, task3)));
+
+    // Add task4 as subtask of task1 with TaskController
+    taskController.addSubtasks(task1, new ArrayList<>(Arrays.asList(task4)));
+
+    // Assert 4 entities were added
+    Assert.assertEquals(4, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Get tasks of each user with TaskController
+    ArrayList<TaskData> getProject1Tasks = taskController.getTasksByProjectID(1l);
+    ArrayList<TaskData> getProject2Tasks = taskController.getTasksByProjectID(2l);
+
+    // Create expected tasks
+    ArrayList<TaskData> project1Tasks = new ArrayList<TaskData>(Arrays.asList(task1, task2));
+    ArrayList<TaskData> project2Tasks = new ArrayList<TaskData>(Arrays.asList(task3));
+
+    // Assert tasks retrieved are correct
+    Assert.assertEquals("getTasksByProjectID", project1Tasks, getProject1Tasks);
+    Assert.assertEquals("getTasksByProjectID", project2Tasks, getProject2Tasks);
+  }
+
+  @Test
   public void testGetTasksFromEmptyDs() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
