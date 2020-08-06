@@ -61,6 +61,20 @@ public final class AuthOps {
   }
 
   public long whichUserLoggedIn(HttpServletRequest request, HttpServletResponse response) {
+    // get all cookies from request
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals("sessionUserID")) {
+          // if we find cookie w/ name, set currCookie equal
+          currCookie = cookie;
+        }
+      }
+    } else {
+      // if no cookie found, create a new one
+      currCookie = new Cookie(cookieName, cookieValue);
+    }
+
     // get cookie value for user
     String currUserIDString = currCookie.getValue();
     return Long.parseLong(currUserIDString);
