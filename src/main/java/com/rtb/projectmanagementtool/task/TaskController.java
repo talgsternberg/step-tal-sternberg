@@ -54,6 +54,11 @@ public final class TaskController {
     return task;
   }
 
+  public ArrayList<TaskData> getTasksByUserID(long userID) {
+    Filter filter = new FilterPredicate("users", FilterOperator.EQUAL, userID);
+    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+  }
+
   public ArrayList<TaskData> getTasks(int limit, String sortBy, String sortDirection) {
     SortPredicate sort =
         new SortPredicate(sortBy, SortDirection.valueOf(sortDirection.toUpperCase()));
