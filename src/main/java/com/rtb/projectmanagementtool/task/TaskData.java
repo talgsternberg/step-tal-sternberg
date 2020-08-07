@@ -13,48 +13,61 @@ enum Status {
 public final class TaskData implements Comparable<TaskData> {
 
   private long taskID;
+  private long parentTaskID;
   private long projectID;
   private String name;
   private String description;
   private Status status;
   private ArrayList<Long> users;
-  private ArrayList<Long> subtasks;
 
   public TaskData(
       long taskID,
+      long parentTaskID,
       long projectID,
       String name,
       String description,
       Status status,
-      ArrayList<Long> users,
-      ArrayList<Long> subtasks) {
+      ArrayList<Long> users) {
     this.taskID = taskID;
+    this.parentTaskID = parentTaskID;
     this.projectID = projectID;
     this.name = name;
     this.description = description;
     this.status = status;
     this.users = users;
-    this.subtasks = subtasks;
   }
 
   public TaskData(
+      long parentTaskID,
       long projectID,
       String name,
       String description,
       Status status,
-      ArrayList<Long> users,
-      ArrayList<Long> subtasks) {
+      ArrayList<Long> users) {
     this.taskID = 0;
+    this.parentTaskID = parentTaskID;
     this.projectID = projectID;
     this.name = name;
     this.description = description;
     this.status = status;
     this.users = users;
-    this.subtasks = subtasks;
+  }
+
+  public TaskData(
+      long projectID, String name, String description, Status status, ArrayList<Long> users) {
+    this.taskID = 0;
+    this.parentTaskID = 0;
+    this.projectID = projectID;
+    this.name = name;
+    this.description = description;
+    this.status = status;
+    this.users = users;
+    // this.subtasks = subtasks;
   }
 
   public TaskData(Entity entity) {
     taskID = entity.getKey().getId();
+    parentTaskID = (long) entity.getProperty("parentTaskID");
     projectID = (long) entity.getProperty("projectID");
     name = (String) entity.getProperty("name");
     description = (String) entity.getProperty("description");
@@ -63,11 +76,6 @@ public final class TaskData implements Comparable<TaskData> {
       users = new ArrayList<Long>();
     } else {
       users = (ArrayList<Long>) entity.getProperty("users");
-    }
-    if (entity.getProperty("subtasks") == null) {
-      subtasks = new ArrayList<Long>();
-    } else {
-      subtasks = (ArrayList<Long>) entity.getProperty("subtasks");
     }
   }
 
@@ -78,6 +86,7 @@ public final class TaskData implements Comparable<TaskData> {
     } else {
       entity = new Entity("Task");
     }
+    entity.setProperty("parentTaskID", parentTaskID);
     entity.setProperty("projectID", projectID);
     entity.setProperty("name", name);
     entity.setProperty("description", description);
@@ -85,14 +94,15 @@ public final class TaskData implements Comparable<TaskData> {
     if (!users.isEmpty()) {
       entity.setProperty("users", users);
     }
-    if (!subtasks.isEmpty()) {
-      entity.setProperty("subtasks", subtasks);
-    }
     return entity;
   }
 
   public long getTaskID() {
     return taskID;
+  }
+
+  public long getParentTaskID() {
+    return parentTaskID;
   }
 
   public long getProjectID() {
@@ -115,12 +125,12 @@ public final class TaskData implements Comparable<TaskData> {
     return users;
   }
 
-  public ArrayList<Long> getSubtasks() {
-    return subtasks;
-  }
-
   public void setTaskID(long taskID) {
     this.taskID = taskID;
+  }
+
+  public void setParentTaskID(long parentTaskID) {
+    this.parentTaskID = parentTaskID;
   }
 
   public void setProjectID(long projectID) {
@@ -143,10 +153,6 @@ public final class TaskData implements Comparable<TaskData> {
     this.users = users;
   }
 
-  public void setSubtasks(ArrayList<Long> subtasks) {
-    this.subtasks = subtasks;
-  }
-
   @Override
   public int compareTo(TaskData task) {
     long dif = this.taskID - task.taskID;
@@ -157,23 +163,23 @@ public final class TaskData implements Comparable<TaskData> {
   public String toString() {
     String returnString = "{\n";
     returnString += "Task ID: " + taskID + "\n";
+    returnString += "Parent Task ID: " + parentTaskID + "\n";
     returnString += "Project ID: " + projectID + "\n";
     returnString += "Name: " + name + "\n";
     returnString += "Description: " + description + "\n";
     returnString += "Status: " + status.name() + "\n";
-    returnString += "Users: " + users.toString() + "\n";
-    returnString += "Subtasks: " + subtasks.toString() + "\n}";
+    returnString += "Users: " + users.toString() + "\n}";
     return returnString;
   }
 
   private boolean equals(TaskData a, TaskData b) {
     return a.taskID == b.taskID
+        && a.parentTaskID == b.parentTaskID
         && a.projectID == b.projectID
         && a.name.equals(b.name)
         && a.description.equals(b.description)
         && a.status == b.status
-        && a.users.equals(b.users)
-        && a.subtasks.equals(b.subtasks);
+        && a.users.equals(b.users);
   }
 
   @Override

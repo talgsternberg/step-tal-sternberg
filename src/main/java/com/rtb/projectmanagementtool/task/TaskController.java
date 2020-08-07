@@ -3,33 +3,46 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Class controlling the TaskData object. */
 public final class TaskController {
 
   private DatastoreService datastore;
+  private static final Filter NO_QUERY_FILTER = null;
+  private static final int NO_QUERY_LIMIT = Integer.MAX_VALUE;
+  private static final SortPredicate NO_QUERY_SORT = null;
 
   public TaskController(DatastoreService datastore) {
     this.datastore = datastore;
   }
 
-  public ArrayList<Key> addTasks(ArrayList<TaskData> tasks) {
+  // Add methods
+
+  public void addTasks(ArrayList<TaskData> tasks) {
     ArrayList<Entity> taskEntities = new ArrayList<>();
     for (TaskData task : tasks) {
       taskEntities.add(task.toEntity());
     }
-    return new ArrayList<>(datastore.put(taskEntities));
+    addKeysToTasks(tasks, new ArrayList<>(datastore.put(taskEntities)));
   }
 
-  public ArrayList<Key> addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
-    ArrayList<Key> keys = addTasks(subtasks);
-    ArrayList<Long> taskSubtasks = task.getSubtasks();
-    for (Key key : keys) {
-      taskSubtasks.add(key.getId());
+  public void addSubtasks(TaskData task, ArrayList<TaskData> subtasks) {
+    for (TaskData subtask : subtasks) {
+      subtask.setParentTaskID(task.getTaskID());
     }
-    task.setSubtasks(taskSubtasks);
-    return keys;
+    addTasks(subtasks);
   }
+
+  private void addKeysToTasks(ArrayList<TaskData> tasks, ArrayList<Key> keys) {
+    if (tasks.size() == keys.size()) {
+      for (int i = 0; i < keys.size(); i++) {
+        tasks.get(i).setTaskID(keys.get(i).getId());
+      }
+    }
+  }
+
+  // Get methods
 
   public TaskData getTaskByID(long taskID) {
     Query query =
@@ -41,44 +54,58 @@ public final class TaskController {
     return task;
   }
 
-  public ArrayList<TaskData> getTasks(int quantity, String sortBy, String sortDirection) {
-    ArrayList<TaskData> tasks = new ArrayList<>();
-    Query query;
-    if (sortDirection.equals("descending")) {
-      query = new Query("Task").addSort(sortBy, SortDirection.DESCENDING);
-    } else {
-      query = new Query("Task").addSort(sortBy, SortDirection.ASCENDING);
-    }
-    return getTasks(query, quantity);
+  public ArrayList<TaskData> getTasks(int limit, String sortBy, String sortDirection) {
+    SortPredicate sort =
+        new SortPredicate(sortBy, SortDirection.valueOf(sortDirection.toUpperCase()));
+    return getTasks(NO_QUERY_FILTER, limit, sort);
   }
 
   public ArrayList<TaskData> getSubtasks(TaskData task) {
-    ArrayList<Key> subtaskKeys = getKeysFromTaskIDs(task.getSubtasks());
-    if (!task.getSubtasks().isEmpty()) {
-      Query query = new Query("Task").addFilter("__key__", FilterOperator.IN, subtaskKeys);
-      return getTasks(query, Integer.MAX_VALUE);
-    }
-    return new ArrayList<>();
+    Filter filter = new FilterPredicate("parentTaskID", FilterOperator.EQUAL, task.getTaskID());
+    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
 
-  private ArrayList<TaskData> getTasks(Query query, int quantity) {
+  private ArrayList<TaskData> getTasks(Filter filter, int limit, SortPredicate sort) {
     ArrayList<TaskData> tasks = new ArrayList<>();
-    PreparedQuery results = datastore.prepare(query);
-    int count = 0;
-    for (Entity entity : results.asIterable()) {
-      if (count++ >= quantity) {
-        break;
-      }
-      TaskData task = new TaskData(entity);
-      tasks.add(task);
+    Query query = new Query("Task");
+    if (filter != null) {
+      query.setFilter(filter);
+    }
+    if (sort != null) {
+      query.addSort(sort.getPropertyName(), sort.getDirection());
+    }
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(limit));
+    for (Entity entity : results) {
+      tasks.add(new TaskData(entity));
     }
     return tasks;
   }
 
+  // Delete methods
+
   public void deleteTasks(ArrayList<Long> taskIDs) {
-    ArrayList<Key> keys = getKeysFromTaskIDs(taskIDs);
-    datastore.delete(keys);
+    TransactionOptions options = TransactionOptions.Builder.withXG(true);
+    Transaction transaction = datastore.beginTransaction(options);
+    try {
+      deleteTasksRecursive(taskIDs);
+      transaction.commit();
+    } finally {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+    }
   }
+
+  private void deleteTasksRecursive(ArrayList<Long> taskIDs) {
+    if (taskIDs.isEmpty()) {
+      return;
+    }
+    datastore.delete(getKeysFromTaskIDs(taskIDs));
+    Filter filter = new FilterPredicate("parentTaskID", FilterOperator.IN, taskIDs);
+    deleteTasksRecursive(getTaskIDsFromTasks(getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT)));
+  }
+
+  // Conversion methods
 
   public ArrayList<Long> getTaskIDsFromKeys(ArrayList<Key> keys) {
     ArrayList<Long> taskIDs = new ArrayList<>();
@@ -88,10 +115,26 @@ public final class TaskController {
     return taskIDs;
   }
 
+  public ArrayList<Long> getTaskIDsFromTasks(ArrayList<TaskData> tasks) {
+    ArrayList<Long> taskIDs = new ArrayList<>();
+    for (TaskData task : tasks) {
+      taskIDs.add(task.getTaskID());
+    }
+    return taskIDs;
+  }
+
   public ArrayList<Key> getKeysFromTaskIDs(ArrayList<Long> taskIDs) {
     ArrayList<Key> keys = new ArrayList<>();
     for (long taskID : taskIDs) {
       keys.add(KeyFactory.createKey("Task", taskID));
+    }
+    return keys;
+  }
+
+  public ArrayList<Key> getKeysFromTasks(ArrayList<TaskData> tasks) {
+    ArrayList<Key> keys = new ArrayList<>();
+    for (TaskData task : tasks) {
+      keys.add(KeyFactory.createKey("Task", task.getTaskID()));
     }
     return keys;
   }
