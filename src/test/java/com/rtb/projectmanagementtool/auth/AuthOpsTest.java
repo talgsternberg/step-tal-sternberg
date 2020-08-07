@@ -88,7 +88,7 @@ public class AuthOpsTest {
 
     // build and send a test cookie for logged out user
     Cookie[] testCookies = new Cookie[1];
-    testCookies[0] = new Cookie("SessionUserID", "out");
+    testCookies[0] = new Cookie("SessionUserID", "-1");
 
     // on this call in class method, return test user
     when(controller.getEveryUser()).thenReturn(testUsers);

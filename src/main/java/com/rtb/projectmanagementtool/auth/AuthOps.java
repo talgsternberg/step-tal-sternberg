@@ -19,7 +19,7 @@ public class AuthOps {
   public AuthOps(DatastoreService datastore) {
     this.datastore = datastore;
     cookieName = "sessionUserID";
-    cookieValue = "out"; // "out" if not logged in, else userID as String
+    cookieValue = "-1"; // "out" if not logged in, else userID as String
   }
 
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
@@ -39,7 +39,7 @@ public class AuthOps {
     }
 
     // if not logged in, call auth service
-    if (currCookie.getValue() == "out") {
+    if (currCookie.getValue() == "-1") {
       // call auth service
       UserService userService = UserServiceFactory.getUserService();
       if (userService.isUserLoggedIn()) {
