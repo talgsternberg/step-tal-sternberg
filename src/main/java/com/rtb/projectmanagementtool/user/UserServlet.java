@@ -49,7 +49,6 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity entity = new Entity("User");
-    System.out.println("no error yet: 1");
 
     // params from request
     long userID = (long) entity.getKey().getId();
