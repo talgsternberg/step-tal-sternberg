@@ -9,7 +9,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public final class AuthOps {
+public class AuthOps {
 
   private DatastoreService datastore;
   public String cookieName;

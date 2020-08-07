@@ -20,19 +20,7 @@ public class AuthOpsTest {
   private HttpServletRequest request;
   private HttpServletResponse response;
   private Cookie cookie;
-
-  // test user
-  private static final long userID = 2l;
-  private static final String AuthID = "abc";
-  private static final String name = "Tal";
-  private static final long year = 2023;
-  private static final ArrayList<String> majors =
-      new ArrayList<>(Arrays.asList("Comp Sci", "Earth Sciences"));
-  private static final Skills skills = Skills.LEADERSHIP;
-  private static final long totalCompTasks = 4;
-
-  private static final UserData testUser =
-      new UserData(userID, AuthID, name, year, majors, skills, totalCompTasks);
+  private AuthOps auth;
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalUserServiceTestConfig())
@@ -45,6 +33,7 @@ public class AuthOpsTest {
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     cookie = mock(Cookie.class);
+    auth = mock(AuthOps.class);
   }
 
   @After
@@ -54,18 +43,35 @@ public class AuthOpsTest {
 
   @Test
   public void testLoginUser() {
+    // add list of mock users
+    ArrayList<UserData> testUsers = new ArrayList<UserData>();
+    testUsers.add(new UserData(1l, "abc"));
+    testUsers.add(new UserData(2l, "opq"));
+    testUsers.add(new UserData(3l, "xyz"));
+
     // new controller
     UserController controller = mock(UserController.class);
-    controller.addUser(testUser);
 
     // build and send a test cookie
-    cookie = mock(Cookie.class);
-    cookie.setName("sessionUserID");
-    cookie.setValue("out");
+    Cookie[] testCookies = new Cookie[3];
+    testCookies[0] = new Cookie("SessionUserID", "abc");
+    testCookies[1] = new Cookie("SessionUserID", "zvm");
+    testCookies[2] = new Cookie("SessionUserID", "wpk");
+
+    // on this call in class method, return test user
+    when(controller.getEveryUser()).thenReturn(testUsers);
+
+    // when get cookies is called, pass cookies
+    when(request.getCookies()).thenReturn(testCookies);
 
     // call loginUser
-    loginUser(request, response);
+    auth.loginUser(request, response);
 
-    Assert.assertEquals(cookie.getValue(), String.valueOf(userID));
+    // captor setup
+    ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+    verify(response).addCookie(cookieCaptor.capture());
+    Cookie cookie = cookieCaptor.getValue();
+
+    Assert.assertEquals(cookie.getValue(), testCookies[0].getValue());
   }
 }

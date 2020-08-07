@@ -14,7 +14,7 @@ enum Skills {
 }
 
 /** Class for User data. */
-public final class UserData {
+public class UserData {
 
   private long userID;
   private String AuthID; // this will be the ID from API
@@ -39,6 +39,11 @@ public final class UserData {
     this.userMajors = userMajors;
     this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
+  }
+
+  public UserData(long userID, String AuthID) {
+    this.userID = userID;
+    this.AuthID = AuthID;
   }
 
   public UserData(Entity entity) {
