@@ -42,7 +42,7 @@ public class AuthOpsTest {
   }
 
   @Test
-  public void testLoginUser() {
+  public void testAlreadyLoggedInDontSetCookie() {
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
     testUsers.add(new UserData(1l, "abc"));
@@ -52,7 +52,7 @@ public class AuthOpsTest {
     // new controller
     UserController controller = mock(UserController.class);
 
-    // build and send a test cookie
+    // build and send test cookies for logged in users
     Cookie[] testCookies = new Cookie[3];
     testCookies[0] = new Cookie("SessionUserID", "abc");
     testCookies[1] = new Cookie("SessionUserID", "zvm");
@@ -69,7 +69,42 @@ public class AuthOpsTest {
 
     // captor setup
     ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
-    verify(response).addCookie(cookieCaptor.capture());
+    verify(response, never()).addCookie(any());
+    Cookie cookie = cookieCaptor.getValue();
+
+    Assert.assertEquals(null, cookie);
+  }
+
+  @Test
+  public void testLoginUser() {
+    // add list of mock users
+    ArrayList<UserData> testUsers = new ArrayList<UserData>();
+    testUsers.add(new UserData(1l, "abc"));
+    testUsers.add(new UserData(2l, "opq"));
+    testUsers.add(new UserData(3l, "xyz"));
+
+    // new controller
+    UserController controller = mock(UserController.class);
+
+    // build and send a test cookie for logged out user
+    Cookie[] testCookies = new Cookie[1];
+    testCookies[0] = new Cookie("SessionUserID", "out");
+
+    // on this call in class method, return test user
+    when(controller.getEveryUser()).thenReturn(testUsers);
+
+    // when get cookies is called, pass cookies
+    when(request.getCookies()).thenReturn(testCookies);
+
+    // call loginUser
+    auth.loginUser(request, response);
+
+    // captor setup
+    ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+    verify(response)
+        .addCookie(
+            cookieCaptor
+                .capture()); // this line is still erroring (even when I add cookie with value "out"
     Cookie cookie = cookieCaptor.getValue();
 
     Assert.assertEquals(cookie.getValue(), testCookies[0].getValue());
