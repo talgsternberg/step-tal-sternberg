@@ -70,7 +70,7 @@ public final class TaskController {
         task.getUsers().add(userID);
         datastore.put(task.toEntity());
         if (task.getParentTaskID() != 0) {
-          addUser(task.getParentTaskID(), userID);
+          addUserRecursive(getTaskByID(task.getParentTaskID()), userID);
         }
       }
     }
