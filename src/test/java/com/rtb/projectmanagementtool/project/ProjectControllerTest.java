@@ -113,4 +113,21 @@ public class ProjectControllerTest {
     Assert.assertEquals("correct projects for user 3", expectedUser3Projects, actualUser3Projects);
     Assert.assertEquals("correct projects for user 4", expectedUser4Projects, actualUser4Projects);
   }
+
+  @Test
+  public void getSpecificProjectWithItsId() {
+    projectController.addProject(PROJECT1);
+    projectController.addProject(PROJECT2);
+    projectController.addProject(PROJECT3);
+    projectController.addProject(PROJECT4);
+
+    Assert.assertEquals(
+        "correct project for project id 1", PROJECT1, projectController.getProjectById(1l));
+    Assert.assertEquals(
+        "correct project for project id 2", PROJECT2, projectController.getProjectById(2l));
+    Assert.assertEquals(
+        "correct project for project id 3", PROJECT3, projectController.getProjectById(3l));
+    Assert.assertEquals(
+        "correct project for project id 4", PROJECT4, projectController.getProjectById(4l));
+  }
 }

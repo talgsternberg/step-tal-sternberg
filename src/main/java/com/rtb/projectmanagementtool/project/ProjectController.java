@@ -23,6 +23,26 @@ public class ProjectController {
   }
 
   /**
+   * Retrieves a project given its id
+   *
+   * @param projectId id of the project
+   * @return a project with id
+   */
+  public ProjectData getProjectById(Long projectId) {
+    Query query =
+        new Query("Project")
+            .addFilter("__key__", FilterOperator.EQUAL, KeyFactory.createKey("Project", projectId));
+
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+
+    if (entity != null) {
+      return new ProjectData(entity);
+    }
+    return null;
+  }
+
+  /**
    * Gets all projects in database with a user
    *
    * @param userId the id of the user
