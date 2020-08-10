@@ -37,7 +37,7 @@ function getTaskInfo() {
         addSubtask.innerHTML = '';
         addSubtask.appendChild(createTaskButton(
             1,
-            'Project Name 1', 
+            'Project Name 1',
             task.taskID,
             task.name));
         // addSubtask.appendChild(getCreateTaskButton(
@@ -47,7 +47,7 @@ function getTaskInfo() {
         //     task.name));
         const toggleUserAssignment =
             document.getElementById('task-assignuser-container');
-        toggleUserAssignment.innerHTML = '';        
+        toggleUserAssignment.innerHTML = '';
         toggleUserAssignment.appendChild(getUserAssignmentButton(task, userID));
         const userList = document.getElementById('task-users-container');
         // userList.appendChild(getUsers(users));
@@ -153,7 +153,6 @@ function addUser() {
   console.log('/task-add-user', params);
   fetch('/task-add-user', {method: 'post', body: params})
       .then(() => getTaskInfo());
-
 }
 
 /**
