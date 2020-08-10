@@ -65,7 +65,7 @@ public class AuthOpsTest {
 
   @Test
   public void testAlreadyLoggedInDontSetCookie() {
-    setUserServiceAuthInfo(false, "abc");
+    setUserServiceAuthInfo(false, "abc"); // user is logged in
     // auth object
     // DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     auth = new AuthOps(controller);
@@ -100,7 +100,7 @@ public class AuthOpsTest {
 
   @Test
   public void testLoginUser() {
-    setUserServiceAuthInfo(true, "abc");
+    setUserServiceAuthInfo(true, "abc"); // user is logged out
     // auth object
     // DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     auth = new AuthOps(controller);
@@ -135,5 +135,13 @@ public class AuthOpsTest {
 
     // Assert that the UserID equals the cookie's value
     Assert.assertEquals("1", cookie.getValue());
+  }
+
+  @Test
+  public void testWhichUser() {
+    setUserServiceAuthInfo(false, "abc"); // user is logged in
+
+    Cookie[] testCookies = new Cookie[1];
+    testCookies[0] = new Cookie("sessionUserID", "2l");
   }
 }

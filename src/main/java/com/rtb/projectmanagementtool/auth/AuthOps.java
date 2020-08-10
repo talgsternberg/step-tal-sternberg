@@ -12,22 +12,19 @@ import javax.servlet.http.*;
 public class AuthOps {
 
   // private DatastoreService datastore;
-  private UserController CONTROLLER;
-  public String COOKIENAME;
+  private UserController controller;
   public String cookieValue;
   public Cookie currCookie;
+  private final String COOKIENAME = "sessionUserID";
+  private final String NO_LOGGED_IN_USER = "-1"; // -1 = logged out
 
   // for testing purposes (with mock controllers)
-  public AuthOps(UserController CONTROLLER) {
-    this.CONTROLLER = CONTROLLER;
-    COOKIENAME = "sessionUserID";
-    cookieValue = "-1"; // "out" if not logged in, else userID as String
+  public AuthOps(UserController controller) {
+    this.controller = controller;
   }
 
   public AuthOps(DatastoreService ds) {
-    UserController CONTROLLER = new UserController(ds);
-    COOKIENAME = "sessionUserID";
-    cookieValue = "-1"; // "out" if not logged in, else userID as String
+    UserController controller = new UserController(ds);
   }
 
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
@@ -42,22 +39,19 @@ public class AuthOps {
       }
     } else {
       // if no cookie found, create a new one
-      currCookie = new Cookie(COOKIENAME, cookieValue);
+      currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
     }
 
     // if not logged in, call auth service
-    if (currCookie.getValue() == "-1") {
+    if (currCookie.getValue() == NO_LOGGED_IN_USER) {
       // call auth service
       UserService userService = UserServiceFactory.getUserService();
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
-        System.out.println("authID from service:");
-        System.out.println(AuthID);
         // find AuthID in DataStore
-        ArrayList<UserData> users = CONTROLLER.getEveryUser();
+        ArrayList<UserData> users = controller.getEveryUser();
         for (UserData user : users) {
-          System.out.println(user.getAuthID());
           if (user.getAuthID() == AuthID) {
             String userIDString = String.valueOf(user.getUserID());
             currCookie.setValue(userIDString);
@@ -81,7 +75,7 @@ public class AuthOps {
       }
     } else {
       // if no cookie found, create a new one
-      currCookie = new Cookie(COOKIENAME, cookieValue);
+      currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
     }
 
     // get cookie value for user
