@@ -250,6 +250,123 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testSetStatusComplete() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create task
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
+
+    // Assert status is INCOMPLETE
+    Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
+
+    // Set status as complete with TaskController
+    taskController.setComplete(task);
+
+    // Assert status is COMPLETE
+    Assert.assertEquals("status", Status.COMPLETE, task.getStatus());
+  }
+
+  @Test
+  public void testSetStatusCompleteWithCompleteSubtasks() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create tasks
+    TaskData task1 = new TaskData(projectID1, name1, description1, Status.INCOMPLETE, users1);
+    TaskData task2 = new TaskData(projectID2, name2, description2, Status.INCOMPLETE, users2);
+    TaskData task3 = new TaskData(projectID3, name3, description3, Status.INCOMPLETE, users3);
+
+    // Add task1 with TaskController
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1)));
+
+    // Add task2 and task3 as subtasks of task1 with TaskController
+    ArrayList<TaskData> subtasks = new ArrayList<>(Arrays.asList(task2, task3));
+    taskController.addSubtasks(task1, subtasks);
+
+    // Assert status is correct
+    Assert.assertEquals("status 1", Status.INCOMPLETE, task1.getStatus());
+    Assert.assertEquals("status 2", Status.INCOMPLETE, task2.getStatus());
+    Assert.assertEquals("status 3", Status.INCOMPLETE, task3.getStatus());
+
+    // Set status of subtasks as complete with TaskController (with id or object as parameter)
+    taskController.setComplete(task2.getTaskID());
+    taskController.setComplete(task3);
+
+    // Get status of tasks from datastore
+    Status status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
+    Status status2 = taskController.getTaskByID(task2.getTaskID()).getStatus();
+    Status status3 = taskController.getTaskByID(task3.getTaskID()).getStatus();
+
+    // Assert status is correct
+    Assert.assertEquals("status 1", Status.INCOMPLETE, status1);
+    Assert.assertEquals("status 2", Status.COMPLETE, status2);
+    Assert.assertEquals("status 3", Status.COMPLETE, status3);
+
+    // Set status of subtasks as complete with TaskController
+    taskController.setComplete(task1);
+
+    // Get status of tasks from datastore
+    status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
+    status2 = taskController.getTaskByID(task2.getTaskID()).getStatus();
+    status3 = taskController.getTaskByID(task3.getTaskID()).getStatus();
+
+    // Assert status is correct
+    Assert.assertEquals("status 1", Status.COMPLETE, status1);
+    Assert.assertEquals("status 2", Status.COMPLETE, status2);
+    Assert.assertEquals("status 3", Status.COMPLETE, status3);
+  }
+
+  @Test
+  public void testSetStatusCompleteWithIncompleteSubtasks() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create tasks
+    TaskData task1 = new TaskData(projectID1, name1, description1, Status.INCOMPLETE, users1);
+    TaskData task2 = new TaskData(projectID2, name2, description2, Status.INCOMPLETE, users2);
+    TaskData task3 = new TaskData(projectID3, name3, description3, Status.INCOMPLETE, users3);
+
+    // Add task1 with TaskController
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1)));
+
+    // Add task2 and task3 as subtasks of task1 with TaskController
+    ArrayList<TaskData> subtasks = new ArrayList<>(Arrays.asList(task2, task3));
+    taskController.addSubtasks(task1, subtasks);
+
+    // Assert status is correct
+    Assert.assertEquals("status 1", Status.INCOMPLETE, task1.getStatus());
+    Assert.assertEquals("status 2", Status.INCOMPLETE, task2.getStatus());
+    Assert.assertEquals("status 3", Status.INCOMPLETE, task3.getStatus());
+
+    // Set status of only one subtask as complete with TaskController
+    taskController.setComplete(task2);
+
+    // Get status of tasks from datastore
+    Status status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
+    Status status2 = taskController.getTaskByID(task2.getTaskID()).getStatus();
+    Status status3 = taskController.getTaskByID(task3.getTaskID()).getStatus();
+
+    // Assert status is correct
+    Assert.assertEquals("status 1", Status.INCOMPLETE, status1);
+    Assert.assertEquals("status 2", Status.COMPLETE, status2);
+    Assert.assertEquals("status 3", Status.INCOMPLETE, status3);
+
+    // Set status of subtasks as complete with TaskController (should not set as complete)
+    taskController.setComplete(task1);
+
+    // Get status of tasks from datastore
+    status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
+    status2 = taskController.getTaskByID(task2.getTaskID()).getStatus();
+    status3 = taskController.getTaskByID(task3.getTaskID()).getStatus();
+
+    // Assert status is correct
+    Assert.assertEquals("status 1", Status.INCOMPLETE, status1);
+    Assert.assertEquals("status 2", Status.COMPLETE, status2);
+    Assert.assertEquals("status 3", Status.INCOMPLETE, status3);
+  }
+
+  @Test
   public void testGetTaskByID() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
