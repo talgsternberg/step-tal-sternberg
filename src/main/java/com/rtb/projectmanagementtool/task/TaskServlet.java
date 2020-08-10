@@ -41,7 +41,9 @@ public class TaskServlet extends HttpServlet {
     // Get Task
     long taskID = Long.parseLong(request.getParameter("taskID"));
     TaskController taskController = new TaskController(datastore);
-    // TaskData task = taskController.getTaskByID(taskID);
+    if (taskID != 0 && taskID != 1) {
+      task1 = taskController.getTaskByID(taskID);
+    }
     // ArrayList is for HashMap below. Is there a better way to do this?
     ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
 
@@ -77,6 +79,7 @@ public class TaskServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get and create parameters
+    long parentTaskID = Long.parseLong(request.getParameter("parentTaskID"));
     long projectID = Long.parseLong(request.getParameter("projectID"));
     String name = request.getParameter("name").trim();
     String description = request.getParameter("description").trim();
@@ -84,7 +87,7 @@ public class TaskServlet extends HttpServlet {
     ArrayList<Long> users = new ArrayList<>();
 
     // Create TaskData object
-    TaskData task = new TaskData(projectID, name, description, status, users);
+    TaskData task = new TaskData(parentTaskID, projectID, name, description, status, users);
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);
