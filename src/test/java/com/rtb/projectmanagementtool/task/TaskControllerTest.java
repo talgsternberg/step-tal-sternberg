@@ -112,6 +112,144 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testAddUserBeforePuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users list
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task: { task users: [1, 2] }
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+
+    // Create user
+    long user = 4l;
+
+    // Add user to task with TaskController with TaskData object
+    taskController.addUser(task, user);
+
+    // Update expected users
+    users.add(user);
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("addUser", users, task.getUsers());
+
+    // Attempt to add user to task with TaskController again
+    taskController.addUser(task, user);
+
+    // Assert the user wasn't added to task again
+    Assert.assertEquals("addUser", users, task.getUsers());
+  }
+
+  @Test
+  public void testAddUserAfterPuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
+
+    // Add task to ds with TaskController
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
+
+    // Create user
+    long user = 4l;
+
+    // Add user to task with TaskController with TaskData object
+    taskController.addUser(task, user);
+
+    // Create expected users
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l, 4l));
+
+    // Get users from ds with TaskController
+    ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("addUser", users, getUsers);
+
+    // Attempt to add user to task with TaskController again with TaskID
+    taskController.addUser(task.getTaskID(), user);
+
+    // Get users from ds with TaskController
+    getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert the user wasn't added to task again
+    Assert.assertEquals("addUser", users, task.getUsers());
+  }
+
+  @Test
+  public void testRemoveUserBeforePuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users list
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task: { task users: [1, 2] }
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users);
+
+    // Create user
+    long user = 2l;
+
+    // Remove user from task with TaskController with TaskData object
+    taskController.removeUser(task, user);
+
+    // Update expected users
+    users.remove(user);
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("addUser", users, task.getUsers());
+
+    // Attempt to remove user from task with TaskController again
+    taskController.removeUser(task, user);
+
+    // Assert users weren't changed
+    Assert.assertEquals("addUser", users, task.getUsers());
+  }
+
+  @Test
+  public void testRemoveUserAfterPuttingIntoDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create users
+    ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
+
+    // Create task
+    TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
+
+    // Add task to ds with TaskController
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
+
+    // Create user
+    long user = 2l;
+
+    // Remove user from task with TaskController with taskID
+    taskController.removeUser(task.getTaskID(), user);
+
+    // Create expected users
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l));
+
+    // Get users from ds with TaskController
+    ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("removeUser", users, getUsers);
+
+    // Attempt to remove user from task with TaskController again
+    taskController.removeUser(task.getTaskID(), user);
+
+    // Get users from ds with TaskController
+    getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+
+    // Assert users weren't changed
+    Assert.assertEquals("removeUser", users, getUsers);
+  }
+
+  @Test
   public void testGetTaskByID() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
@@ -140,6 +278,77 @@ public class TaskControllerTest {
 
     // Assert task retrieved is correct
     Assert.assertEquals("getTask", task2, getTask);
+  }
+
+  @Test
+  public void testGetTasksByUserID() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create tasks: { task1 users: [1, 2]; task2 users: [1, 3]; task3 users: [3] }
+    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1);
+    TaskData task2 = new TaskData(projectID2, name2, description2, status2, users2);
+    TaskData task3 = new TaskData(projectID3, name3, description3, status3, users3);
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Add task entities with TaskController
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1, task2, task3)));
+
+    // Assert 3 entities were added
+    Assert.assertEquals(3, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Get tasks of each user with TaskController
+    ArrayList<TaskData> getUser1Tasks = taskController.getTasksByUserID(1l);
+    ArrayList<TaskData> getUser2Tasks = taskController.getTasksByUserID(2l);
+    ArrayList<TaskData> getUser3Tasks = taskController.getTasksByUserID(3l);
+
+    // Create expected tasks
+    ArrayList<TaskData> user1Tasks = new ArrayList<TaskData>(Arrays.asList(task1, task2));
+    ArrayList<TaskData> user2Tasks = new ArrayList<TaskData>(Arrays.asList(task1));
+    ArrayList<TaskData> user3Tasks = new ArrayList<TaskData>(Arrays.asList(task2, task3));
+
+    // Assert tasks retrieved are correct
+    Assert.assertEquals("getTasksByUserID", user1Tasks, getUser1Tasks);
+    Assert.assertEquals("getTasksByUserID", user2Tasks, getUser2Tasks);
+    Assert.assertEquals("getTasksByUserID", user3Tasks, getUser3Tasks);
+  }
+
+  @Test
+  public void testGetTasksByProjectID() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create tasks:
+    TaskData task1 = new TaskData(1l, name1, description1, status1, users1);
+    TaskData task2 = new TaskData(1l, name2, description2, status2, users2);
+    TaskData task3 = new TaskData(2l, name3, description3, status3, users3);
+    TaskData task4 = new TaskData(1l, name1, description1, status1, users1);
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Add task1, task2, and task3 entities with TaskController
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1, task2, task3)));
+
+    // Add task4 as subtask of task1 with TaskController
+    taskController.addSubtasks(task1, new ArrayList<>(Arrays.asList(task4)));
+
+    // Assert 4 entities were added
+    Assert.assertEquals(4, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Get tasks of each user with TaskController
+    ArrayList<TaskData> getProject1Tasks = taskController.getTasksByProjectID(1l);
+    ArrayList<TaskData> getProject2Tasks = taskController.getTasksByProjectID(2l);
+
+    // Create expected tasks
+    ArrayList<TaskData> project1Tasks = new ArrayList<TaskData>(Arrays.asList(task1, task2));
+    ArrayList<TaskData> project2Tasks = new ArrayList<TaskData>(Arrays.asList(task3));
+
+    // Assert tasks retrieved are correct
+    Assert.assertEquals("getTasksByProjectID", project1Tasks, getProject1Tasks);
+    Assert.assertEquals("getTasksByProjectID", project2Tasks, getProject2Tasks);
   }
 
   @Test

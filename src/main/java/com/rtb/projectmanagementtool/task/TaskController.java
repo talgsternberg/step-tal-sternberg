@@ -3,6 +3,7 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Class controlling the TaskData object. */
@@ -42,6 +43,34 @@ public final class TaskController {
     }
   }
 
+  // Update methods
+
+  public void addUser(long taskID, long userID) {
+    addUser(getTaskByID(taskID), userID);
+  }
+
+  public void addUser(TaskData task, long userID) {
+    if (!task.getUsers().contains(userID)) {
+      task.getUsers().add(userID);
+      if (task.getTaskID() != 0) {
+        datastore.put(task.toEntity());
+      }
+    }
+  }
+
+  public void removeUser(long taskID, long userID) {
+    removeUser(getTaskByID(taskID), userID);
+  }
+
+  public void removeUser(TaskData task, long userID) {
+    if (task.getUsers().contains(userID)) {
+      task.getUsers().remove(userID);
+      if (task.getTaskID() != 0) {
+        datastore.put(task.toEntity());
+      }
+    }
+  }
+
   // Get methods
 
   public TaskData getTaskByID(long taskID) {
@@ -52,6 +81,21 @@ public final class TaskController {
     Entity entity = results.asSingleEntity();
     TaskData task = new TaskData(entity);
     return task;
+  }
+
+  public ArrayList<TaskData> getTasksByUserID(long userID) {
+    Filter filter = new FilterPredicate("users", FilterOperator.EQUAL, userID);
+    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+  }
+
+  public ArrayList<TaskData> getTasksByProjectID(long projectID) {
+    Filter filter =
+        new CompositeFilter(
+            CompositeFilterOperator.AND,
+            Arrays.asList(
+                FilterOperator.EQUAL.of("projectID", projectID),
+                FilterOperator.EQUAL.of("parentTaskID", 0)));
+    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
 
   public ArrayList<TaskData> getTasks(int limit, String sortBy, String sortDirection) {
