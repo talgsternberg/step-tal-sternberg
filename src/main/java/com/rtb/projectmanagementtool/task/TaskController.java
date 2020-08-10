@@ -50,28 +50,10 @@ public final class TaskController {
   }
 
   public void addUser(TaskData task, long userID) {
-    if (task.getTaskID() != 0) {
-      TransactionOptions options = TransactionOptions.Builder.withXG(true);
-      Transaction transaction = datastore.beginTransaction(options);
-      try {
-        addUserRecursive(task, userID);
-        transaction.commit();
-      } finally {
-        if (transaction.isActive()) {
-          transaction.rollback();
-        }
-      }
-    }
-  }
-
-  private void addUserRecursive(TaskData task, long userID) {
-    if (task.getTaskID() != 0) {
-      if (!task.getUsers().contains(userID)) {
-        task.getUsers().add(userID);
+    if (!task.getUsers().contains(userID)) {
+      task.getUsers().add(userID);
+      if (task.getTaskID() != 0) {
         datastore.put(task.toEntity());
-        if (task.getParentTaskID() != 0) {
-          addUserRecursive(getTaskByID(task.getParentTaskID()), userID);
-        }
       }
     }
   }
@@ -81,37 +63,12 @@ public final class TaskController {
   }
 
   public void removeUser(TaskData task, long userID) {
-    if (task.getTaskID() != 0) {
-      TransactionOptions options = TransactionOptions.Builder.withXG(true);
-      Transaction transaction = datastore.beginTransaction(options);
-      try {
-        removeUserRecursive(new ArrayList<>(Arrays.asList(task)), userID);
-        transaction.commit();
-      } finally {
-        if (transaction.isActive()) {
-          transaction.rollback();
-        }
-      }
-    }
-  }
-
-  private void removeUserRecursive(ArrayList<TaskData> tasks, long userID) {
-    if (tasks.isEmpty()) {
-      return;
-    }
-    ArrayList<Long> taskIDs = new ArrayList<>();
-    for (TaskData task : tasks) {
-      if (task.getUsers().contains(userID)) {
-        task.getUsers().remove(userID);
+    if (task.getUsers().contains(userID)) {
+      task.getUsers().remove(userID);
+      if (task.getTaskID() != 0) {
         datastore.put(task.toEntity());
-        taskIDs.add(task.getTaskID());
       }
     }
-    if (taskIDs.isEmpty()) {
-      return;
-    }
-    Filter filter = new FilterPredicate("parentTaskID", FilterOperator.IN, taskIDs);
-    removeUserRecursive(getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT), userID);
   }
 
   // Get methods
