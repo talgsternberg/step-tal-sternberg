@@ -5,9 +5,9 @@
 package com.rtb.projectmanagementtool.project;
 
 import com.google.appengine.api.datastore.Entity;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class ProjectData {
   private final String PROPERTY_NAME = "name";
@@ -50,36 +50,20 @@ public class ProjectData {
     this.name = (String) entity.getProperty(PROPERTY_NAME);
     this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
 
-    // Instantiate containers
-    this.members = new HashSet<Long>();
-    this.admins = new HashSet<Long>();
-
-    // Update containers with entity properties
-    parseEntityHashSets(entity, PROPERTY_ADMINS);
-    parseEntityHashSets(entity, PROPERTY_MEMBERS);
-  }
-
-  /**
-   * Used by ProjectData(Entity) to parse entity properties into respective HashSets of this class
-   *
-   * @param entity the entity
-   * @param propertyName the name of entity property
-   */
-  private void parseEntityHashSets(Entity entity, String propertyName) {
-    Object entityProperty = entity.getProperty(propertyName);
-    if (entityProperty == null) {
-      return;
+    // Members
+    Collection entityProperty = (Collection) entity.getProperty(PROPERTY_MEMBERS);
+    if (entityProperty != null) {
+      this.members = new HashSet<Long>((ArrayList<Long>) entityProperty);
+    } else {
+      this.members = new HashSet<Long>();
     }
 
-    Collection collection = (Collection) entityProperty;
-    Iterator<Long> iterator = collection.iterator();
-
-    while (iterator.hasNext()) {
-      if (propertyName.equals(PROPERTY_ADMINS)) {
-        addAdminUser(iterator.next());
-      } else if (propertyName.equals(PROPERTY_MEMBERS)) {
-        addMemberUser(iterator.next());
-      }
+    // Admins
+    entityProperty = (Collection) entity.getProperty(PROPERTY_ADMINS);
+    if (entityProperty == null) {
+      this.admins = new HashSet<Long>();
+    } else {
+      this.admins = new HashSet<Long>((ArrayList<Long>) entityProperty);
     }
   }
 
@@ -236,16 +220,21 @@ public class ProjectData {
     return other instanceof ProjectData && equals(this, (ProjectData) other);
   }
 
-  /** @return the string representation of this class. */
+  /** @return the string representation of this class in JSON format. */
   @Override
   public String toString() {
-    String returnString = "{\n";
-    returnString += "Project id: " + this.id + "\n";
-    returnString += "Project creator's id: " + this.creatorId + "\n";
-    returnString += "Project Name: " + this.name + "\n";
-    returnString += "Project Description: " + this.description + "\n";
-    returnString += "Project Members: " + this.admins.toString() + "\n";
-    returnString += "Project Admins: " + this.members.toString() + "\n";
-    return returnString;
+    String json = "{";
+    json += "\"name\":";
+    json += "\"" + this.name + "\",";
+    json += "\"description\":";
+    json += "\"" + this.description + "\",";
+    json += "\"creatorId\":";
+    json += "\"" + this.creatorId + "\",";
+    json += "\"members\":";
+    json += "\"" + this.members.toString() + "\",";
+    json += "\"admins\":";
+    json += "\"" + this.admins.toString() + "\"";
+    json += "}";
+    return json;
   }
 }
