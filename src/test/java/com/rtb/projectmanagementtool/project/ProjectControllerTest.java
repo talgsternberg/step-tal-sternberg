@@ -8,7 +8,6 @@ import java.util.Arrays;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProjectControllerTest {
@@ -36,13 +35,12 @@ public class ProjectControllerTest {
     projectController = new ProjectController(ds);
 
     // Add users to projects
-    PROJECT2.addUser(USER2, UserProjectRole.ADMIN);
-    PROJECT2.addUser(USER4, UserProjectRole.MEMBER);
-    PROJECT2.addUser(USER3, UserProjectRole.ADMIN);
-    PROJECT1.addUser(USER4, UserProjectRole.ADMIN);
-    PROJECT4.addUser(USER2, UserProjectRole.MEMBER);
-    PROJECT3.addUser(USER3, UserProjectRole.MEMBER);
-    PROJECT3.addUser(USER1, UserProjectRole.MEMBER);
+    PROJECT2.addAdminUser(USER2);
+    PROJECT2.addMemberUser(USER4);
+    PROJECT2.addAdminUser(USER3);
+    PROJECT1.addAdminUser(USER4);
+    PROJECT4.addMemberUser(USER2);
+    PROJECT3.addMemberUser(USER3);
 
     // Set hardcoded ids to mimic expected behavior
     PROJECT1.setId(1l);
@@ -56,60 +54,16 @@ public class ProjectControllerTest {
     helper.tearDown();
   }
 
-  // Test saving projects to database
-  // Projects added here are used in subsequent test methods
-  @Ignore
+  @Test
   public void addProjects() {
-    ArrayList<ProjectData> expectedProjects =
-        new ArrayList<ProjectData>(Arrays.asList(PROJECT1, PROJECT2, PROJECT3, PROJECT4));
-    projectController.addProject(PROJECT1);
-    projectController.addProject(PROJECT2);
-
-    projectController.addProject(PROJECT3);
-    projectController.addProject(PROJECT4);
-    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
-  }
-
-  // Test querying for specific user's projects, both as owner and admin/regular user
-  @Test
-  public void getProjectWithCreator() {
     projectController.addProject(PROJECT1);
     projectController.addProject(PROJECT2);
     projectController.addProject(PROJECT3);
     projectController.addProject(PROJECT4);
 
-    ArrayList<ProjectData> expectedUserProjects =
-        new ArrayList<ProjectData>(Arrays.asList(PROJECT1, PROJECT2));
-
-    ArrayList<String> queryList = new ArrayList<String>();
-    String userString = ProjectData.createUserString(USER1, UserProjectRole.CREATOR);
-    queryList.add(userString);
-
-    ArrayList<ProjectData> actualUserProjects = projectController.getProjectsByQuery(queryList);
-
-    Assert.assertEquals(expectedUserProjects.toString(), actualUserProjects.toString());
+    Assert.assertTrue("four projects in database", projectController.getAllProjects().size() == 4);
   }
 
-  @Test
-  public void getProjectsWithUser() {
-    projectController.addProject(PROJECT1);
-    projectController.addProject(PROJECT2);
-    projectController.addProject(PROJECT3);
-    projectController.addProject(PROJECT4);
-
-    ArrayList<ProjectData> expectedUserProjects =
-        new ArrayList<ProjectData>(Arrays.asList(PROJECT3, PROJECT2, PROJECT4));
-
-    ArrayList<String> queryList = new ArrayList<String>();
-    queryList.add(ProjectData.createUserString(USER2, UserProjectRole.CREATOR));
-    queryList.add(ProjectData.createUserString(USER2, UserProjectRole.ADMIN));
-    queryList.add(ProjectData.createUserString(USER2, UserProjectRole.MEMBER));
-
-    ArrayList<ProjectData> actualUserProjects = projectController.getProjectsByQuery(queryList);
-    Assert.assertEquals(expectedUserProjects.toString(), actualUserProjects.toString());
-  }
-
-  // Test project removal from database
   @Test
   public void removeProjects() {
     projectController.addProject(PROJECT1);
@@ -117,19 +71,63 @@ public class ProjectControllerTest {
     projectController.addProject(PROJECT3);
     projectController.addProject(PROJECT4);
 
-    ArrayList<ProjectData> expectedProjects =
-        new ArrayList<ProjectData>(Arrays.asList(PROJECT1, PROJECT2, PROJECT3, PROJECT4));
+    Assert.assertTrue("four projects in database", projectController.getAllProjects().size() == 4);
 
-    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
-
-    expectedProjects.remove(PROJECT2);
-    projectController.removeProject(PROJECT2);
-    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
-
-    expectedProjects.remove(PROJECT3);
-    expectedProjects.remove(PROJECT1);
     projectController.removeProject(PROJECT1);
+    projectController.removeProject(PROJECT2);
+
+    Assert.assertTrue(
+        "two projects in database after removing two",
+        projectController.getAllProjects().size() == 2);
+
     projectController.removeProject(PROJECT3);
-    Assert.assertEquals(expectedProjects.toString(), projectController.getAllProjects().toString());
+    projectController.removeProject(PROJECT4);
+    Assert.assertTrue("0 projects in database", projectController.getAllProjects().size() == 0);
+  }
+
+  @Test
+  public void getProjectsThatUserIsIn() {
+    projectController.addProject(PROJECT1);
+    projectController.addProject(PROJECT2);
+    projectController.addProject(PROJECT3);
+    projectController.addProject(PROJECT4);
+
+    ArrayList<ProjectData> expectedUser1Projects =
+        new ArrayList<ProjectData>(Arrays.asList(PROJECT1, PROJECT2));
+    ArrayList<ProjectData> actualUser1Projects = projectController.getProjectsWithUser(USER1);
+
+    ArrayList<ProjectData> expectedUser2Projects =
+        new ArrayList<ProjectData>(Arrays.asList(PROJECT2, PROJECT3, PROJECT4));
+    ArrayList<ProjectData> actualUser2Projects = projectController.getProjectsWithUser(USER2);
+
+    ArrayList<ProjectData> expectedUser3Projects =
+        new ArrayList<ProjectData>(Arrays.asList(PROJECT2, PROJECT3, PROJECT4));
+    ArrayList<ProjectData> actualUser3Projects = projectController.getProjectsWithUser(USER3);
+
+    ArrayList<ProjectData> expectedUser4Projects =
+        new ArrayList<ProjectData>(Arrays.asList(PROJECT1, PROJECT2));
+    ArrayList<ProjectData> actualUser4Projects = projectController.getProjectsWithUser(USER4);
+
+    Assert.assertEquals("correct projects for user 1", expectedUser1Projects, actualUser1Projects);
+    Assert.assertEquals("correct projects for user 2", expectedUser2Projects, actualUser2Projects);
+    Assert.assertEquals("correct projects for user 3", expectedUser3Projects, actualUser3Projects);
+    Assert.assertEquals("correct projects for user 4", expectedUser4Projects, actualUser4Projects);
+  }
+
+  @Test
+  public void getSpecificProjectWithItsId() {
+    projectController.addProject(PROJECT1);
+    projectController.addProject(PROJECT2);
+    projectController.addProject(PROJECT3);
+    projectController.addProject(PROJECT4);
+
+    Assert.assertEquals(
+        "correct project for project id 1", PROJECT1, projectController.getProjectById(1l));
+    Assert.assertEquals(
+        "correct project for project id 2", PROJECT2, projectController.getProjectById(2l));
+    Assert.assertEquals(
+        "correct project for project id 3", PROJECT3, projectController.getProjectById(3l));
+    Assert.assertEquals(
+        "correct project for project id 4", PROJECT4, projectController.getProjectById(4l));
   }
 }

@@ -7,10 +7,10 @@ package com.rtb.projectmanagementtool.project;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class ProjectController {
-  private final String PROPERTY_USER_IDS = "userIds";
-
   DatastoreService datastore;
 
   public ProjectController(DatastoreService datastore) {
@@ -19,7 +19,27 @@ public class ProjectController {
 
   /** @return ArrayList containing all projects in database * Only for testing right now */
   public ArrayList<ProjectData> getAllProjects() {
-    return getProjectsByQuery(/* queryList */ null);
+    return getProjects(/* filter */ null);
+  }
+
+  /**
+   * Retrieves a project given its id
+   *
+   * @param projectId id of the project
+   * @return a project with id
+   */
+  public ProjectData getProjectById(Long projectId) {
+    Query query =
+        new Query("Project")
+            .addFilter("__key__", FilterOperator.EQUAL, KeyFactory.createKey("Project", projectId));
+
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+
+    if (entity != null) {
+      return new ProjectData(entity);
+    }
+    return null;
   }
 
   /**
@@ -29,51 +49,25 @@ public class ProjectController {
    * @return ArrayList containing desired projects
    */
   public ArrayList<ProjectData> getProjectsWithUser(Long userId) {
-    ArrayList<String> queryList = new ArrayList<String>();
-    queryList.add(ProjectData.createUserString(userId, UserProjectRole.CREATOR));
-    queryList.add(ProjectData.createUserString(userId, UserProjectRole.ADMIN));
-    queryList.add(ProjectData.createUserString(userId, UserProjectRole.MEMBER));
-    return getProjectsByQuery(queryList);
+    // Create the sub-filters
+    ArrayList<FilterPredicate> subFilters = new ArrayList<FilterPredicate>();
+    subFilters.add(new FilterPredicate("creator", FilterOperator.EQUAL, userId));
+    subFilters.add(new FilterPredicate("admins", FilterOperator.IN, Arrays.asList(userId)));
+    subFilters.add(new FilterPredicate("members", FilterOperator.IN, Arrays.asList(userId)));
+    CompositeFilter filter =
+        new Query.CompositeFilter(CompositeFilterOperator.OR, (Collection) subFilters);
+
+    return getProjects(filter);
   }
 
-  /**
-   * Gets all projects in database that has a specific admin
-   *
-   * @param userId the id of the user
-   * @return ArrayList containing desired projects
-   */
-  public ArrayList<ProjectData> getProjectsWithAdmin(Long userId) {
-    ArrayList<String> queryList = new ArrayList<String>();
-    queryList.add(ProjectData.createUserString(userId, UserProjectRole.ADMIN));
-    return getProjectsByQuery(queryList);
-  }
-
-  /**
-   * Gets all projects in database created by specific user
-   *
-   * @param userId the id of the user
-   * @return ArrayList containing desired projects
-   */
-  public ArrayList<ProjectData> getProjectsByCreator(Long userId) {
-    ArrayList<String> queryList = new ArrayList<String>();
-    queryList.add(ProjectData.createUserString(userId, UserProjectRole.CREATOR));
-    return getProjectsByQuery(queryList);
-  }
-
-  /**
-   * Gets all projects in database that match query list
-   *
-   * @param queryList list of users to fetch. ex string: CREATOR-12345
-   * @return ArrayList containing desired projects
-   */
-  public ArrayList<ProjectData> getProjectsByQuery(ArrayList<String> queryList) {
-    ArrayList<ProjectData> projectContainer = new ArrayList<ProjectData>();
-
+  private ArrayList<ProjectData> getProjects(CompositeFilter filter) {
     // Only retrieve filtered projects
     Query query = new Query("Project");
-    if (queryList != null) {
-      query.addFilter("users", FilterOperator.IN, queryList);
+    if (filter != null) {
+      query.setFilter(filter);
     }
+
+    ArrayList<ProjectData> projectContainer = new ArrayList<ProjectData>();
 
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {

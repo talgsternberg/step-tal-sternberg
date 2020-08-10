@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
 
-public final class UserController {
+public class UserController {
 
   private DatastoreService datastore;
 
@@ -35,5 +35,17 @@ public final class UserController {
   public void addUser(UserData user) {
     Entity entity = user.toEntity();
     datastore.put(entity);
+  }
+
+  public ArrayList<Long> getUserIDs() {
+    Query query = new Query("User");
+    ArrayList<Long> userIDs = new ArrayList<Long>();
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      UserData user = new UserData(entity);
+      Long userID = (Long) user.getUserID();
+      userIDs.add(userID);
+    }
+    return userIDs;
   }
 }
