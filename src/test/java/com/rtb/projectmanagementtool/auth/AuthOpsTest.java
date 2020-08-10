@@ -24,6 +24,7 @@ public class AuthOpsTest {
   private HttpServletResponse response;
   private Cookie cookie;
   private AuthOps auth;
+  private UserController controller;
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
@@ -54,6 +55,7 @@ public class AuthOpsTest {
     helper.setUp();
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
+    controller = mock(UserController.class);
   }
 
   @After
@@ -66,7 +68,7 @@ public class AuthOpsTest {
     setUserServiceAuthInfo(false, "abc");
     // auth object
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    auth = new AuthOps(ds);
+    auth = new AuthOps(ds, controller);
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
@@ -101,16 +103,13 @@ public class AuthOpsTest {
     setUserServiceAuthInfo(true, "abc");
     // auth object
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    auth = new AuthOps(ds);
+    auth = new AuthOps(ds, controller);
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
     testUsers.add(new UserData(1l, "abc"));
     // testUsers.add(new UserData(2l, "opq"));
     // testUsers.add(new UserData(3l, "xyz"));
-
-    // new controller
-    UserController controller = mock(UserController.class);
 
     // build and send a test cookie for logged out user
     Cookie[] testCookies = new Cookie[1];
@@ -134,7 +133,7 @@ public class AuthOpsTest {
     // extract value
     Cookie cookie = cookieCaptor.getValue();
 
-    // Assert
-    Assert.assertEquals("abc", cookie.getValue());
+    // Assert that the UserID equals the cookie's value
+    Assert.assertEquals("1", cookie.getValue());
   }
 }

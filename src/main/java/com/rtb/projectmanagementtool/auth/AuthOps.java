@@ -12,12 +12,14 @@ import javax.servlet.http.*;
 public class AuthOps {
 
   private DatastoreService datastore;
+  private UserController controller;
   public String cookieName;
   public String cookieValue;
   public Cookie currCookie;
 
-  public AuthOps(DatastoreService datastore) {
+  public AuthOps(DatastoreService datastore, UserController controller) {
     this.datastore = datastore;
+    this.controller = controller;
     cookieName = "sessionUserID";
     cookieValue = "-1"; // "out" if not logged in, else userID as String
   }
@@ -44,14 +46,13 @@ public class AuthOps {
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
-        // find AuthID in DataStore
-        UserController controller = new UserController(datastore);
-        ArrayList<UserData> users = controller.getEveryUser();
-        System.out.println("Here 1: users from controller:");
-        System.out.println(users);
-        System.out.println("Here 2. AuthID from login:");
+        System.out.println("authID from service:");
         System.out.println(AuthID);
+        // find AuthID in DataStore
+        // UserController controller = new UserController(datastore);
+        ArrayList<UserData> users = controller.getEveryUser();
         for (UserData user : users) {
+          System.out.println(user.getAuthID());
           if (user.getAuthID() == AuthID) {
             String userIDString = String.valueOf(user.getUserID());
             currCookie.setValue(userIDString);
