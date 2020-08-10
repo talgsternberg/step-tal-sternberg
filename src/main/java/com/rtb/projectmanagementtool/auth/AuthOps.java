@@ -66,7 +66,7 @@ public class AuthOps {
       response.addCookie(currCookie);
     }
   }
-  
+
   // returns the userID long (or -1) associated with the user logged in
   public long whichUserLoggedIn(HttpServletRequest request, HttpServletResponse response) {
     currCookie = generateCurrCookie(request, response);
@@ -88,7 +88,8 @@ public class AuthOps {
 
   // returns the AuthID to go in the UserData object (for later association)
   public String createUserHelper(HttpServletRequest request, HttpServletResponse response) {
+    UserService userService = UserServiceFactory.getUserService();
     String AuthID = userService.getCurrentUser().getUserId();
-    return AuthID   
+    return AuthID;
   }
 }
