@@ -88,6 +88,7 @@ public class TaskServletTest extends Mockito {
 
     // When parameters are requested, return test values
     when(request.getParameter("projectID")).thenReturn("1");
+    when(request.getParameter("parentTaskID")).thenReturn("0");
     when(request.getParameter("name")).thenReturn("Task 1");
     when(request.getParameter("description")).thenReturn("Task 1 description...");
     when(request.getParameter("status")).thenReturn("incomplete");

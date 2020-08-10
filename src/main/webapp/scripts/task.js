@@ -35,7 +35,7 @@ function getTaskInfo() {
         // subtaskList.appendChild(getTasks(subtasks));
         const addSubtask = document.getElementById('task-addsubtask-container');
         addSubtask.innerHTML = '';
-        addSubtask.appendChild(createTaskButton(1, 'Project Name 1'));
+        addSubtask.appendChild(createTaskButton(1, 'Project Name 1', task.taskID, task.name));
         // addSubtask.appendChild(getCreateTaskButton(
         //     project.projectID,
         //     project.projectName,
@@ -114,6 +114,8 @@ function getAddTaskInfo() {
   }
   const inputProjectID = document.getElementById('addtask-project-input');
   inputProjectID.setAttribute('value', projectID);
+  const inputParentTaskID = document.getElementById('addtask-parenttask-input');
+  inputParentTaskID.setAttribute('value', taskID);
 }
 
 /**
