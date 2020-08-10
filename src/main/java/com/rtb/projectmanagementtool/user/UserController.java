@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import java.util.ArrayList;
 
-public final class UserController {
+public class UserController {
 
   private DatastoreService datastore;
 
