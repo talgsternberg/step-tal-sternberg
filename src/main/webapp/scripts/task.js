@@ -8,10 +8,12 @@ function getTaskInfo() {
   // <a href=''> route).
   const params = new URLSearchParams(location.search);
   const taskID = params.get('taskID');
+  const userID = 1; // Get current userID from cookies?
   // const tasks = JSON.parse(gJSONtasks);
   // Create variables to create the URL
-  console.log('/task?taskID=' + taskID);
-  fetch('/task?taskID=' + taskID)
+  const url = '/task?taskID=' + taskID;
+  console.log(url);
+  fetch(url)
       .then((response) => response.json())
       .then((response) => {
         const task = response.task[0];
@@ -32,12 +34,16 @@ function getTaskInfo() {
         const subtaskList = document.getElementById('task-subtasks-container');
         // subtaskList.appendChild(getTasks(subtasks));
         const addSubtask = document.getElementById('task-addsubtask-container');
+        addSubtask.innerHTML = '';
+        addSubtask.appendChild(createTaskButton(1, 'Project Name 1'));
         // addSubtask.appendChild(getCreateTaskButton(
         //     project.projectID,
         //     project.projectName,
         //     task.taskID,
         //     task.name));
-        addSubtask.appendChild(createTaskButton(1, 'Project Name 1'));
+        const toggleUserAssignment = document.getElementById('task-assignuser-container');
+        toggleUserAssignment.innerHTML = '';        
+        toggleUserAssignment.appendChild(getUserAssignmentButton(task, userID));
         const userList = document.getElementById('task-users-container');
         // userList.appendChild(getUsers(users));
         // const commentList =
@@ -108,4 +114,49 @@ function getAddTaskInfo() {
   }
   const inputProjectID = document.getElementById('addtask-project-input');
   inputProjectID.setAttribute('value', projectID);
+}
+
+/**
+ * Get button to toggle user assignment to a task
+ * @param {HashMap} task
+ * @param {number} userID
+ * @return {Element} HTML button element containing addUser() or removeUser().
+ */
+function getUserAssignmentButton(task, userID) {
+  const buttonElement = document.createElement('button');
+  buttonElement.setAttribute('type', 'button');
+  if (task.users.includes(userID)) {
+    buttonElement.setAttribute('onclick', 'removeUser()');
+    buttonElement.innerText = 'Remove me from this task';
+  } else {
+    buttonElement.setAttribute('onclick', 'addUser()');
+    buttonElement.innerText = 'Assign me to this task';
+  }
+  return buttonElement;
+}
+
+/**
+ * Add user via servlet
+ */
+function addUser() {
+  const getParams = new URLSearchParams(location.search);
+  const taskID = getParams.get('taskID');
+  const userID = 1; // Get current userID from cookies?
+  const params = new URLSearchParams('taskID=' + taskID + '&userID=' + userID);
+  console.log('/task-add-user', params);
+  fetch('/task-add-user', {method: "post", body: params})
+    .then(() => getTaskInfo());
+}
+
+/**
+ * Add user via servlet
+ */
+function removeUser() {
+  const getParams = new URLSearchParams(location.search);
+  const taskID = getParams.get('taskID');
+  const userID = 1; // Get current userID from cookies?
+  const params = new URLSearchParams('taskID=' + taskID + '&userID=' + userID);
+  console.log('/task-remove-user', params);
+  fetch('/task-remove-user', {method: "post", body: params})
+    .then(() => getTaskInfo());
 }

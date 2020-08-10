@@ -41,7 +41,9 @@ public class TaskServlet extends HttpServlet {
     // Get Task
     long taskID = Long.parseLong(request.getParameter("taskID"));
     TaskController taskController = new TaskController(datastore);
-    // TaskData task = taskController.getTaskByID(taskID);
+    if (taskID != 0 && taskID != 1) {
+      task1 = taskController.getTaskByID(taskID);
+    }
     // ArrayList is for HashMap below. Is there a better way to do this?
     ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
 
