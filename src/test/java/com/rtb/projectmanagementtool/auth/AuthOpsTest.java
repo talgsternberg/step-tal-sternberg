@@ -141,7 +141,19 @@ public class AuthOpsTest {
   public void testWhichUser() {
     setUserServiceAuthInfo(false, "abc"); // user is logged in
 
+    auth = new AuthOps(controller);
+
+    // test cookies
     Cookie[] testCookies = new Cookie[1];
-    testCookies[0] = new Cookie("sessionUserID", "2l");
+    testCookies[0] = new Cookie("sessionUserID", "2");
+
+    // when get cookies is called, pass cookies
+    when(request.getCookies()).thenReturn(testCookies);
+
+    // call method
+    long userID = auth.whichUserLoggedIn(request, response);
+
+    // Assert that the val returned equals userID as type long
+    Assert.assertEquals(2, userID);
   }
 }
