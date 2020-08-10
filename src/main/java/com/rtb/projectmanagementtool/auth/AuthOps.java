@@ -27,7 +27,8 @@ public class AuthOps {
     UserController controller = new UserController(ds);
   }
 
-  public void loginUser(HttpServletRequest request, HttpServletResponse response) {
+  // generates cookie. Used in most methods.
+  public Cookie generateCurrCookie(HttpServletRequest request, HttpServletResponse response) {
     Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
     // get all cookies from request
     Cookie[] cookies = request.getCookies();
@@ -39,7 +40,12 @@ public class AuthOps {
         }
       }
     }
+    return currCookie;
+  }
 
+  // logs in user and adds cookie with value of String userID to response
+  public void loginUser(HttpServletRequest request, HttpServletResponse response) {
+    currCookie = generateCurrCookie(request, response);
     // if not logged in, call auth service
     if (currCookie.getValue() == NO_LOGGED_IN_USER) {
       // call auth service
@@ -61,22 +67,29 @@ public class AuthOps {
     }
   }
 
+  // returns the userID long (or -1) associated with the user logged in
   public long whichUserLoggedIn(HttpServletRequest request, HttpServletResponse response) {
-    Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
-
-    // get all cookies from request
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null) {
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals("sessionUserID")) {
-          // if we find cookie w/ name, set currCookie equal
-          currCookie.setValue(cookie.getValue());
-        }
-      }
-    }
+    currCookie = generateCurrCookie(request, response);
 
     // get cookie value for user
     String currUserIDString = currCookie.getValue();
     return Long.parseLong(currUserIDString);
+  }
+
+  // logs out user by setting cookie value to -1
+  public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+    currCookie = generateCurrCookie(request, response);
+    // set cookie value to logged out
+    currCookie.setValue(NO_LOGGED_IN_USER);
+
+    // write cookie back
+    response.addCookie(currCookie);
+  }
+
+  // returns the AuthID to go in the UserData object (for later association)
+  public String createUserHelper(HttpServletRequest request, HttpServletResponse response) {
+    UserService userService = UserServiceFactory.getUserService();
+    String AuthID = userService.getCurrentUser().getUserId();
+    return AuthID;
   }
 }

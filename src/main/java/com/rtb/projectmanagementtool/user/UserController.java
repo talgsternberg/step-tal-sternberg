@@ -36,4 +36,16 @@ public class UserController {
     Entity entity = user.toEntity();
     datastore.put(entity);
   }
+
+  public ArrayList<Long> getUserIDs() {
+    Query query = new Query("User");
+    ArrayList<Long> userIDs = new ArrayList<Long>();
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      UserData user = new UserData(entity);
+      Long userID = (Long) user.getUserID();
+      userIDs.add(userID);
+    }
+    return userIDs;
+  }
 }
