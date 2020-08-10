@@ -12,14 +12,21 @@ import javax.servlet.http.*;
 public class AuthOps {
 
   // private DatastoreService datastore;
-  private UserController controller;
-  public String cookieName;
+  private UserController CONTROLLER;
+  public String COOKIENAME;
   public String cookieValue;
   public Cookie currCookie;
 
-  public AuthOps(UserController controller) {
-    this.controller = controller;
-    cookieName = "sessionUserID";
+  // for testing purposes (with mock controllers)
+  public AuthOps(UserController CONTROLLER) {
+    this.CONTROLLER = CONTROLLER;
+    COOKIENAME = "sessionUserID";
+    cookieValue = "-1"; // "out" if not logged in, else userID as String
+  }
+
+  public AuthOps(DatastoreService ds) {
+    UserController CONTROLLER = new UserController(ds);
+    COOKIENAME = "sessionUserID";
     cookieValue = "-1"; // "out" if not logged in, else userID as String
   }
 
@@ -35,7 +42,7 @@ public class AuthOps {
       }
     } else {
       // if no cookie found, create a new one
-      currCookie = new Cookie(cookieName, cookieValue);
+      currCookie = new Cookie(COOKIENAME, cookieValue);
     }
 
     // if not logged in, call auth service
@@ -48,8 +55,7 @@ public class AuthOps {
         System.out.println("authID from service:");
         System.out.println(AuthID);
         // find AuthID in DataStore
-        // UserController controller = new UserController(datastore);
-        ArrayList<UserData> users = controller.getEveryUser();
+        ArrayList<UserData> users = CONTROLLER.getEveryUser();
         for (UserData user : users) {
           System.out.println(user.getAuthID());
           if (user.getAuthID() == AuthID) {
@@ -75,7 +81,7 @@ public class AuthOps {
       }
     } else {
       // if no cookie found, create a new one
-      currCookie = new Cookie(cookieName, cookieValue);
+      currCookie = new Cookie(COOKIENAME, cookieValue);
     }
 
     // get cookie value for user
