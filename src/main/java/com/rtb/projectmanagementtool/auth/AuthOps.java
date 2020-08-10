@@ -79,4 +79,24 @@ public class AuthOps {
     String currUserIDString = currCookie.getValue();
     return Long.parseLong(currUserIDString);
   }
+
+  public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+    Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
+
+    // get all cookies from request
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals("sessionUserID")) {
+          // if we find cookie w/ name, set currCookie equal
+          currCookie.setValue(cookie.getValue());
+        }
+      }
+    }
+    // set cookie value to logged out
+    currCookie.setValue(NO_LOGGED_IN_USER);
+
+    // write cookie back
+    response.addCookie(currCookie);
+  }
 }

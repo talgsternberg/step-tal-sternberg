@@ -156,4 +156,33 @@ public class AuthOpsTest {
     // Assert that the val returned equals userID as type long
     Assert.assertEquals(2, userID);
   }
+
+  @Test
+  public void testLogoutUser() {
+    setUserServiceAuthInfo(false, "abc"); // user is logged in
+
+    auth = new AuthOps(controller);
+
+    // test cookies
+    Cookie[] testCookies = new Cookie[1];
+    testCookies[0] = new Cookie("sessionUserID", "2");
+
+    // when get cookies is called, pass cookies
+    when(request.getCookies()).thenReturn(testCookies);
+
+    // captor setup
+    ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+
+    // call logoutUser
+    auth.logoutUser(request, response);
+
+    // verify
+    verify(response).addCookie(cookieCaptor.capture());
+
+    // extract value
+    Cookie cookie = cookieCaptor.getValue();
+
+    // Assert that the cookie's value is NO_LOGGED_IN_USER
+    Assert.assertEquals("-1", cookie.getValue());
+  }
 }
