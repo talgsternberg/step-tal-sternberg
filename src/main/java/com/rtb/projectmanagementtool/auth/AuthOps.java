@@ -23,13 +23,6 @@ public class AuthOps {
   }
 
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
-    System.out.println("Checkpoint 1");
-    System.out.println("Checkpoint 1");
-    System.out.println("Checkpoint 1");
-    System.out.println("Checkpoint 1");
-    System.out.println("Checkpoint 1");
-    System.out.println("Checkpoint 1");
-
     // get all cookies from request
     Cookie[] cookies = request.getCookies();
     if (cookies != null) {
@@ -37,43 +30,36 @@ public class AuthOps {
         if (cookie.getName().equals("sessionUserID")) {
           // if we find cookie w/ name, set currCookie equal
           currCookie = cookie;
-          System.out.println("Checkpoint 2");
         }
       }
     } else {
       // if no cookie found, create a new one
       currCookie = new Cookie(cookieName, cookieValue);
-      System.out.println("Checkpoint 3");
     }
-
-    System.out.println("Checkpoint 4");
 
     // if not logged in, call auth service
     if (currCookie.getValue() == "-1") {
       // call auth service
       UserService userService = UserServiceFactory.getUserService();
       if (userService.isUserLoggedIn()) {
-
-        System.out.println("Checkpoint 5");
-
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
         // find AuthID in DataStore
         UserController controller = new UserController(datastore);
         ArrayList<UserData> users = controller.getEveryUser();
+        System.out.println("Here 1: users from controller:");
+        System.out.println(users);
+        System.out.println("Here 2. AuthID from login:");
+        System.out.println(AuthID);
         for (UserData user : users) {
           if (user.getAuthID() == AuthID) {
             String userIDString = String.valueOf(user.getUserID());
             currCookie.setValue(userIDString);
-            System.out.println("Checkpoint 6");
           }
         }
       }
     }
     // send back cookie to response
-
-    System.out.println("Checkpoint 7");
-
     response.addCookie(currCookie);
   }
 

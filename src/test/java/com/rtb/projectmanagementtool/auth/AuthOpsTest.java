@@ -2,6 +2,8 @@ package com.rtb.projectmanagementtool.auth;
 
 import static org.mockito.Mockito.*;
 
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -25,10 +27,27 @@ public class AuthOpsTest {
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
-          new LocalServiceTestHelper(new LocalUserServiceTestConfig().setOAuthUserId("abc"))
-              .setEnvIsLoggedIn(true),
-          new LocalDatastoreServiceTestConfig()
-              .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
+              new LocalUserServiceTestConfig(),
+              new LocalDatastoreServiceTestConfig()
+                  .setAutoIdAllocationPolicy(
+                      LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL))
+          .setEnvEmail("testemail@rtbstep2020.com")
+          .setEnvAuthDomain("rtbstep2020.com");
+
+  public void setUserServiceAuthInfo(boolean isLoggedIn, String authId) {
+    helper.setEnvIsLoggedIn(true);
+    if (isLoggedIn && authId != null) {
+      helper.setEnvAttributes(
+          new HashMap<String, Object>() {
+            {
+              put("com.google.appengine.api.users.UserService.user_id_key", authId);
+            }
+          });
+    }
+
+    // Reinitialize helper to set reset the flags
+    helper.setUp();
+  }
 
   @Before
   public void setUp() {
@@ -44,11 +63,9 @@ public class AuthOpsTest {
 
   @Test
   public void testAlreadyLoggedInDontSetCookie() {
+    setUserServiceAuthInfo(false, "abc");
     // auth object
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    ds.add(new UserData(1l, "abc"));
-    ds.add(new UserData(2l, "opq"));
-    ds.add(new UserData(3l, "xyz"));
     auth = new AuthOps(ds);
 
     // add list of mock users
@@ -62,9 +79,9 @@ public class AuthOpsTest {
 
     // build and send test cookies for logged in users
     Cookie[] testCookies = new Cookie[3];
-    testCookies[0] = new Cookie("SessionUserID", "abc");
-    testCookies[1] = new Cookie("SessionUserID", "zvm");
-    testCookies[2] = new Cookie("SessionUserID", "wpk");
+    testCookies[0] = new Cookie("sessionUserID", "abc");
+    testCookies[1] = new Cookie("sessionUserID", "zvm");
+    testCookies[2] = new Cookie("sessionUserID", "wpk");
 
     // on this call in class method, return test user
     when(controller.getEveryUser()).thenReturn(testUsers);
@@ -77,31 +94,27 @@ public class AuthOpsTest {
 
     // captor setup
     verify(response, never()).addCookie(any());
-
-    // Assert.assertEquals(null, cookie);
   }
 
   @Test
   public void testLoginUser() {
+    setUserServiceAuthInfo(true, "abc");
     // auth object
-    ds = DatastoreServiceFactory.getDatastoreService();
-    ds.add(new UserData(1l, "abc"));
-    ds.add(new UserData(2l, "opq"));
-    ds.add(new UserData(3l, "xyz"));
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     auth = new AuthOps(ds);
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
     testUsers.add(new UserData(1l, "abc"));
-    testUsers.add(new UserData(2l, "opq"));
-    testUsers.add(new UserData(3l, "xyz"));
+    // testUsers.add(new UserData(2l, "opq"));
+    // testUsers.add(new UserData(3l, "xyz"));
 
     // new controller
     UserController controller = mock(UserController.class);
 
     // build and send a test cookie for logged out user
     Cookie[] testCookies = new Cookie[1];
-    testCookies[0] = new Cookie("SessionUserID", "-1");
+    testCookies[0] = new Cookie("sessionUserID", "-1");
 
     // on this call in class method, return test user
     when(controller.getEveryUser()).thenReturn(testUsers);
@@ -110,16 +123,18 @@ public class AuthOpsTest {
     when(request.getCookies()).thenReturn(testCookies);
 
     // captor setup
-    // ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
-    // verify(response).addCookie(cookieCaptor.capture());
+    ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
 
     // call loginUser
     auth.loginUser(request, response);
 
+    // verify
+    verify(response).addCookie(cookieCaptor.capture());
+
     // extract value
-    // Cookie cookie = cookieCaptor.getValue();
+    Cookie cookie = cookieCaptor.getValue();
 
     // Assert
-    Assert.assertEquals(null, testCookies[0].getValue());
+    Assert.assertEquals("abc", cookie.getValue());
   }
 }
