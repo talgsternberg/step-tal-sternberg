@@ -11,14 +11,13 @@ import javax.servlet.http.*;
 
 public class AuthOps {
 
-  private DatastoreService datastore;
+  // private DatastoreService datastore;
   private UserController controller;
   public String cookieName;
   public String cookieValue;
   public Cookie currCookie;
 
-  public AuthOps(DatastoreService datastore, UserController controller) {
-    this.datastore = datastore;
+  public AuthOps(UserController controller) {
     this.controller = controller;
     cookieName = "sessionUserID";
     cookieValue = "-1"; // "out" if not logged in, else userID as String
@@ -59,9 +58,9 @@ public class AuthOps {
           }
         }
       }
+      // send back cookie to response
+      response.addCookie(currCookie);
     }
-    // send back cookie to response
-    response.addCookie(currCookie);
   }
 
   public long whichUserLoggedIn(HttpServletRequest request, HttpServletResponse response) {

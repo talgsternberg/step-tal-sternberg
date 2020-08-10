@@ -67,8 +67,8 @@ public class AuthOpsTest {
   public void testAlreadyLoggedInDontSetCookie() {
     setUserServiceAuthInfo(false, "abc");
     // auth object
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    auth = new AuthOps(ds, controller);
+    // DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    auth = new AuthOps(controller);
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
@@ -80,10 +80,10 @@ public class AuthOpsTest {
     UserController controller = mock(UserController.class);
 
     // build and send test cookies for logged in users
-    Cookie[] testCookies = new Cookie[3];
-    testCookies[0] = new Cookie("sessionUserID", "abc");
-    testCookies[1] = new Cookie("sessionUserID", "zvm");
-    testCookies[2] = new Cookie("sessionUserID", "wpk");
+    Cookie[] testCookies = new Cookie[1];
+    testCookies[0] = new Cookie("sessionUserID", "1l");
+    // testCookies[1] = new Cookie("sessionUserID", "zvm");
+    // testCookies[2] = new Cookie("sessionUserID", "wpk");
 
     // on this call in class method, return test user
     when(controller.getEveryUser()).thenReturn(testUsers);
@@ -102,8 +102,8 @@ public class AuthOpsTest {
   public void testLoginUser() {
     setUserServiceAuthInfo(true, "abc");
     // auth object
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    auth = new AuthOps(ds, controller);
+    // DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    auth = new AuthOps(controller);
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
