@@ -35,13 +35,18 @@ function getTaskInfo() {
         // subtaskList.appendChild(getTasks(subtasks));
         const addSubtask = document.getElementById('task-addsubtask-container');
         addSubtask.innerHTML = '';
-        addSubtask.appendChild(createTaskButton(1, 'Project Name 1', task.taskID, task.name));
+        addSubtask.appendChild(createTaskButton(
+            1,
+            'Project Name 1', 
+            task.taskID,
+            task.name));
         // addSubtask.appendChild(getCreateTaskButton(
         //     project.projectID,
         //     project.projectName,
         //     task.taskID,
         //     task.name));
-        const toggleUserAssignment = document.getElementById('task-assignuser-container');
+        const toggleUserAssignment =
+            document.getElementById('task-assignuser-container');
         toggleUserAssignment.innerHTML = '';        
         toggleUserAssignment.appendChild(getUserAssignmentButton(task, userID));
         const userList = document.getElementById('task-users-container');
@@ -146,8 +151,9 @@ function addUser() {
   const userID = 1; // Get current userID from cookies?
   const params = new URLSearchParams('taskID=' + taskID + '&userID=' + userID);
   console.log('/task-add-user', params);
-  fetch('/task-add-user', {method: "post", body: params})
-    .then(() => getTaskInfo());
+  fetch('/task-add-user', {method: 'post', body: params})
+      .then(() => getTaskInfo());
+
 }
 
 /**
@@ -159,6 +165,6 @@ function removeUser() {
   const userID = 1; // Get current userID from cookies?
   const params = new URLSearchParams('taskID=' + taskID + '&userID=' + userID);
   console.log('/task-remove-user', params);
-  fetch('/task-remove-user', {method: "post", body: params})
-    .then(() => getTaskInfo());
+  fetch('/task-remove-user', {method: 'post', body: params})
+      .then(() => getTaskInfo());
 }
