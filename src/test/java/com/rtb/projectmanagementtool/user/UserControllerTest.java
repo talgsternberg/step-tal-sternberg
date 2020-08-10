@@ -95,4 +95,21 @@ public class UserControllerTest {
     ArrayList<UserData> users = userController.getEveryUser();
     Assert.assertEquals(users.size(), 2);
   }
+
+  @Test
+  public void testGetUserIDs() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
+    // Add user entities with UserController
+    UserController userController = new UserController(ds);
+    userController.addUser(user1);
+    userController.addUser(user2);
+
+    ArrayList<Long> generatedIDList = new ArrayList<>();
+    generatedIDList.add((Long) userID1);
+    generatedIDList.add((Long) userID2);
+
+    ArrayList<Long> userIDList = userController.getUserIDs();
+    Assert.assertEquals(userIDList, generatedIDList);
+  }
 }
