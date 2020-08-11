@@ -71,6 +71,38 @@ public final class TaskController {
     }
   }
 
+  public void setComplete(long taskID) {
+    setComplete(getTaskByID(taskID));
+  }
+
+  public void setComplete(TaskData task) {
+    ArrayList<TaskData> subtasks = getSubtasks(task);
+    for (TaskData subtask : subtasks) {
+      if (subtask.getStatus() != Status.COMPLETE) {
+        return;
+      }
+    }
+    task.setStatus(Status.COMPLETE);
+    if (task.getTaskID() != 0) {
+      datastore.put(task.toEntity());
+    }
+  }
+
+  public void setIncomplete(long taskID) {
+    setIncomplete(getTaskByID(taskID));
+  }
+
+  public void setIncomplete(TaskData task) {
+    Long parentTaskID = task.getParentTaskID();
+    if (parentTaskID != 0 && getTaskByID(parentTaskID).getStatus() == Status.COMPLETE) {
+      return;
+    }
+    task.setStatus(Status.INCOMPLETE);
+    if (task.getTaskID() != 0) {
+      datastore.put(task.toEntity());
+    }
+  }
+
   // Get methods
 
   public TaskData getTaskByID(long taskID) {
