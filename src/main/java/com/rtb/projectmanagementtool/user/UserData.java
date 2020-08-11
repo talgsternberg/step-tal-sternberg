@@ -3,16 +3,6 @@ package com.rtb.projectmanagementtool.user;
 import com.google.appengine.api.datastore.Entity;
 import java.util.*;
 
-/** Enum containing skills for user. */
-enum Skills {
-  LEADERSHIP,
-  ORGANIZATION,
-  WRITING,
-  ART,
-  WEBDEV,
-  OOP;
-}
-
 /** Class for User data. */
 public class UserData {
 
