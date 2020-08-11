@@ -1,4 +1,4 @@
-package com.rtb.projectmanagementtool.pages;
+package com.rtb.projectmanagementtool.home;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -115,7 +115,7 @@ public class HomePageServletTest extends Mockito {
 
     // Get actual response string
     String actualOutput = stringWriter.getBuffer().toString().trim();
-
+    
     Gson gson = new Gson();
     Assert.assertEquals(gson.toJson(expectedOutput), gson.toJson(actualOutput));
 

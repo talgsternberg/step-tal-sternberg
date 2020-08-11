@@ -1,5 +1,5 @@
 /** Servlet responsible getting data for loading home page */
-package com.rtb.projectmanagementtool.pages;
+package com.rtb.projectmanagementtool.home;
 
 import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
