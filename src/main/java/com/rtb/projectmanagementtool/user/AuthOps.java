@@ -1,9 +1,8 @@
-package com.rtb.projectmanagementtool.auth;
+package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.users.*;
-import com.rtb.projectmanagementtool.user.*;
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
@@ -27,8 +26,8 @@ public class AuthOps {
     UserController controller = new UserController(ds);
   }
 
-  // generates cookie. Used in most methods.
-  public Cookie generateCurrCookie(HttpServletRequest request, HttpServletResponse response) {
+  // gets cookie from request. Used in most methods.
+  public Cookie getCurrCookie(HttpServletRequest request) {
     Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
     // get all cookies from request
     Cookie[] cookies = request.getCookies();
@@ -45,7 +44,7 @@ public class AuthOps {
 
   // logs in user and adds cookie with value of String userID to response
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
-    currCookie = generateCurrCookie(request, response);
+    currCookie = getCurrCookie(request);
     // if not logged in, call auth service
     if (currCookie.getValue() == NO_LOGGED_IN_USER) {
       // call auth service
@@ -68,8 +67,8 @@ public class AuthOps {
   }
 
   // returns the userID long (or -1) associated with the user logged in
-  public long whichUserLoggedIn(HttpServletRequest request, HttpServletResponse response) {
-    currCookie = generateCurrCookie(request, response);
+  public long whichUserIsLoggedIn(HttpServletRequest request, HttpServletResponse response) {
+    currCookie = getCurrCookie(request);
 
     // get cookie value for user
     String currUserIDString = currCookie.getValue();
@@ -78,9 +77,8 @@ public class AuthOps {
 
   // logs out user by setting cookie value to -1
   public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
-    currCookie = generateCurrCookie(request, response);
-    // set cookie value to logged out
-    currCookie.setValue(NO_LOGGED_IN_USER);
+    // make currCookie val = -1
+    Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
 
     // write cookie back
     response.addCookie(currCookie);

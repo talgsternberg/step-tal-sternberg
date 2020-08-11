@@ -5,6 +5,7 @@ import java.util.*;
 
 /** Enum containing skills for user. */
 enum Skills {
+  NONE,
   LEADERSHIP,
   ORGANIZATION,
   WRITING,
@@ -33,6 +34,22 @@ public class UserData {
       Skills skills,
       long userTotalCompTasks) {
     this.userID = userID;
+    this.AuthID = AuthID;
+    this.userName = userName;
+    this.userYear = userYear;
+    this.userMajors = userMajors;
+    this.skills = skills;
+    this.userTotalCompTasks = userTotalCompTasks;
+  }
+
+  public UserData(
+      String AuthID,
+      String userName,
+      long userYear,
+      ArrayList<String> userMajors,
+      Skills skills,
+      long userTotalCompTasks) {
+    this.userID = 0;
     this.AuthID = AuthID;
     this.userName = userName;
     this.userYear = userYear;
