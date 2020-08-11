@@ -37,6 +37,17 @@ public class UserController {
     datastore.put(entity);
   }
 
+  public Entity createNewUser() {
+    ArrayList<String> majors = new ArrayList<>();
+
+    // create new UserData object with UserID
+    UserData newUser = new UserData("", "", 0, majors, Skills.NONE, 0);
+    
+    // to entity
+    Entity entity = newUser.toEntity();
+    return entity;
+  }
+
   public ArrayList<Long> getUserIDs() {
     Query query = new Query("User");
     ArrayList<Long> userIDs = new ArrayList<Long>();

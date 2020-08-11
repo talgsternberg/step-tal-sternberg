@@ -31,14 +31,11 @@ public class CreateUserServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     String AuthID = userService.getCurrentUser().getUserId();
 
-    // initialize userMajors
-    ArrayList<String> majors = new ArrayList<>();
-
-    // create new UserData object with UserID
-    UserData newUser = new UserData("", "", 0, majors, Skills.NONE, 0);
-
-    // to entity
-    Entity entity = newUser.toEntity();
+    // new UserController object
+    UserController controller = new UserController(datastore);
+    
+    // create new "blank" entity to put in datastore
+    Entity entity = controller.createNewUser();
 
     // put in datastore
     datastore.put(entity);
