@@ -2,6 +2,7 @@ package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
