@@ -3,6 +3,7 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
+import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,17 +54,27 @@ public class TaskServlet extends HttpServlet {
     // ProjectData project = projectController.getProjectByID(task.getProjectID);
     // ArrayList<ProjectData> projectInArrayList = new ArrayList<>(Arrays.asList(project));
 
-    // // Get Subtasks
-    // ArrayList<TaskData> subtasks = taskController.getSubtasks(task);
+    // Get Subtasks
+    ArrayList<TaskData> subtasks = taskController.getSubtasks(task1);
 
     // // Get Comments
     // int quantity = Integer.parseInt(request.getParameter("quantity"));
     // String sortBy = request.getParameter("sortBy");
     // String sortDirection = request.getParameter("sortDirection");
 
-    // // Get Task Users
-    // UserController userController = new UserController(datastore);
-    // ArrayList<UserData> users = userController.getUsers(task.getUsers());
+    // Get Task Users
+    ArrayList<UserData> users = new ArrayList<>();
+    if (taskID != 0 && taskID != 1) {
+      UserController userController = new UserController(datastore);
+      // users = userController.getUsers(task1.getUsers());
+      for (long userID : task1.getUsers()) {
+        try {
+          users.add(userController.getUserByID(userID));
+        } catch (NullPointerException e) {
+          System.out.println("No user exists for that userID.");
+        }
+      }
+    }
 
     // Convert data to JSON
     Gson gson = new Gson();
@@ -71,9 +82,9 @@ public class TaskServlet extends HttpServlet {
     HashMap<String, ArrayList> data = new HashMap<>();
     data.put("task", taskInArrayList);
     // data.put("project", projectInArrayList);
-    // data.put("subtasks", subtasks);
+    data.put("subtasks", subtasks);
     // data.put("comments", comments);
-    // data.put("users", users);
+    data.put("users", users);
     response.getWriter().println(gson.toJson(data));
   }
 
@@ -84,11 +95,9 @@ public class TaskServlet extends HttpServlet {
     long projectID = Long.parseLong(request.getParameter("projectID"));
     String name = request.getParameter("name").trim();
     String description = request.getParameter("description").trim();
-    Status status = Status.valueOf(request.getParameter("status").toUpperCase());
-    ArrayList<Long> users = new ArrayList<>();
 
     // Create TaskData object
-    TaskData task = new TaskData(parentTaskID, projectID, name, description, status, users);
+    TaskData task = new TaskData(parentTaskID, projectID, name, description);
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);

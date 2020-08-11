@@ -142,6 +142,36 @@ public class TaskDataTest {
   }
 
   @Test
+  public void testCreateBasicTaskFromConstructorWithParentTaskID() {
+    // Build TaskData object
+    TaskData task = new TaskData(0, projectID1, name1, description1);
+
+    // Assert TaskData parameters were stored correctly
+    Assert.assertEquals("taskID", 0, task.getTaskID());
+    Assert.assertEquals("parentTaskID", 0, task.getParentTaskID());
+    Assert.assertEquals("projectID", projectID1, task.getProjectID());
+    Assert.assertEquals("name", name1, task.getName());
+    Assert.assertEquals("description", description1, task.getDescription());
+    Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
+    Assert.assertEquals("users", new ArrayList<>(), task.getUsers());
+  }
+
+  @Test
+  public void testCreateBasicTaskFromConstructor() {
+    // Build TaskData object
+    TaskData task = new TaskData(projectID1, name1, description1);
+
+    // Assert TaskData parameters were stored correctly
+    Assert.assertEquals("taskID", 0, task.getTaskID());
+    Assert.assertEquals("parentTaskID", 0, task.getParentTaskID());
+    Assert.assertEquals("projectID", projectID1, task.getProjectID());
+    Assert.assertEquals("name", name1, task.getName());
+    Assert.assertEquals("description", description1, task.getDescription());
+    Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
+    Assert.assertEquals("users", new ArrayList<>(), task.getUsers());
+  }
+
+  @Test
   public void testCreateTaskFromEntity() {
     // Build entity
     Entity entity = new Entity("Task");
