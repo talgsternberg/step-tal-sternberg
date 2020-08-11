@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 /** Class containing task data. */
 public final class TaskData implements Comparable<TaskData> {
+  /** Enum containing status options for a task. */
+  public enum Status {
+    COMPLETE,
+    INCOMPLETE
+  }
 
   private long taskID;
   private long parentTaskID;

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HomePageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      // Get user
+    // Get user
     Long userId = Long.parseLong(request.getParameter("userId"));
     /**
      * TODO: change to Long userId = auth.whichUserLoggedIn(request, response); I'm not entirely
@@ -39,7 +39,6 @@ public class HomePageServlet extends HttpServlet {
       return;
     }
 
-    
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // Initialize controllers
@@ -47,8 +46,6 @@ public class HomePageServlet extends HttpServlet {
     TaskController taskController = new TaskController(datastore);
     UserController userController = new UserController(datastore);
     // AuthOps auth = new AuthOps(userController);
-
-    
 
     UserData user = userController.getUserByID(userId);
 
