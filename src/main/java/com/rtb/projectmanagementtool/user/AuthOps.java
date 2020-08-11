@@ -26,6 +26,13 @@ public class AuthOps {
     UserController controller = new UserController(ds);
   }
 
+  public String getAuthID() {
+    // call auth service to generate AuthID
+    UserService userService = UserServiceFactory.getUserService();
+    String AuthID = userService.getCurrentUser().getUserId();
+    return AuthID;
+  }
+
   // gets cookie from request. Used in most methods.
   public Cookie getCurrCookie(HttpServletRequest request) {
     Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);

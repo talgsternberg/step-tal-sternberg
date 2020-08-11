@@ -122,7 +122,7 @@ public class UserData {
     this.userID = userID;
   }
 
-  public void setUserEmail(String AuthID) {
+  public void setAuthID(String AuthID) {
     this.AuthID = AuthID;
   }
 

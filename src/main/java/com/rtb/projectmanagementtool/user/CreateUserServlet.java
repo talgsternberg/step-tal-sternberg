@@ -27,27 +27,23 @@ public class CreateUserServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // call auth service to generate AuthID
-    UserService userService = UserServiceFactory.getUserService();
-    String AuthID = userService.getCurrentUser().getUserId();
+    // new AuthOps object
+    AuthOps auth = new AuthOps(datastore);
+
+    // get Auth ID from AuthOps method
+    String AuthID = auth.getAuthID();
 
     // new UserController object
     UserController controller = new UserController(datastore);
-    
-    // create new "blank" entity to put in datastore
-    Entity entity = controller.createNewUser();
 
-    // put in datastore
-    datastore.put(entity);
+    // create new "blank" UserData object to put in datastore
+    UserData newUser = controller.createNewUser();
 
-    // get userID for cookie
-    long userID = (long) entity.getKey().getId();
+    // set this user's AuthID
+    newUser.setAuthID(AuthID);
 
-    // set AuthID in entity
-    entity.setProperty("AuthID", AuthID);
-
-    // new AuthOps object
-    AuthOps auth = new AuthOps(datastore);
+    // create entity and put in datastore. Get userID
+    long userID = controller.addUser(newUser);
 
     // get/create cookie and set value to userID
     cookie = auth.getCurrCookie(request);

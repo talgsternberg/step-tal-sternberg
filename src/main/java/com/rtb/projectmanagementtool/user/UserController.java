@@ -32,20 +32,20 @@ public class UserController {
     return users;
   }
 
-  public void addUser(UserData user) {
+  public long addUser(UserData user) {
     Entity entity = user.toEntity();
-    datastore.put(entity);
+    Key key = datastore.put(entity);
+    long userID = key.getId();
+    user.setUserID(userID);
+    return userID;
   }
 
-  public Entity createNewUser() {
+  public UserData createNewUser() {
     ArrayList<String> majors = new ArrayList<>();
 
     // create new UserData object with UserID
     UserData newUser = new UserData("", "", 0, majors, Skills.NONE, 0);
-    
-    // to entity
-    Entity entity = newUser.toEntity();
-    return entity;
+    return newUser;
   }
 
   public ArrayList<Long> getUserIDs() {
