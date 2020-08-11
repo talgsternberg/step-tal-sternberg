@@ -94,11 +94,9 @@ public class TaskServlet extends HttpServlet {
     long projectID = Long.parseLong(request.getParameter("projectID"));
     String name = request.getParameter("name").trim();
     String description = request.getParameter("description").trim();
-    Status status = Status.valueOf(request.getParameter("status").toUpperCase());
-    ArrayList<Long> users = new ArrayList<>();
 
     // Create TaskData object
-    TaskData task = new TaskData(parentTaskID, projectID, name, description, status, users);
+    TaskData task = new TaskData(parentTaskID, projectID, name, description);
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);
