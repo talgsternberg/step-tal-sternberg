@@ -261,7 +261,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
 
     // Set status as complete with TaskController
-    taskController.setComplete(task);
+    boolean isSuccessful = taskController.setComplete(task);
+
+    // Assert status was set successfully
+    Assert.assertTrue("isSuccessful", isSuccessful);
 
     // Assert status is COMPLETE
     Assert.assertEquals("status", Status.COMPLETE, task.getStatus());
@@ -290,8 +293,12 @@ public class TaskControllerTest {
     Assert.assertEquals("status 3", Status.INCOMPLETE, task3.getStatus());
 
     // Set status of subtasks as complete with TaskController (with id or object as parameter)
-    taskController.setComplete(task2.getTaskID());
-    taskController.setComplete(task3);
+    boolean isSuccessful2 = taskController.setComplete(task2.getTaskID());
+    boolean isSuccessful3 = taskController.setComplete(task3);
+
+    // Assert status was set successfully
+    Assert.assertTrue("isSuccessful 2", isSuccessful2);
+    Assert.assertTrue("isSuccessful 3", isSuccessful3);
 
     // Get status of tasks from datastore
     Status status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
@@ -304,7 +311,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status 3", Status.COMPLETE, status3);
 
     // Set status of subtasks as complete with TaskController
-    taskController.setComplete(task1);
+    boolean isSuccessful1 = taskController.setComplete(task1);
+
+    // Assert status was set successfully
+    Assert.assertTrue("isSuccessful 1", isSuccessful1);
 
     // Get status of tasks from datastore
     status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
@@ -340,7 +350,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status 3", Status.INCOMPLETE, task3.getStatus());
 
     // Set status of only one subtask as complete with TaskController
-    taskController.setComplete(task2);
+    boolean isSuccessful2 = taskController.setComplete(task2);
+
+    // Assert status was set successfully
+    Assert.assertTrue("isSuccessful 2", isSuccessful2);
 
     // Get status of tasks from datastore
     Status status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
@@ -353,7 +366,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status 3", Status.INCOMPLETE, status3);
 
     // Set status of subtasks as complete with TaskController (should not set as complete)
-    taskController.setComplete(task1);
+    boolean isSuccessful1 = taskController.setComplete(task1);
+
+    // Assert status was not set
+    Assert.assertFalse("isSuccessful 1", isSuccessful1);
 
     // Get status of tasks from datastore
     status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
@@ -378,7 +394,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status", Status.COMPLETE, task.getStatus());
 
     // Set status as incomplete with TaskController
-    taskController.setIncomplete(task);
+    boolean isSuccessful = taskController.setIncomplete(task);
+
+    // Assert status was set successfully
+    Assert.assertTrue("isSuccessful", isSuccessful);
 
     // Assert status is INCOMPLETE
     Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
@@ -407,7 +426,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status 3", Status.INCOMPLETE, task3.getStatus());
 
     // Set status of subtasks as complete with TaskController
-    taskController.setIncomplete(task2.getTaskID());
+    boolean isSuccessful2 = taskController.setIncomplete(task2.getTaskID());
+
+    // Assert status was set successfully
+    Assert.assertTrue("isSuccessful 2", isSuccessful2);
 
     // Get status of tasks from datastore
     Status status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();
@@ -443,7 +465,10 @@ public class TaskControllerTest {
     Assert.assertEquals("status 3", Status.INCOMPLETE, task3.getStatus());
 
     // Set status of subtasks as complete with TaskController (should not set as incomplete)
-    taskController.setIncomplete(task2.getTaskID());
+    boolean isSuccessful2 = taskController.setIncomplete(task2.getTaskID());
+
+    // Assert status was not set
+    Assert.assertFalse("isSuccessful 2", isSuccessful2);
 
     // Get status of tasks from datastore
     Status status1 = taskController.getTaskByID(task1.getTaskID()).getStatus();

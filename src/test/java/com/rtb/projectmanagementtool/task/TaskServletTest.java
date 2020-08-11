@@ -8,6 +8,7 @@ import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.Gson;
+import com.rtb.projectmanagementtool.user.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,10 +73,31 @@ public class TaskServletTest extends Mockito {
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
     TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1);
 
+    // // Expected Parent Project
+    // ProjectController projectController = new ProjectController(datastore);
+    // ProjectData project = projectController.getProjectByID(task.getProjectID);
+    // ArrayList<ProjectData> projectInArrayList = new ArrayList<>(Arrays.asList(project));
+
+    // Expected Subtasks
+    ArrayList<TaskData> subtasks = new ArrayList<>();
+
+    // // Expected Comments
+    // int quantity = Integer.parseInt(request.getParameter("quantity"));
+    // String sortBy = request.getParameter("sortBy");
+    // String sortDirection = request.getParameter("sortDirection");
+
+    // Expected Task Users
+    ArrayList<UserData> users = new ArrayList<>();
+    // users = userController.getUsers(task.getUsers());
+
     // Create expected results
     ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
     HashMap<String, ArrayList> data = new HashMap<>();
     data.put("task", taskInArrayList);
+    // data.put("project", projectInArrayList);
+    data.put("subtasks", subtasks);
+    // data.put("comments", comments);
+    data.put("users", users);
     Gson gson = new Gson();
     String expectedResult = gson.toJson(data);
 
@@ -91,7 +113,6 @@ public class TaskServletTest extends Mockito {
     when(request.getParameter("parentTaskID")).thenReturn("0");
     when(request.getParameter("name")).thenReturn("Task 1");
     when(request.getParameter("description")).thenReturn("Task 1 description...");
-    when(request.getParameter("status")).thenReturn("incomplete");
 
     // Create writer
     StringWriter stringWriter = new StringWriter();
