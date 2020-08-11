@@ -212,21 +212,16 @@ public class ProjectData {
     return other instanceof ProjectData && equals(this, (ProjectData) other);
   }
 
-  /** @return the string representation of this class in JSON format. */
+  /** @return the string representation of this class. */
   @Override
   public String toString() {
-    String json = "{";
-    json += "\"name\":";
-    json += "\"" + this.name + "\",";
-    json += "\"description\":";
-    json += "\"" + this.description + "\",";
-    json += "\"creatorId\":";
-    json += "\"" + this.creatorId + "\",";
-    json += "\"members\":";
-    json += "\"" + this.members.toString() + "\",";
-    json += "\"admins\":";
-    json += "\"" + this.admins.toString() + "\"";
-    json += "}";
-    return json;
+    String returnString = "{\n";
+    returnString += "Project id: " + this.id + "\n";
+    returnString += "Project creator's id: " + this.creatorId + "\n";
+    returnString += "Project Name: " + this.name + "\n";
+    returnString += "Project Description: " + this.description + "\n";
+    returnString += "Project Members: " + this.admins.toString() + "\n";
+    returnString += "Project Admins: " + this.members.toString() + "\n}";
+    return returnString;
   }
 }
