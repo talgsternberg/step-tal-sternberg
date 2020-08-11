@@ -2,6 +2,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.rtb.projectmanagementtool.project.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -70,8 +71,8 @@ public class ProjectDataTest {
     entity.setProperty(PROPERTY_NAME, PROJECT1_NAME);
     entity.setProperty(PROPERTY_CREATOR, USER2);
     entity.setProperty(PROPERTY_DESCRIPTION, PROJECT1_DESC);
-    entity.setProperty(PROPERTY_ADMINS, new HashSet<Long>(Arrays.asList(USER3, USER4)));
-    entity.setProperty(PROPERTY_MEMBERS, new HashSet<Long>(Arrays.asList(USER1)));
+    entity.setProperty(PROPERTY_ADMINS, new ArrayList<Long>(Arrays.asList(USER3, USER4)));
+    entity.setProperty(PROPERTY_MEMBERS, new ArrayList<Long>(Arrays.asList(USER1)));
 
     // Create project
     ProjectData project = new ProjectData(entity);
@@ -85,12 +86,14 @@ public class ProjectDataTest {
     Assert.assertEquals(
         "project creators match", entity.getProperty(PROPERTY_CREATOR), project.getCreatorId());
 
-    HashSet<Long> projectAdmins = project.getAdmins();
-    HashSet<Long> projectMembers = project.getMembers();
-
-    Assert.assertEquals("project admins match", entity.getProperty(PROPERTY_ADMINS), projectAdmins);
     Assert.assertEquals(
-        "project members match", entity.getProperty(PROPERTY_MEMBERS), projectMembers);
+        "project admins match",
+        new HashSet<Long>((ArrayList<Long>) entity.getProperty(PROPERTY_ADMINS)),
+        project.getAdmins());
+    Assert.assertEquals(
+        "project members match",
+        new HashSet<Long>((ArrayList<Long>) entity.getProperty(PROPERTY_MEMBERS)),
+        project.getMembers());
   }
 
   @Test

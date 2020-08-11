@@ -3,12 +3,6 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.Entity;
 import java.util.ArrayList;
 
-/** Enum containing status options for a task. */
-enum Status {
-  COMPLETE,
-  INCOMPLETE
-}
-
 /** Class containing task data. */
 public final class TaskData implements Comparable<TaskData> {
 

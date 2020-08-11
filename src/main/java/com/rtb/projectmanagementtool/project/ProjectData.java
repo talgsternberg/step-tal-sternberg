@@ -5,18 +5,11 @@
 package com.rtb.projectmanagementtool.project;
 
 import com.google.appengine.api.datastore.Entity;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 public class ProjectData {
-  private final String PROPERTY_NAME = "name";
-  private final String PROPERTY_CREATOR = "creator";
-  private final String PROPERTY_DESCRIPTION = "description";
-  private final String PROPERTY_TASKS = "tasks";
-  private final String PROPERTY_ADMINS = "admins";
-  private final String PROPERTY_MEMBERS = "members";
-
   private long id;
   private long creatorId;
   private String name;
@@ -46,51 +39,35 @@ public class ProjectData {
    */
   public ProjectData(Entity entity) {
     this.id = (Long) entity.getKey().getId();
-    this.creatorId = (Long) entity.getProperty(PROPERTY_CREATOR);
-    this.name = (String) entity.getProperty(PROPERTY_NAME);
-    this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
+    this.creatorId = (Long) entity.getProperty("creator");
+    this.name = (String) entity.getProperty("name");
+    this.description = (String) entity.getProperty("description");
 
-    // Instantiate containers
-    this.members = new HashSet<Long>();
-    this.admins = new HashSet<Long>();
-
-    // Update containers with entity properties
-    parseEntityHashSets(entity, PROPERTY_ADMINS);
-    parseEntityHashSets(entity, PROPERTY_MEMBERS);
-  }
-
-  /**
-   * Used by ProjectData(Entity) to parse entity properties into respective HashSets of this class
-   *
-   * @param entity the entity
-   * @param propertyName the name of entity property
-   */
-  private void parseEntityHashSets(Entity entity, String propertyName) {
-    Object entityProperty = entity.getProperty(propertyName);
-    if (entityProperty == null) {
-      return;
+    // Members
+    Collection entityProperty = (Collection) entity.getProperty("members");
+    if (entityProperty != null) {
+      this.members = new HashSet<Long>((ArrayList<Long>) entityProperty);
+    } else {
+      this.members = new HashSet<Long>();
     }
 
-    Collection collection = (Collection) entityProperty;
-    Iterator<Long> iterator = collection.iterator();
-
-    while (iterator.hasNext()) {
-      if (propertyName.equals(PROPERTY_ADMINS)) {
-        addAdminUser(iterator.next());
-      } else if (propertyName.equals(PROPERTY_MEMBERS)) {
-        addMemberUser(iterator.next());
-      }
+    // Admins
+    entityProperty = (Collection) entity.getProperty("admins");
+    if (entityProperty == null) {
+      this.admins = new HashSet<Long>();
+    } else {
+      this.admins = new HashSet<Long>((ArrayList<Long>) entityProperty);
     }
   }
 
   /** @return the entity representation of this class */
   public Entity toEntity() {
     Entity entity = new Entity("Project");
-    entity.setProperty(PROPERTY_NAME, this.name);
-    entity.setProperty(PROPERTY_CREATOR, this.creatorId);
-    entity.setProperty(PROPERTY_DESCRIPTION, this.description);
-    entity.setProperty(PROPERTY_ADMINS, this.admins);
-    entity.setProperty(PROPERTY_MEMBERS, this.members);
+    entity.setProperty("name", this.name);
+    entity.setProperty("creator", this.creatorId);
+    entity.setProperty("description", this.description);
+    entity.setProperty("admins", this.admins);
+    entity.setProperty("members", this.members);
     return entity;
   }
 
@@ -176,7 +153,6 @@ public class ProjectData {
    * @return true if operation is successful
    */
   public boolean removeAdmin(long userId) {
-    System.out.println("removing admin");
     return this.admins.remove(userId);
   }
 
@@ -245,7 +221,7 @@ public class ProjectData {
     returnString += "Project Name: " + this.name + "\n";
     returnString += "Project Description: " + this.description + "\n";
     returnString += "Project Members: " + this.admins.toString() + "\n";
-    returnString += "Project Admins: " + this.members.toString() + "\n";
+    returnString += "Project Admins: " + this.members.toString() + "\n}";
     return returnString;
   }
 }
