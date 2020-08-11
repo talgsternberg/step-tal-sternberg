@@ -1,5 +1,5 @@
 /** Servlet responsible getting data for loading home page */
-package com.rtb.projectmanagementtool.pages;
+package com.rtb.projectmanagementtool.home;
 
 import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
@@ -18,14 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 public class HomePageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
-    // Initialize controllers
-    ProjectController projectController = new ProjectController(datastore);
-    TaskController taskController = new TaskController(datastore);
-    UserController userController = new UserController(datastore);
-    // AuthOps auth = new AuthOps(userController);
-
     // Get user
     Long userId = Long.parseLong(request.getParameter("userId"));
     /**
@@ -46,6 +38,14 @@ public class HomePageServlet extends HttpServlet {
                   /*userTasks*/ null));
       return;
     }
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    // Initialize controllers
+    ProjectController projectController = new ProjectController(datastore);
+    TaskController taskController = new TaskController(datastore);
+    UserController userController = new UserController(datastore);
+    // AuthOps auth = new AuthOps(userController);
 
     UserData user = userController.getUserByID(userId);
 
