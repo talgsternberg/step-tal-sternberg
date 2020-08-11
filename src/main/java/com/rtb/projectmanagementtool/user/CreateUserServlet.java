@@ -1,13 +1,13 @@
 package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.users.*;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 /** Servlet that returns task data */
 @WebServlet("/create-user")
@@ -45,13 +45,17 @@ public class CreateUserServlet extends HttpServlet {
 
     // get userID for cookie
     long userID = (long) entity.getKey().getId();
-    
+
     // set AuthID in entity
-    entity.getProperty("AuthID") = AuthID;
+    entity.setProperty("AuthID", AuthID);
+
+    // new AuthOps object
+    AuthOps auth = new AuthOps(datastore);
 
     // get/create cookie and set value to userID
-    cookie = getCurrCookie(request);
-    cookie.setValue(userID);
+    cookie = auth.getCurrCookie(request);
+    String userIDString = Long.toString(userID);
+    cookie.setValue(userIDString);
 
     // redirect to user_settings
     response.sendRedirect("/user_settings.html");
