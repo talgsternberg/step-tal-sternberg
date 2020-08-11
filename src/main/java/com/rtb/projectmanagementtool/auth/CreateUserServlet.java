@@ -1,8 +1,9 @@
-package com.rtb.projectmanagementtool.user;
+package com.rtb.projectmanagementtool.auth;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.users.*;
+import com.rtb.projectmanagementtool.user.*;
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;
