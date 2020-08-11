@@ -10,13 +10,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class ProjectData {
-  private final String PROPERTY_NAME = "name";
-  private final String PROPERTY_CREATOR = "creator";
-  private final String PROPERTY_DESCRIPTION = "description";
-  private final String PROPERTY_TASKS = "tasks";
-  private final String PROPERTY_ADMINS = "admins";
-  private final String PROPERTY_MEMBERS = "members";
-
   private long id;
   private long creatorId;
   private String name;
@@ -46,12 +39,12 @@ public class ProjectData {
    */
   public ProjectData(Entity entity) {
     this.id = (Long) entity.getKey().getId();
-    this.creatorId = (Long) entity.getProperty(PROPERTY_CREATOR);
-    this.name = (String) entity.getProperty(PROPERTY_NAME);
-    this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
+    this.creatorId = (Long) entity.getProperty("creator");
+    this.name = (String) entity.getProperty("name");
+    this.description = (String) entity.getProperty("description");
 
     // Members
-    Collection entityProperty = (Collection) entity.getProperty(PROPERTY_MEMBERS);
+    Collection entityProperty = (Collection) entity.getProperty("members");
     if (entityProperty != null) {
       this.members = new HashSet<Long>((ArrayList<Long>) entityProperty);
     } else {
@@ -59,7 +52,7 @@ public class ProjectData {
     }
 
     // Admins
-    entityProperty = (Collection) entity.getProperty(PROPERTY_ADMINS);
+    entityProperty = (Collection) entity.getProperty("admins");
     if (entityProperty == null) {
       this.admins = new HashSet<Long>();
     } else {
@@ -70,11 +63,11 @@ public class ProjectData {
   /** @return the entity representation of this class */
   public Entity toEntity() {
     Entity entity = new Entity("Project");
-    entity.setProperty(PROPERTY_NAME, this.name);
-    entity.setProperty(PROPERTY_CREATOR, this.creatorId);
-    entity.setProperty(PROPERTY_DESCRIPTION, this.description);
-    entity.setProperty(PROPERTY_ADMINS, this.admins);
-    entity.setProperty(PROPERTY_MEMBERS, this.members);
+    entity.setProperty("name", this.name);
+    entity.setProperty("creator", this.creatorId);
+    entity.setProperty("description", this.description);
+    entity.setProperty("admins", this.admins);
+    entity.setProperty("members", this.members);
     return entity;
   }
 
@@ -160,7 +153,6 @@ public class ProjectData {
    * @return true if operation is successful
    */
   public boolean removeAdmin(long userId) {
-    System.out.println("removing admin");
     return this.admins.remove(userId);
   }
 
