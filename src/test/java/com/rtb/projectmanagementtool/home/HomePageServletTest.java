@@ -115,7 +115,7 @@ public class HomePageServletTest extends Mockito {
 
     // Get actual response string
     String actualOutput = stringWriter.getBuffer().toString().trim();
-    
+
     Gson gson = new Gson();
     Assert.assertEquals(gson.toJson(expectedOutput), gson.toJson(actualOutput));
 
