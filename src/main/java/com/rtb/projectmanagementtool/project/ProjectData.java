@@ -224,12 +224,12 @@ public class ProjectData {
   @Override
   public String toString() {
     String returnString = "{\n";
-    returnString += "Project id: " + this.id + "\n";
-    returnString += "Project creator's id: " + this.creatorId + "\n";
-    returnString += "Project Name: " + this.name + "\n";
-    returnString += "Project Description: " + this.description + "\n";
-    returnString += "Project Members: " + this.admins.toString() + "\n";
-    returnString += "Project Admins: " + this.members.toString() + "\n}";
+    returnString += "\tProject id: " + this.id + "\n";
+    returnString += "\tProject creator's id: " + this.creatorId + "\n";
+    returnString += "\tProject Name: " + this.name + "\n";
+    returnString += "\tProject Description: " + this.description + "\n";
+    returnString += "\tProject Members: " + this.admins.toString() + "\n";
+    returnString += "\tProject Admins: " + this.members.toString() + "\n}";
     return returnString;
   }
 }
