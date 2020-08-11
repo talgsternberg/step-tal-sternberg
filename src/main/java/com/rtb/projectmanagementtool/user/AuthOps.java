@@ -33,6 +33,13 @@ public class AuthOps {
     return AuthID;
   }
 
+  // get/create cookie and set value to userID
+  public void createAndSetCookieNewUser(HttpServletRequest request, long userID) {
+    Cookie cookie = getCurrCookie(request);
+    String userIDString = Long.toString(userID);
+    cookie.setValue(userIDString);
+  }
+
   // gets cookie from request. Used in most methods.
   public Cookie getCurrCookie(HttpServletRequest request) {
     Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);

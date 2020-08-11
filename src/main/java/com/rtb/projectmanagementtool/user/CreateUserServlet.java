@@ -46,9 +46,7 @@ public class CreateUserServlet extends HttpServlet {
     long userID = controller.addUser(newUser);
 
     // get/create cookie and set value to userID
-    cookie = auth.getCurrCookie(request);
-    String userIDString = Long.toString(userID);
-    cookie.setValue(userIDString);
+    auth.createAndSetCookieNewUser(request, userID);
 
     // redirect to user_settings
     response.sendRedirect("/user_settings.html");
