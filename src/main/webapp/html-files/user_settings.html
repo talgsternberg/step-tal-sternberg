@@ -18,7 +18,7 @@
       <h2>Change User Settings: </h2>
       <div class="user-settings">
         <h3>Change Skills:</h3>
-        <form>
+        <form id="skills-form" action="/create-user" method="POST">
           <ul>
             <li><input type="checkbox" id="leadership" name="leadership" value="leadership">
               <label for="leadership">Leadership</label></li>
@@ -36,7 +36,7 @@
           </ul>
         </form>
         <h3>Change Other Information:</h3>
-        <form id="stats-form">
+        <form id="stats-form" action="/create-user" method="POST">
           <ul>
             <li><input type="text" id="name" name="name" value="Update Name"></li>
             <li><input type="text" id="year" name="year" value="Update Class Year (ex: 2020)"></li>

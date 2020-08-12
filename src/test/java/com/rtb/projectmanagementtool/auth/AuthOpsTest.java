@@ -65,9 +65,8 @@ public class AuthOpsTest {
 
   @Test
   public void testAlreadyLoggedInDontSetCookie() {
-    setUserServiceAuthInfo(false, "abc"); // user is logged in
+    setUserServiceAuthInfo(true, "abc"); // logged in
     // auth object
-    // DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     auth = new AuthOps(controller);
 
     // add list of mock users
@@ -82,8 +81,6 @@ public class AuthOpsTest {
     // build and send test cookies for logged in users
     Cookie[] testCookies = new Cookie[1];
     testCookies[0] = new Cookie("sessionUserID", "1l");
-    // testCookies[1] = new Cookie("sessionUserID", "zvm");
-    // testCookies[2] = new Cookie("sessionUserID", "wpk");
 
     // on this call in class method, return test user
     when(controller.getEveryUser()).thenReturn(testUsers);
@@ -100,16 +97,13 @@ public class AuthOpsTest {
 
   @Test
   public void testLoginUser() {
-    setUserServiceAuthInfo(true, "abc"); // user is logged out
+    setUserServiceAuthInfo(true, "abc"); // logged in
     // auth object
-    // DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     auth = new AuthOps(controller);
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
     testUsers.add(new UserData(1l, "abc"));
-    // testUsers.add(new UserData(2l, "opq"));
-    // testUsers.add(new UserData(3l, "xyz"));
 
     // build and send a test cookie for logged out user
     Cookie[] testCookies = new Cookie[1];
@@ -139,7 +133,7 @@ public class AuthOpsTest {
 
   @Test
   public void testWhichUser() {
-    setUserServiceAuthInfo(false, "abc"); // user is logged in
+    setUserServiceAuthInfo(true, "abc"); // logged in
 
     auth = new AuthOps(controller);
 
@@ -151,7 +145,7 @@ public class AuthOpsTest {
     when(request.getCookies()).thenReturn(testCookies);
 
     // call method
-    long userID = auth.whichUserLoggedIn(request, response);
+    long userID = auth.whichUserIsLoggedIn(request, response);
 
     // Assert that the val returned equals userID as type long
     Assert.assertEquals(2, userID);
