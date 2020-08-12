@@ -3,6 +3,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 #content {
   background-color: lavender;
   padding: 20px;
@@ -134,6 +138,35 @@ li {
 }
 
 .projects button {
+  width: 200px;
+  height: 150px;
+}
+
+#navigation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+#navigation li {
+  float: left;
+}
+
+#navigation a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#navigation a:hover {
+  background-color: #111;
+}
+
+#project-container button {
   width: 200px;
   height: 150px;
 }
