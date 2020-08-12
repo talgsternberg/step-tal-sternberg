@@ -1,7 +1,6 @@
 /** Servlet responsible for loading project page */
 package com.rtb.projectmanagementtool.project;
 
-import com.rtb.projectmanagementtool.project.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
