@@ -8,9 +8,8 @@ import java.util.*;
  * WEBDEV, OOP; }
  */
 
-/** Class for User data. */
+// Class for User data.
 public class UserData {
-
   private long userID;
   private String AuthID; // this will be the ID from API
   private String userName;

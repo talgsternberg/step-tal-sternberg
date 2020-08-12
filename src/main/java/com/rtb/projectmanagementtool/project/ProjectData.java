@@ -10,6 +10,14 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class ProjectData {
+  //  Previously removed constants because they would appear in Json
+  // created by gson.toJson(), but making them static fixed that
+  private static final String PROPERTY_NAME = "name";
+  private static final String PROPERTY_CREATOR = "creator";
+  private static final String PROPERTY_DESCRIPTION = "description";
+  private static final String PROPERTY_ADMINS = "admins";
+  private static final String PROPERTY_MEMBERS = "members";
+
   private long id;
   private long creatorId;
   private String name;
@@ -39,12 +47,12 @@ public class ProjectData {
    */
   public ProjectData(Entity entity) {
     this.id = (Long) entity.getKey().getId();
-    this.creatorId = (Long) entity.getProperty("creator");
-    this.name = (String) entity.getProperty("name");
-    this.description = (String) entity.getProperty("description");
+    this.creatorId = (Long) entity.getProperty(PROPERTY_CREATOR);
+    this.name = (String) entity.getProperty(PROPERTY_NAME);
+    this.description = (String) entity.getProperty(PROPERTY_DESCRIPTION);
 
     // Members
-    Collection entityProperty = (Collection) entity.getProperty("members");
+    Collection entityProperty = (Collection) entity.getProperty(PROPERTY_MEMBERS);
     if (entityProperty != null) {
       this.members = new HashSet<Long>((ArrayList<Long>) entityProperty);
     } else {
@@ -52,7 +60,7 @@ public class ProjectData {
     }
 
     // Admins
-    entityProperty = (Collection) entity.getProperty("admins");
+    entityProperty = (Collection) entity.getProperty(PROPERTY_ADMINS);
     if (entityProperty == null) {
       this.admins = new HashSet<Long>();
     } else {
@@ -63,11 +71,11 @@ public class ProjectData {
   /** @return the entity representation of this class */
   public Entity toEntity() {
     Entity entity = new Entity("Project");
-    entity.setProperty("name", this.name);
-    entity.setProperty("creator", this.creatorId);
-    entity.setProperty("description", this.description);
-    entity.setProperty("admins", this.admins);
-    entity.setProperty("members", this.members);
+    entity.setProperty(PROPERTY_NAME, this.name);
+    entity.setProperty(PROPERTY_CREATOR, this.creatorId);
+    entity.setProperty(PROPERTY_DESCRIPTION, this.description);
+    entity.setProperty(PROPERTY_ADMINS, this.admins);
+    entity.setProperty(PROPERTY_MEMBERS, this.members);
     return entity;
   }
 
@@ -216,12 +224,12 @@ public class ProjectData {
   @Override
   public String toString() {
     String returnString = "{\n";
-    returnString += "Project id: " + this.id + "\n";
-    returnString += "Project creator's id: " + this.creatorId + "\n";
-    returnString += "Project Name: " + this.name + "\n";
-    returnString += "Project Description: " + this.description + "\n";
-    returnString += "Project Members: " + this.admins.toString() + "\n";
-    returnString += "Project Admins: " + this.members.toString() + "\n}";
+    returnString += "\tProject id: " + this.id + "\n";
+    returnString += "\tProject creator's id: " + this.creatorId + "\n";
+    returnString += "\tProject Name: " + this.name + "\n";
+    returnString += "\tProject Description: " + this.description + "\n";
+    returnString += "\tProject Members: " + this.admins.toString() + "\n";
+    returnString += "\tProject Admins: " + this.members.toString() + "\n}";
     return returnString;
   }
 }

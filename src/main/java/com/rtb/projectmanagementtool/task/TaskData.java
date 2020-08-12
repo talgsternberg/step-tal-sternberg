@@ -5,6 +5,11 @@ import java.util.ArrayList;
 
 /** Class containing task data. */
 public final class TaskData implements Comparable<TaskData> {
+  /** Enum containing status options for a task. */
+  public enum Status {
+    COMPLETE,
+    INCOMPLETE
+  }
 
   private long taskID;
   private long parentTaskID;
@@ -56,7 +61,26 @@ public final class TaskData implements Comparable<TaskData> {
     this.description = description;
     this.status = status;
     this.users = users;
-    // this.subtasks = subtasks;
+  }
+
+  public TaskData(long parentTaskID, long projectID, String name, String description) {
+    this.taskID = 0;
+    this.parentTaskID = parentTaskID;
+    this.projectID = projectID;
+    this.name = name;
+    this.description = description;
+    this.status = Status.INCOMPLETE;
+    this.users = new ArrayList<>();
+  }
+
+  public TaskData(long projectID, String name, String description) {
+    this.taskID = 0;
+    this.parentTaskID = 0;
+    this.projectID = projectID;
+    this.name = name;
+    this.description = description;
+    this.status = Status.INCOMPLETE;
+    this.users = new ArrayList<>();
   }
 
   public TaskData(Entity entity) {

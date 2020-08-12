@@ -18,8 +18,8 @@ function getTaskInfo() {
       .then((response) => {
         const task = response.task[0];
         // const project = response.project[0];
-        // const subtasks = response.subtasks;
-        // const users = response.users;
+        const subtasks = response.subtasks;
+        const users = response.users;
         // const comments = response.comments;
         // Fill up task page
         const title = document.getElementById('task-title-container');
@@ -32,7 +32,8 @@ function getTaskInfo() {
         const toProject = document.getElementById('task-project-container');
         // toProject.appendChild(getProjectReturn(project));
         const subtaskList = document.getElementById('task-subtasks-container');
-        // subtaskList.appendChild(getTasks(subtasks));
+        subtaskList.textContent = '';
+        subtaskList.appendChild(getTasks(subtasks));
         const addSubtask = document.getElementById('task-addsubtask-container');
         addSubtask.innerHTML = '';
         addSubtask.appendChild(createTaskButton(
@@ -50,12 +51,26 @@ function getTaskInfo() {
         toggleUserAssignment.innerHTML = '';
         toggleUserAssignment.appendChild(getUserAssignmentButton(task, userID));
         const userList = document.getElementById('task-users-container');
-        // userList.appendChild(getUsers(users));
+        userList.textContent = '';
+        userList.appendChild(getUsers(users));
         // const commentList =
         //   document.getElementById('task-comments-container');
         // commentList.appendChild(getComments(comments));
         doStuff(); // Test calling a function in another file
       });
+}
+
+/**
+ * Build ul element for tasks.
+ * @param {Array} tasks Array of taskIDs.
+ * @return {Element} HTML ul element containing a list of tasks.
+ */
+function getTasks(tasks) {
+  const ulElement = document.createElement('ul');
+  for (task of tasks) {
+    ulElement.appendChild(createTaskLiElement(task));
+  }
+  return ulElement;
 }
 
 /**

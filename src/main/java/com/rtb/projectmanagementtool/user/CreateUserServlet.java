@@ -1,9 +1,11 @@
-package com.rtb.projectmanagementtool.auth;
+// incomplete
+// build other servlets first
+package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.users.*;
-import com.rtb.projectmanagementtool.user.*;
+import com.rtb.projectmanagementtool.auth.*;
 import java.io.*;
 import java.util.*;
 import javax.servlet.*;

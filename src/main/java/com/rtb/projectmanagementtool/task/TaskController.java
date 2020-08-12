@@ -2,6 +2,7 @@ package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,36 +72,49 @@ public final class TaskController {
     }
   }
 
-  public void setComplete(long taskID) {
-    setComplete(getTaskByID(taskID));
+  public boolean setComplete(long taskID) {
+    return setComplete(getTaskByID(taskID));
   }
 
-  public void setComplete(TaskData task) {
+  public boolean setComplete(TaskData task) {
+    if (!allSubtasksAreComplete(task)) {
+      return false;
+    }
+    completeTask(task);
+    return true;
+  }
+
+  private boolean allSubtasksAreComplete(TaskData task) {
     ArrayList<TaskData> subtasks = getSubtasks(task);
     for (TaskData subtask : subtasks) {
       if (subtask.getStatus() != Status.COMPLETE) {
-        return;
+        return false;
       }
     }
+    return true;
+  }
+
+  private void completeTask(TaskData task) {
     task.setStatus(Status.COMPLETE);
     if (task.getTaskID() != 0) {
       datastore.put(task.toEntity());
     }
   }
 
-  public void setIncomplete(long taskID) {
-    setIncomplete(getTaskByID(taskID));
+  public boolean setIncomplete(long taskID) {
+    return setIncomplete(getTaskByID(taskID));
   }
 
-  public void setIncomplete(TaskData task) {
+  public boolean setIncomplete(TaskData task) {
     Long parentTaskID = task.getParentTaskID();
     if (parentTaskID != 0 && getTaskByID(parentTaskID).getStatus() == Status.COMPLETE) {
-      return;
+      return false;
     }
     task.setStatus(Status.INCOMPLETE);
     if (task.getTaskID() != 0) {
       datastore.put(task.toEntity());
     }
+    return true;
   }
 
   // Get methods

@@ -7,6 +7,7 @@ import com.google.appengine.api.datastore.Query.*;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.After;
@@ -138,6 +139,36 @@ public class TaskDataTest {
     Assert.assertEquals("description", description1, task.getDescription());
     Assert.assertEquals("status", status1, task.getStatus());
     Assert.assertEquals("users", users1, task.getUsers());
+  }
+
+  @Test
+  public void testCreateBasicTaskFromConstructorWithParentTaskID() {
+    // Build TaskData object
+    TaskData task = new TaskData(0, projectID1, name1, description1);
+
+    // Assert TaskData parameters were stored correctly
+    Assert.assertEquals("taskID", 0, task.getTaskID());
+    Assert.assertEquals("parentTaskID", 0, task.getParentTaskID());
+    Assert.assertEquals("projectID", projectID1, task.getProjectID());
+    Assert.assertEquals("name", name1, task.getName());
+    Assert.assertEquals("description", description1, task.getDescription());
+    Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
+    Assert.assertEquals("users", new ArrayList<>(), task.getUsers());
+  }
+
+  @Test
+  public void testCreateBasicTaskFromConstructor() {
+    // Build TaskData object
+    TaskData task = new TaskData(projectID1, name1, description1);
+
+    // Assert TaskData parameters were stored correctly
+    Assert.assertEquals("taskID", 0, task.getTaskID());
+    Assert.assertEquals("parentTaskID", 0, task.getParentTaskID());
+    Assert.assertEquals("projectID", projectID1, task.getProjectID());
+    Assert.assertEquals("name", name1, task.getName());
+    Assert.assertEquals("description", description1, task.getDescription());
+    Assert.assertEquals("status", Status.INCOMPLETE, task.getStatus());
+    Assert.assertEquals("users", new ArrayList<>(), task.getUsers());
   }
 
   @Test
