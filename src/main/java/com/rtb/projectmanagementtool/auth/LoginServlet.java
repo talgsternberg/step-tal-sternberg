@@ -1,8 +1,10 @@
 // Servlet for loading login page
-// TODO: add doPost() for a user logging in
 
 package com.rtb.projectmanagementtool.auth;
 
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.users.*;
+import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +17,23 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    // Just redirect to login jsp
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    AuthOps auth = new AuthOps(datastore);
+
+    // Don't view login page if user is logged in
+    if (auth.whichUserLoggedIn(request, response) != -1) {
+      response.sendRedirect("/home");
+      return;
+    }
+
+    // Get login URL
+    UserService userService = UserServiceFactory.getUserService();
+    String urlToRedirectToAfterUserLogsIn = "/home";
+    String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+    request.setAttribute("loginUrl", loginUrl);
+
+    // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
   }
 }
