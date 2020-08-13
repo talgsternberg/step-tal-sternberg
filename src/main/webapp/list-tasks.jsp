@@ -2,11 +2,12 @@
 <%@ page import="com.google.gson.Gson"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.Arrays"%>
+<%@ page import="java.util.List"%>
 
 <%--Get variables--%>
 <%
-    Gson gson = new Gson();
-    ArrayList<TaskData> tasks = (ArrayList<TaskData>) gson.fromJson(request.getParameter("tasks"), ArrayList.class);
+    List<TaskData> tasks = (List<TaskData>)(List<?>) request.getAttribute("tasks");
 %>
 
 <%--HTML--%>

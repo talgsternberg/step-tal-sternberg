@@ -7,8 +7,6 @@
 <%
     TaskData task = (TaskData) request.getAttribute("task");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
-    System.out.println(task);
-    System.out.println(subtasks);
 %>
 
     <!-- TaskData parentTask = (TaskData) request.getAttribute("parentTask"); -->
@@ -37,13 +35,13 @@
       <div id="task-status-container">Status: <%=task.getStatus()%></div>
       <div id="task-project-container">
         <p>Return to Project: </p>
-        <!-- <button type="button" href="project.jsp?projectID="> -->
+        <!-- <button type="button" href="project?projectID="> -->
           <!--  -->
         <!-- </button> -->
       </div>
       <div id="task-parenttask-container">
         <p>Return to Parent Task: </p>
-        <!-- <button type="button" href="task.jsp?taskID="> -->
+        <!-- <button type="button" href="task?taskID="> -->
           <!--  -->
         <!-- </button> -->
       </div>
@@ -51,11 +49,13 @@
       <h2>Subtasks</h2>
       <div id="task-subtasks-container">
         <%Gson gson = new Gson();%>
-        <jsp:include page="list-tasks.jsp">
-          <jsp:param name="tasks" value="<%=gson.toJson(subtasks)%>"/>
-        </jsp:include>
+        <%String paramString = gson.toJson(subtasks);%>
+        <%request.setAttribute("tasks", subtasks);%>
+        <jsp:include page="list-tasks.jsp"/>
       </div>
-      <div id="task-addsubtask-container"></div>
+      <div id="task-addsubtask-container">
+        <button type="button" onclick="location.href='add-task.jsp?projectID=1&projectName=DefaultProjectName&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">Add Subtask</button>
+      </div>
       <h2>Members</h2>
       <div id="task-assignuser-container"></div>
       <div id="task-users-container"></div>

@@ -104,7 +104,8 @@ public class TaskServlet extends HttpServlet {
   }
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     // Get and create parameters
     long parentTaskID = Long.parseLong(request.getParameter("parentTaskID"));
     long projectID = Long.parseLong(request.getParameter("projectID"));
@@ -118,7 +119,9 @@ public class TaskServlet extends HttpServlet {
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
 
-    // Redirect to newly created task page
-    response.sendRedirect("/task.html?taskID=" + task.getTaskID());
+    // // Redirect to newly created task page
+    // HttpServletRequest request2 = new HttpServletRequest();
+    // request2.setParameter("taskID", task.getTaskID());
+    // request.getRequestDispatcher("task").forward(request, response);
   }
 }
