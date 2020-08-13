@@ -2,6 +2,7 @@ package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
+import com.rtb.projectmanagementtool.user.UserData.Skills;
 import java.util.ArrayList;
 
 public class UserController {

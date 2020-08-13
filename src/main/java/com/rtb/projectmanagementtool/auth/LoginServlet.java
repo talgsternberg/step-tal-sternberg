@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
 
     // Don't view login page if user is logged in
-    if (auth.whichUserLoggedIn(request, response) != -1) {
+    if (auth.whichUserIsLoggedIn(request, response) != -1) {
       response.sendRedirect("/home");
       return;
     }

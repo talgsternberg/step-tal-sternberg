@@ -10,6 +10,18 @@ import java.util.*;
 
 // Class for User data.
 public class UserData {
+
+  /** Enum containing skills for user. */
+  public enum Skills {
+    NONE,
+    LEADERSHIP,
+    ORGANIZATION,
+    WRITING,
+    ART,
+    WEBDEV,
+    OOP;
+  }
+
   private long userID;
   private String AuthID; // this will be the ID from API
   private String userName;

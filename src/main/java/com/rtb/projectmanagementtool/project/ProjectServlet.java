@@ -26,7 +26,7 @@ public class ProjectServlet extends HttpServlet {
 
     // Authenticate
     auth.loginUser(request, response);
-    Long userLoggedInId = auth.whichUserLoggedIn(request, response);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == /*No user found*/ -1l) {
       // If no user found, redirect to create user servlet
       response.sendRedirect("/login");
