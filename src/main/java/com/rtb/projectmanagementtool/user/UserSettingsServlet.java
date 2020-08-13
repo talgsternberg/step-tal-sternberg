@@ -133,19 +133,26 @@ public class UserSettingsServlet extends HttpServlet {
     String userName = request.getParameter("userName");
     long userYear = Long.parseLong(request.getParameter("userYear"));
     String userMajorsString = request.getParameter("userMajors");
-    String[] skillsString = request.getParameterValues("skills");
+    String skillsString = request.getParameter("skills");
 
-   
+    // default to no skills
+    Skills skills = Skills.NONE;
 
-    // convert skills back to enum
-    /**
-     * if (skillsString == "none") { Skills skills = Skills.NONE; } else if (skillsString ==
-     * "leadership") { Skills skills = Skills.LEADERSHIP; } else if (skillsString == "organization")
-     * { Skills skills = Skills.ORGANIZATION; } else if (skillsString == "writing") { Skills skills
-     * = Skills.WRITING; } else if (skillsString == "art") { Skills skills = Skills.ART; } else if
-     * (skillsString == "webdev") { Skills skills = Skills.WEBDEV; } else if (skillsString == "oop")
-     * { Skills skills = Skills.OOP; }
-     */
+    if (skillsString.equals("leadership")) {
+      skills = Skills.LEADERSHIP;
+    } else if (skillsString.equals("organization")) {
+      skills = Skills.ORGANIZATION;
+    } else if (skillsString.equals("organization")) {
+      skills = Skills.ORGANIZATION;
+    } else if (skillsString.equals("writing")) {
+      skills = Skills.WRITING;
+    } else if (skillsString.equals("art")) {
+      skills = Skills.ART;
+    } else if (skillsString.equals("webdev")) {
+      skills = Skills.WEBDEV;
+    } else if (skillsString.equals("oop")) {
+      skills = Skills.OOP;
+    }
 
     // convert userMajors back to ArrayList
     String[] majorsSA = userMajorsString.split(",");
@@ -155,6 +162,6 @@ public class UserSettingsServlet extends HttpServlet {
     user.setUserName(userName);
     user.setUserYear(userYear);
     user.setUserMajors(userMajors);
-    // user.setuserSkills(userSkills);
+    user.setUserSkills(skills);
   }
 }
