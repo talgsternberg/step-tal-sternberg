@@ -36,25 +36,25 @@
         </tr><br><br>
         <tr>
           <td>Majors (separate by commas no spaces)</td>
-          <td><input type="text" name="userYear" value=<%=majors%> /></td>
+          <td><input type="text" name="userMajors" value=<%=majors%> /></td>
         </tr><br><br>
         <tr>
-          <td>Skills</td><br>
+          <td>Top Skill:</td><br>
           <td>
-            <input type="checkbox" name="NONE">
-            <label for="NONE">None</label><br>
-            <input type="checkbox" name="LEADERSHIP">
-            <label for="LEADERSHIP">Leadership</label><br>
-            <input type="checkbox" name="ORGANIZATION">
-            <label for="ORGANIZATION">Organization</label><br>
-            <input type="checkbox" name="WRITING">
-            <label for="WRITING">Writing</label><br>
-            <input type="checkbox" name="ART">
-            <label for="ART">Art</label><br>
-            <input type="checkbox" name="WEBDEV">
-            <label for="WEBDEV">WebDev</label><br>
-            <input type="checkbox" name="OOP">
-            <label for="OOP">OOP</label><br>
+            <input type="radio" value="none" name="skills">
+            <label>None</label><br>
+            <input type="radio" value="leadership" name="skills">
+            <label>Leadership</label><br>
+            <input type="radio" vlaue="organization" name="skills">
+            <label>Organization</label><br>
+            <input type="radio" value="writing" name="skills">
+            <label>Writing</label><br>
+            <input type="radio" value="art" name="skills">
+            <label>Art</label><br>
+            <input type="radio" value="webdev" name="skills">
+            <label>WebDev</label><br>
+            <input type="radio" value="oop" name="skills">
+            <label>OOP</label><br>
           </td>
         </tr><br><br>
         <input type="submit" value="Submit" />

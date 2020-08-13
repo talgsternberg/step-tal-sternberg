@@ -28,7 +28,7 @@
       <div id="user-name-container"><p>Name: <%=user.getUserName()%></p></div>
       <div id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></div>
       <div id="user-majors-container"><p>Majors: <%=user.getUserMajors()%></p></div>
-      <div id="user-skills-container"><p>Skills: <%=user.getUserSkills()%></p></div>
+      <div id="user-skills-container"><p>Top Skill: <%=user.getUserSkills()%></p></div>
       <div id="user-total-tasks-container">
           <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
       </div>
