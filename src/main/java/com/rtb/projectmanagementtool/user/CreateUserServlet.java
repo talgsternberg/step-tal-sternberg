@@ -34,7 +34,7 @@ public class CreateUserServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
 
     // get Auth ID from AuthOps method
-    String AuthID = auth.getAuthID();
+    String AuthID = auth.getAuthID(request, response);
 
     // new UserController object
     UserController controller = new UserController(datastore);
@@ -49,12 +49,13 @@ public class CreateUserServlet extends HttpServlet {
     long userID = controller.addUser(newUser);
 
     // get/create cookie and set value to userID
-    auth.createAndSetCookieNewUser(request, userID);
+    auth.createAndSetCookieNewUser(request, response, userID);
 
     // redirect to user_settings
     response.sendRedirect("/user_settings.html");
 
-    // now how do I update the rest of my user's fields given their input
+    // get the form data from the parameters and set
+    // them into the blank UserData before pushing into datastore
 
   }
 }

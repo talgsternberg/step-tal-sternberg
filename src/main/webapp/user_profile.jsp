@@ -4,7 +4,7 @@
 
 <%--Get variables--%>
 <%
-    UserData user = (UserData) request.getAttribute("UserProfile");
+    UserData user = (UserData) request.getAttribute("UserData");
     ArrayList<TaskData> userTasks = (ArrayList<TaskData>) request.getAttribute("UserTasks");
 %>
 
@@ -36,8 +36,7 @@
       <div id="user-tasks-container">
         <h2><%=user.getUserName()%>'s Tasks:</h2>
         <%for (TaskData task : userTasks) {%>
-          <p>Task Name: <%=task.getName()%></p>
-          <p>Task Status: <%=task.getStatus()%></p>
+          <p><%=task.getName()%>, <%=task.getStatus()%></p>
         <%}%>
       </div>
     </div>

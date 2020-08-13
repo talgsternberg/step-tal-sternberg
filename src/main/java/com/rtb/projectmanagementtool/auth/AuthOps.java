@@ -27,18 +27,25 @@ public class AuthOps {
     UserController controller = new UserController(ds);
   }
 
-  public String getAuthID() {
-    // call auth service to generate AuthID
-    UserService userService = UserServiceFactory.getUserService();
-    String AuthID = userService.getCurrentUser().getUserId();
-    return AuthID;
+  public String getAuthID(HttpServletRequest request, HttpServletResponse response) {
+    if (whichUserIsLoggedIn(request, response) != -1) {
+      // call auth service to generate AuthID
+      UserService userService = UserServiceFactory.getUserService();
+      String AuthID = userService.getCurrentUser().getUserId();
+      return AuthID;
+    }
+    // if no one logged in, return empty string
+    return "";
   }
 
   // get/create cookie and set value to userID
-  public void createAndSetCookieNewUser(HttpServletRequest request, long userID) {
+  public void createAndSetCookieNewUser(
+      HttpServletRequest request, HttpServletResponse response, long userID) {
     Cookie cookie = getCurrCookie(request);
     String userIDString = Long.toString(userID);
     cookie.setValue(userIDString);
+    // send back cookie to response
+    response.addCookie(cookie);
   }
 
   // gets cookie from request. Used in most methods.

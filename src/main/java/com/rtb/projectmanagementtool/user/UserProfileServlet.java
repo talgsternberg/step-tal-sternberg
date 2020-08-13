@@ -87,7 +87,7 @@ public class UserProfileServlet extends HttpServlet {
      */
 
     // Set attributes of request; retrieve in jsp with
-    request.setAttribute("UserProfile", user);
+    request.setAttribute("UserData", user);
     request.setAttribute("UserTasks", tasks);
 
     // Load jsp for user page
