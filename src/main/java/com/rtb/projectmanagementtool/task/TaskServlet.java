@@ -1,6 +1,7 @@
 package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.*;
+import com.rtb.projectmanagementtool.project.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,30 +36,30 @@ public class TaskServlet extends HttpServlet {
     long projectID1 = 1l;
     String name1 = "Task 1";
     String description1 = "Task 1 description...";
-    TaskData task1 = new TaskData(projectID1, name1, description1);
+    TaskData task = new TaskData(projectID1, name1, description1);
 
     // Get Task
     long taskID = Long.parseLong(request.getParameter("taskID"));
     TaskController taskController = new TaskController(datastore);
     if (taskID != 0 && taskID != 1) {
-      task1 = taskController.getTaskByID(taskID);
+      task = taskController.getTaskByID(taskID);
     }
     // // ArrayList is for HashMap below. Is there a better way to do this?
-    // ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
+    // ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task));
 
     // Get Parent Task
     TaskData parentTask = null;
-    if (taskID != 0 && taskID != 1 && task1.getParentTaskID() != 0) {
-      parentTask = taskController.getTaskByID(task1.getParentTaskID());
+    if (taskID != 0 && taskID != 1 && task.getParentTaskID() != 0) {
+      parentTask = taskController.getTaskByID(task.getParentTaskID());
     }
 
-    // // Get Parent Project
-    // ProjectController projectController = new ProjectController(datastore);
-    // ProjectData project = projectController.getProjectByID(task.getProjectID);
+    // Get Parent Project
+    ProjectController projectController = new ProjectController(datastore);
+    ProjectData project = projectController.getProjectById(task.getProjectID());
     // ArrayList<ProjectData> projectInArrayList = new ArrayList<>(Arrays.asList(project));
 
     // Get Subtasks
-    ArrayList<TaskData> subtasks = taskController.getSubtasks(task1);
+    ArrayList<TaskData> subtasks = taskController.getSubtasks(task);
 
     // // Get Comments
     // int quantity = Integer.parseInt(request.getParameter("quantity"));
@@ -69,8 +70,8 @@ public class TaskServlet extends HttpServlet {
     ArrayList<UserData> users = new ArrayList<>();
     if (taskID != 0 && taskID != 1) {
       UserController userController = new UserController(datastore);
-      // users = userController.getUsers(task1.getUsers());
-      for (long userID : task1.getUsers()) {
+      // users = userController.getUsers(task.getUsers());
+      for (long userID : task.getUsers()) {
         try {
           users.add(userController.getUserByID(userID));
         } catch (NullPointerException e) {
@@ -80,13 +81,13 @@ public class TaskServlet extends HttpServlet {
     }
 
     System.out.println("TaskServlet");
-    System.out.println(task1);
+    System.out.println(task);
     System.out.println(subtasks);
 
     // Send data to task.jsp
-    request.setAttribute("task", task1);
+    request.setAttribute("task", task);
     request.setAttribute("parentTask", parentTask);
-    // request.setAttribute("project", projectInArrayList);
+    request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     // request.setAttribute("comments", comments);
     request.setAttribute("users", users);
@@ -120,9 +121,7 @@ public class TaskServlet extends HttpServlet {
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
 
-    // // Redirect to newly created task page
-    // HttpServletRequest request2 = new HttpServletRequest();
-    // request2.setParameter("taskID", task.getTaskID());
-    // request.getRequestDispatcher("task").forward(request, response);
+    // // Redirect back to the parent task's task page
+    response.sendRedirect("/task?taskID=" + parentTaskID);
   }
 }

@@ -1,5 +1,6 @@
 <%--Class Imports--%>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="java.util.ArrayList" %>
 
@@ -7,10 +8,10 @@
 <%
     TaskData task = (TaskData) request.getAttribute("task");
     TaskData parentTask = (TaskData) request.getAttribute("parentTask");
+    ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
 %>
 
-    <!-- ProjectData project = (ProjectData) request.getAttribute("project"); -->
     <!-- ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users"); -->
     <!-- ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments"); -->
 
@@ -33,7 +34,12 @@
       <div id="task-description-container"><%=task.getDescription()%></div>
       <div id="task-status-container">Status: <%=task.getStatus()%></div>
       <div id="task-project-container">
-        <p>Return to Project: </p>
+        <%if (project != null) {%>
+          <p class="inline">Return to Project: </p>
+          <button type="button" class="inline" onclick="location.href='project?id=<%=project.getId()%>'">
+            <%=project.getName()%>
+          </button>
+        <%}%>
       </div>
       <div id="task-parenttask-container">
         <%if (parentTask != null) {%>
