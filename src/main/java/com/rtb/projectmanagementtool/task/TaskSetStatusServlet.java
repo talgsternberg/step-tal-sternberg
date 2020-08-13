@@ -36,5 +36,7 @@ public class TaskSetStatusServlet extends HttpServlet {
     } else if (status == Status.INCOMPLETE) {
       taskController.setIncomplete(taskID);
     }
+
+    response.sendRedirect("/task?taskID=" + taskID);
   }
 }

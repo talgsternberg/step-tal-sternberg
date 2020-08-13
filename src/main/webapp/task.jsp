@@ -2,6 +2,7 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
+<%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
 <%@ page import="java.util.ArrayList" %>
 
 <%--Get variables--%>
@@ -32,7 +33,25 @@
     <div id="content">
       <div id="task-title-container"><h1><%=task.getName()%></h1></div>
       <div id="task-description-container"><%=task.getDescription()%></div>
-      <div id="task-status-container">Status: <%=task.getStatus()%></div>
+      <div id="task-status-container">
+        <p>Status: <%=task.getStatus()%></p>
+        <%
+            String status;
+            String statusButtonText;
+            if (task.getStatus() != Status.COMPLETE) {
+                status = "COMPLETE";
+                statusButtonText = "Set Task Status as Complete";
+            } else {
+                status = "INCOMPLETE";
+                statusButtonText = "Set Task Status as Incomplete";
+            }
+        %>
+        <form id="toggle-status-post-form" action="/task-set-status" method="POST">
+          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
+          <input type="hidden" name="status" value="<%=status%>"/>
+          <button type="submit" id="task-toggle-status"><%=statusButtonText%></button>
+        </form>
+      </div>
       <div id="task-project-container">
         <%if (project != null) {%>
           <p class="inline">Return to Project: </p>
@@ -71,19 +90,19 @@
         <%
             long userID = 1; // Default value
             String servletPage;
-            String buttonText;
+            String userButtonText;
             if (!task.getUsers().contains(userID)) {
                 servletPage = "/task-add-user";
-                buttonText = "Assign me to this task";
+                userButtonText = "Assign me to this task";
             } else {
                 servletPage = "/task-remove-user";
-                buttonText = "Remove me from this task";
+                userButtonText = "Remove me from this task";
             }
         %>
         <form id="toggle-user-assignment-post-form" action="<%=servletPage%>" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="userID" value="<%=userID%>"/>
-          <button type="submit" id="toggle-user-assignment"><%=buttonText%></button>
+          <button type="submit" id="toggle-user-assignment"><%=userButtonText%></button>
         </form>
       <div id="task-users-container"></div>
 
