@@ -3,18 +3,13 @@ package com.rtb.projectmanagementtool.user;
 import com.google.appengine.api.datastore.Entity;
 import java.util.*;
 
-/** Class for User data. */
-public class UserData {
-  /** Enum containing skills for user. */
-  public enum Skills {
-    LEADERSHIP,
-    ORGANIZATION,
-    WRITING,
-    ART,
-    WEBDEV,
-    OOP;
-  }
+/**
+ * Enum containing skills for user. enum Skills { NONE, LEADERSHIP, ORGANIZATION, WRITING, ART,
+ * WEBDEV, OOP; }
+ */
 
+// Class for User data.
+public class UserData {
   private long userID;
   private String AuthID; // this will be the ID from API
   private String userName;
@@ -32,6 +27,22 @@ public class UserData {
       Skills skills,
       long userTotalCompTasks) {
     this.userID = userID;
+    this.AuthID = AuthID;
+    this.userName = userName;
+    this.userYear = userYear;
+    this.userMajors = userMajors;
+    this.skills = skills;
+    this.userTotalCompTasks = userTotalCompTasks;
+  }
+
+  public UserData(
+      String AuthID,
+      String userName,
+      long userYear,
+      ArrayList<String> userMajors,
+      Skills skills,
+      long userTotalCompTasks) {
+    this.userID = 0;
     this.AuthID = AuthID;
     this.userName = userName;
     this.userYear = userYear;
@@ -104,7 +115,7 @@ public class UserData {
     this.userID = userID;
   }
 
-  public void setUserEmail(String AuthID) {
+  public void setAuthID(String AuthID) {
     this.AuthID = AuthID;
   }
 

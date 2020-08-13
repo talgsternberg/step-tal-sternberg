@@ -31,5 +31,7 @@ public class TaskAddUserServlet extends HttpServlet {
     // Add user to task
     TaskController taskController = new TaskController(datastore);
     taskController.addUser(taskID, userID);
+
+    response.sendRedirect("/task?taskID=" + taskID);
   }
 }
