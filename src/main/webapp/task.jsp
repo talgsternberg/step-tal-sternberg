@@ -6,10 +6,10 @@
 <%--Get variables--%>
 <%
     TaskData task = (TaskData) request.getAttribute("task");
+    TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
 %>
 
-    <!-- TaskData parentTask = (TaskData) request.getAttribute("parentTask"); -->
     <!-- ProjectData project = (ProjectData) request.getAttribute("project"); -->
     <!-- ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users"); -->
     <!-- ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments"); -->
@@ -26,7 +26,6 @@
   </head>
 
   <body>
-    <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp"/>
 
     <div id="content">
@@ -35,26 +34,30 @@
       <div id="task-status-container">Status: <%=task.getStatus()%></div>
       <div id="task-project-container">
         <p>Return to Project: </p>
-        <!-- <button type="button" href="project?projectID="> -->
-          <!--  -->
-        <!-- </button> -->
       </div>
       <div id="task-parenttask-container">
-        <p>Return to Parent Task: </p>
-        <!-- <button type="button" href="task?taskID="> -->
-          <!--  -->
-        <!-- </button> -->
+        <%if (parentTask != null) {%>
+          <p class="inline">Return to Parent Task: </p>
+          <button type="button" class="inline" onclick="location.href='task?taskID=<%=parentTask.getTaskID()%>'">
+            <%=parentTask.getName()%>
+          </button>
+        <%}%>
       </div>
 
       <h2>Subtasks</h2>
       <div id="task-subtasks-container">
-        <%Gson gson = new Gson();%>
-        <%String paramString = gson.toJson(subtasks);%>
         <%request.setAttribute("tasks", subtasks);%>
         <jsp:include page="list-tasks.jsp"/>
       </div>
       <div id="task-addsubtask-container">
-        <button type="button" onclick="location.href='add-task.jsp?projectID=1&projectName=DefaultProjectName&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">Add Subtask</button>
+        <%
+            // Default values
+            long projectID = 1;
+            String projectName = "Default Project Name";
+        %>
+        <button type="button" onclick="location.href='add-task.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">
+          Add Subtask
+        </button>
       </div>
 
       <h2>Members</h2>

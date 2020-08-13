@@ -46,10 +46,11 @@ public class TaskServlet extends HttpServlet {
     // // ArrayList is for HashMap below. Is there a better way to do this?
     // ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task1));
 
-    // // Get Parent Task
-    // if (taskID != 0 && taskID != 1) {
-    //   TaskData parentTask = taskController.getTaskByID(task1.getParentTaskID());
-    // }
+    // Get Parent Task
+    TaskData parentTask = null;
+    if (taskID != 0 && taskID != 1 && task1.getParentTaskID() != 0) {
+      parentTask = taskController.getTaskByID(task1.getParentTaskID());
+    }
 
     // // Get Parent Project
     // ProjectController projectController = new ProjectController(datastore);
@@ -84,7 +85,7 @@ public class TaskServlet extends HttpServlet {
 
     // Send data to task.jsp
     request.setAttribute("task", task1);
-    // request.setAttribute("parentTask", parentTask);
+    request.setAttribute("parentTask", parentTask);
     // request.setAttribute("project", projectInArrayList);
     request.setAttribute("subtasks", subtasks);
     // request.setAttribute("comments", comments);
