@@ -1,2 +1,2 @@
-<!-- Forward to /home servlet upon entering website -->
-<jsp:forward page="/home" />
+<!-- Forward home page for final product -->
+<jsp:forward page="/logout" />

@@ -6,23 +6,13 @@
   </head>
   <body>
     <div id="content">
-      <div class="login-header">
-        <h1>Create and work collaboratively on course projects with peers with [website name]</h1>
-        <a href="/home?user=1"> <!-- TODO: remove query string -->
-          <button id="login-button">Log in with Google</button>
+      <h1>Login Page</h1>
+      <h2>If you're on the local server, enter one of the following <br>in the "Email" field to log in as the user:</h2>
+      <p>"Patrick", "Sandy", "Pearl", "Garry"</p>
+
+      <a href="${loginUrl}">
+        <button>Log In</button>
         </a>
-        <a href="/home?user=2"> <!-- TODO: remove query string -->
-          <button id="signup-button">Sign up</button>
-        </a>
-      </div>
-      <div class="feature">
-        <h1>View detailed information about tasks you're working on</h1>
-        <img src="images/feature_image1.png" alt="image showing feature">
-      </div>
-      <div class="feature">
-        <img src="images/feature_image2.png" alt="image showing feature">
-        <h1>Organize your tasks based on completion</h1>
-      </div>
     </div>
   </body>
 </html>
