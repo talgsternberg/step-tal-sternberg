@@ -36,7 +36,7 @@ public class InitTestData extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    System.out.println("Initiating test data");
+    System.out.println("Initiatializing test data");
 
     // Authentication goes here
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -56,7 +56,7 @@ public class InitTestData extends HttpServlet {
     creatTasks(datastore);
 
     // Load jsp for project page
-    response.sendRedirect("/home");
+    response.sendRedirect("/logout");
   }
 
   public void removeAllEntities(DatastoreService datastore) {
@@ -128,7 +128,6 @@ public class InitTestData extends HttpServlet {
     entity.setProperty("skills", skill.name());
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
     Long userId = datastore.put(entity).getId();
-
     switch (userName) {
       case "Sandy":
         this.Sandy = userId;

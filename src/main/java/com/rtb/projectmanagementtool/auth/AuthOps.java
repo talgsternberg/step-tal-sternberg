@@ -24,7 +24,7 @@ public class AuthOps {
   }
 
   public AuthOps(DatastoreService ds) {
-    controller = new UserController(ds);
+    this.controller = new UserController(ds);
   }
 
   // generates cookie. Used in most methods.
@@ -53,6 +53,7 @@ public class AuthOps {
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
+        System.out.println("AuthID: " + AuthID);
         // find AuthID in DataStore
         ArrayList<UserData> users = controller.getEveryUser();
         for (UserData user : users) {
