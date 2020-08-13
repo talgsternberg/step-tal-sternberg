@@ -1,13 +1,17 @@
-<%--Class Imports--%>
-<%@ page import="com.rtb.projectmanagementtool.project.*,java.util.ArrayList" %>
+<%@ page import="com.rtb.projectmanagementtool.project.*" %>
+<%@ page import="com.rtb.projectmanagementtool.user.*" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashSet" %>
 
-<%--Get variables--%>
 <%
+    Long userId = (Long) request.getAttribute("userId");
     ProjectData project = (ProjectData) request.getAttribute("project");
-    ArrayList<Long> tasks = (ArrayList<Long>) request.getAttribute("projectTasks");
+    UserData creator = (UserData) request.getAttribute("creator");
+    HashSet<UserData> admins =  (HashSet<UserData>) request.getAttribute("admins");
+    HashSet<UserData> members =  (HashSet<UserData>) request.getAttribute("members");
+    ArrayList<Long> tasks = (ArrayList<Long>) request.getAttribute("tasks");
 %>
 
-<%--HTML--%>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -28,13 +32,36 @@
       
       <div id="project-users-container">
         <h2>Users</h2>
-        <p>(Creator) User with id #<%=project.getCreatorId()%></p>
-        <%for (Long userId : project.getAdmins()) {%>
-          <p>(Admin) User with id #<%=userId%></p>
+        <p>Creator: 
+            <%if (userId == creator.getUserID()) { %> 
+              <mark>
+            <% } %>
+            <%=creator.getUserName() %>
+            <%if (userId == creator.getUserID()) { %> 
+              </mark>
+            <% } %>
+        </p>
+        <%for (UserData user : admins) {%>
+          <p>Admin: 
+            <%if (userId == user.getUserID()) { %> 
+              <mark>
+            <% } %>
+              <%=user.getUserName() %>
+            <%if (userId == user.getUserID()) { %> 
+              </mark>
+            <% } %>
+          </p>
         <%}%>
-
-        <%for (Long userId : project.getMembers()) {%>
-          <p>(Member) User with id #<%=userId%></p>
+        <%for (UserData user : members) {%>
+          <p>Member: 
+            <%if (userId == user.getUserID()) { %> 
+              <mark>
+            <% } %>
+              <%=user.getUserName() %>
+            <%if (userId == user.getUserID()) { %> 
+              </mark>
+            <% } %>
+          </p>
         <%}%>
       </div>
       

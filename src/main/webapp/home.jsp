@@ -1,31 +1,18 @@
-<%--Class Imports--%>
-<%@ page import="com.rtb.projectmanagementtool.project.*,java.util.ArrayList" %>
-
-<%--Get variables from servlet--%>
-<%
-  ArrayList<ProjectData> userProjects = (ArrayList<ProjectData>) request.getAttribute("userProjects");
-%>
-
-<%--HTML--%>
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Home page</title>
+    <title>Login page</title>
     <link rel="stylesheet" href="style.css">
   </head>
-
   <body>
-    <!-- Include navigation bar -->
-    <jsp:include page="navigation-bar.jsp" />
+    <div id="content">
+      <h1>Login Page</h1>
+      <h2>If you're on the local server, enter one of the following <br>in the "Email" field to log in as the user:</h2>
+      <p>"Patrick", "Sandy", "Pearl", "Garry"</p>
 
-    <p>Hello ${user}</p>
-    <div id="project-container">
-      <%for (ProjectData project : userProjects) {%>
-        <a href="/project?id=<%=project.getId()%>">
-          <button><%=project.getName()%></button>
+      <a href="${loginUrl}">
+        <button>Log In</button>
         </a>
-      <%}%>
-    <button>Create Project</button>
     </div>
   </body>
 </html>
