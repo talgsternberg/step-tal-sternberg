@@ -31,5 +31,7 @@ public class TaskRemoveUserServlet extends HttpServlet {
     // Add user to task
     TaskController taskController = new TaskController(datastore);
     taskController.removeUser(taskID, userID);
+
+    response.sendRedirect("/task?taskID=" + taskID);
   }
 }
