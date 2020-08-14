@@ -97,19 +97,28 @@ public final class TaskController {
 
   private void completeTask(TaskData task) {
     if (task.getStatus() != Status.COMPLETE) {
-      task.setStatus(Status.COMPLETE);
-      if (task.getTaskID() != 0) {
-        datastore.put(task.toEntity());
-        UserController userController = new UserController(datastore);
-        UserData user;
-        for (long userID : task.getUsers()) {
-          try {
-            user = userController.getUserByID(userID);
-            user.setUserTotal(user.getUserTotal() + 1);
-            datastore.put(user.toEntity());
-          } catch (NullPointerException e) {
-            System.out.println("User ID: " + userID + " cannot be found.");
+      TransactionOptions options = TransactionOptions.Builder.withXG(true);
+      Transaction transaction = datastore.beginTransaction(options);
+      try {
+        task.setStatus(Status.COMPLETE);
+        if (task.getTaskID() != 0) {
+          datastore.put(task.toEntity());
+          UserController userController = new UserController(datastore);
+          UserData user;
+          for (long userID : task.getUsers()) {
+            try {
+              user = userController.getUserByID(userID);
+              user.setUserTotal(user.getUserTotal() + 1);
+              datastore.put(user.toEntity());
+            } catch (NullPointerException e) {
+              System.out.println("User ID: " + userID + " cannot be found.");
+            }
           }
+        }
+        transaction.commit();
+      } finally {
+        if (transaction.isActive()) {
+          transaction.rollback();
         }
       }
     }
@@ -125,19 +134,28 @@ public final class TaskController {
       return false;
     }
     if (task.getStatus() != Status.INCOMPLETE) {
-      task.setStatus(Status.INCOMPLETE);
-      if (task.getTaskID() != 0) {
-        datastore.put(task.toEntity());
-        UserController userController = new UserController(datastore);
-        UserData user;
-        for (long userID : task.getUsers()) {
-          try {
-            user = userController.getUserByID(userID);
-            user.setUserTotal(user.getUserTotal() - 1);
-            datastore.put(user.toEntity());
-          } catch (NullPointerException e) {
-            System.out.println("User ID: " + userID + " cannot be found.");
+      TransactionOptions options = TransactionOptions.Builder.withXG(true);
+      Transaction transaction = datastore.beginTransaction(options);
+      try {
+        task.setStatus(Status.INCOMPLETE);
+        if (task.getTaskID() != 0) {
+          datastore.put(task.toEntity());
+          UserController userController = new UserController(datastore);
+          UserData user;
+          for (long userID : task.getUsers()) {
+            try {
+              user = userController.getUserByID(userID);
+              user.setUserTotal(user.getUserTotal() - 1);
+              datastore.put(user.toEntity());
+            } catch (NullPointerException e) {
+              System.out.println("User ID: " + userID + " cannot be found.");
+            }
           }
+        }
+        transaction.commit();
+      } finally {
+        if (transaction.isActive()) {
+          transaction.rollback();
         }
       }
     }
