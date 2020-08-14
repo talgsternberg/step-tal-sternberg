@@ -52,7 +52,7 @@ public final class TaskController {
   }
 
   public void addUser(TaskData task, long userID) {
-    if (!task.getUsers().contains(userID)) {
+    if (task.getStatus() != Status.COMPLETE && !task.getUsers().contains(userID)) {
       task.getUsers().add(userID);
       if (task.getTaskID() != 0) {
         datastore.put(task.toEntity());
@@ -65,7 +65,7 @@ public final class TaskController {
   }
 
   public void removeUser(TaskData task, long userID) {
-    if (task.getUsers().contains(userID)) {
+    if (task.getStatus() != Status.COMPLETE && task.getUsers().contains(userID)) {
       task.getUsers().remove(userID);
       if (task.getTaskID() != 0) {
         datastore.put(task.toEntity());

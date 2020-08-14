@@ -88,22 +88,24 @@
       <h2>Members</h2>
       <div id="task-assignuser-container"></div>
         <%
-            long userID = 1; // Default value
-            String servletPage;
-            String userButtonText;
-            if (!task.getUsers().contains(userID)) {
-                servletPage = "/task-add-user";
-                userButtonText = "Assign me to this task";
-            } else {
-                servletPage = "/task-remove-user";
-                userButtonText = "Remove me from this task";
-            }
+            if (task.getStatus() != Status.COMPLETE) {
+                long userID = 1; // Default value
+                String servletPage;
+                String userButtonText;
+                if (!task.getUsers().contains(userID)) {
+                    servletPage = "/task-add-user";
+                    userButtonText = "Assign me to this task";
+                } else {
+                    servletPage = "/task-remove-user";
+                    userButtonText = "Remove me from this task";
+                }
         %>
         <form id="toggle-user-assignment-post-form" action="<%=servletPage%>" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="userID" value="<%=userID%>"/>
           <button type="submit" id="toggle-user-assignment"><%=userButtonText%></button>
         </form>
+        <%}%>
       <div id="task-users-container"></div>
 
       <h2>Comments</h2>
