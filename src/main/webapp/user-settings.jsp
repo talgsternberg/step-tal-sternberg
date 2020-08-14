@@ -4,8 +4,6 @@
 <%--Get variables--%>
 <%
     UserData user = (UserData) request.getAttribute("settings");
-    <!--ArrayList<String> skills = (ArrayList<String>) request.getAttribute("skillsSettings");-->
-    ArrayList<String> checkedStatus = (ArrayList<String>) request.getAttribute("checkedStatus");
     String majors = (String) request.getAttribute("majorsSettings");
 %>
 

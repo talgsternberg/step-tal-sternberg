@@ -54,14 +54,14 @@ public class UserSettingsServlet extends HttpServlet {
     // Skills skills = Skills.OOP;
     // long userTotalCompTasks = 3;
     // UserData user =
-        // new UserData(AuthID, userName, userYear, userMajors, skills, userTotalCompTasks);
+    // new UserData(AuthID, userName, userYear, userMajors, skills, userTotalCompTasks);
     // user.setUserID(userID);
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
 
     // new UserController
     UserController userController = new UserController(datastore);
-    // get user by ID long 
+    // get user by ID long
     long userID = auth.whichUserIsLoggedIn(request, response);
     UserData user = userController.getUserByID(userID);
 
@@ -106,7 +106,7 @@ public class UserSettingsServlet extends HttpServlet {
 
     // Set attributes of request; retrieve in jsp with
     request.setAttribute("settings", user);
-    request.setAttribute("checkedStatus", checkedStatus);
+    // request.setAttribute("checkedStatus", checkedStatus);
     request.setAttribute("majorsSettings", majorsString);
 
     // Load jsp for user page
@@ -140,7 +140,7 @@ public class UserSettingsServlet extends HttpServlet {
     // Skills skills1 = Skills.OOP;
     // long userTotalCompTasks1 = 3;
     // UserData user =
-        // new UserData(AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
+    // new UserData(AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
     // user.setUserID(userID1);
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
