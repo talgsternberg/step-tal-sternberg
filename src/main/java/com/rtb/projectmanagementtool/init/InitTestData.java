@@ -64,7 +64,6 @@ public class InitTestData extends HttpServlet {
     // delete all entities from previous run
     Entity keysEntity = datastore.prepare(new Query("Keys")).asSingleEntity();
     if (keysEntity != null) {
-      System.out.println("got the entity");
       entityKeys = (ArrayList<Key>) keysEntity.getProperty("entityKeys");
       datastore.delete(entityKeys);
       datastore.delete(keysEntity.getKey()); // also delete the keysEntity entity
