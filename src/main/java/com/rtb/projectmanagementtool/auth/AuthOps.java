@@ -67,14 +67,13 @@ public class AuthOps {
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
-        System.out.println("AuthID: " + AuthID);
+        System.out.println(
+            "AuthID: " + AuthID);
         // find AuthID in DataStore
-        ArrayList<UserData> users = controller.getEveryUser();
-        for (UserData user : users) {
-          if (user.getAuthID().equals(AuthID)) {
-            String userIDString = String.valueOf(user.getUserID());
-            currCookie.setValue(userIDString);
-          }
+        UserData user = controller.getUserByAuthID(AuthID);
+        if (user != null) {
+          String userIDString = String.valueOf(user.getUserID());
+          currCookie.setValue(userIDString);
         }
       }
       // send back cookie to response

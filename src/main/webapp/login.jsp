@@ -13,6 +13,9 @@
       <a href="${loginUrl}">
         <button>Log In</button>
         </a>
+
+        <br>
+        <p>If you enter a valid input in the "Email" field but get an error, just refresh the page until it's fixed.<br>Will need to fix that bug</p>
     </div>
   </body>
 </html>

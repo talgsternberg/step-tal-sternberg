@@ -17,8 +17,22 @@ public class UserController {
     Query query = new Query("User").addFilter("userID", FilterOperator.EQUAL, userID);
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
-    UserData user = new UserData(entity);
-    return user;
+    if (entity != null) {
+      UserData user = new UserData(entity);
+      return user;
+    }
+    return null;
+  }
+
+  public UserData getUserByAuthID(String AuthID) {
+    Query query = new Query("User").addFilter("AuthID", FilterOperator.EQUAL, AuthID);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity != null) {
+      UserData user = new UserData(entity);
+      return user;
+    }
+    return null;
   }
 
   // get users+data to direct/display user's profiles later
