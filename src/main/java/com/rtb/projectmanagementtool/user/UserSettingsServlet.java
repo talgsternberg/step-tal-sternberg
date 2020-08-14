@@ -18,22 +18,25 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/user-settings")
 public class UserSettingsServlet extends HttpServlet {
   DatastoreService datastore;
+  AuthOps auth;
 
   public UserSettingsServlet() {
     datastore = DatastoreServiceFactory.getDatastoreService();
+    auth = new AuthOps(datastore);
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    // taken from @Godsfavour. Will implement once auth is ready
-    // Authentication goes here
-    // if (something something something) {
-    //   // Redirect to /login servlet if authentication fails
-    //   request.getRequestDispatcher("/login").forward(request, response);
-    //   return;
-    // }
+    // Authenticate
+    auth.loginUser(request, response);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == /*No user found*/ -1l) {
+      // If no user found, redirect to create user servlet
+      response.sendRedirect("/login");
+      return;
+    }
 
     // HARDCODE FOR TESTING
 
@@ -56,12 +59,12 @@ public class UserSettingsServlet extends HttpServlet {
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
 
-    /**
-     * // new UserController UserController userController = new UserController(datastore);
-     *
-     * <p>// get user by ID long AuthOps auth = new AuthOps(datastore); long userID =
-     * auth.whichUserIsLoggedIn(request, response); user = userController.getUserByID(userID);
-     */
+    // new UserController
+    // UserController userController = new UserController(datastore);
+    // get user by ID long AuthOps auth = new AuthOps(datastore);
+    // long userID = auth.whichUserIsLoggedIn(request, response);
+    // user = userController.getUserByID(userID);
+
     // make a string of majors
     String majorsString = "";
     for (String major : user.getUserMajors()) {
@@ -74,16 +77,36 @@ public class UserSettingsServlet extends HttpServlet {
     majorsString = majorsString.replaceAll("\\s", "");
 
     // make enum ArrayList<String>
-    Skills userSkills = user.getUserSkills();
-    Skills[] skillsArray = userSkills.values();
-    ArrayList<String> skillsStringList = new ArrayList<>();
-    for (Skills skill : skillsArray) {
-      skillsStringList.add(skill.name());
+    // Skills userSkills = user.getUserSkills();
+    // Skills[] skillsArray = userSkills.values();
+    // ArrayList<String> skillsStringList = new ArrayList<>();
+    // for (Skills skill : skillsArray) {
+    // skillsStringList.add(skill.name());
+    // }
+
+    // pre checked buttons
+    ArrayList<String> checkedStatus = new ArrayList<>(Arrays.asList("", "", "", "", "", "", ""));
+    Skills getSkills = user.getUserSkills();
+    String skillsAsString = getSkills.name();
+    if (skillsAsString.equals("NONE")) {
+      checkedStatus.set(0, "checked");
+    } else if (skillsAsString.equals("LEADERSHIP")) {
+      checkedStatus.set(1, "checked");
+    } else if (skillsAsString.equals("ORGANIZATION")) {
+      checkedStatus.set(2, "checked");
+    } else if (skillsAsString.equals("WRITING")) {
+      checkedStatus.set(3, "checked");
+    } else if (skillsAsString.equals("ART")) {
+      checkedStatus.set(4, "checked");
+    } else if (skillsAsString.equals("WEBDEV")) {
+      checkedStatus.set(5, "checked");
+    } else {
+      checkedStatus.set(6, "checked");
     }
 
     // Set attributes of request; retrieve in jsp with
     request.setAttribute("settings", user);
-    request.setAttribute("skillsSettings", skillsStringList);
+    request.setAttribute("checkedStatus", checkedStatus);
     request.setAttribute("majorsSettings", majorsString);
 
     // Load jsp for user page
@@ -94,13 +117,14 @@ public class UserSettingsServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    // taken from @Godsfavour. Will implement once auth is ready
-    // Authentication goes here
-    // if (something something something) {
-    //   // Redirect to /login servlet if authentication fails
-    //   request.getRequestDispatcher("/login").forward(request, response);
-    //   return;
-    // }
+    // Authenticate
+    auth.loginUser(request, response);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == /*No user found*/ -1l) {
+      // If no user found, redirect to create user servlet
+      response.sendRedirect("/login");
+      return;
+    }
 
     // TESTING ONLY
     ArrayList<String> majors = new ArrayList<>();
@@ -108,8 +132,6 @@ public class UserSettingsServlet extends HttpServlet {
     majors.add("Studio Art");
 
     // Create hardcoded user
-    AuthOps auth = new AuthOps(datastore);
-    // long userID1 = auth.whichUserIsLoggedIn(request, response);
     long userID1 = 2l;
     String AuthID1 = "abc";
     String userName1 = "Name1";
@@ -123,12 +145,12 @@ public class UserSettingsServlet extends HttpServlet {
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
 
-    /**
-     * // new UserController UserController userController = new UserController(datastore);
-     *
-     * <p>// get user by ID long AuthOps auth = new AuthOps(datastore); long userID =
-     * auth.whichUserIsLoggedIn(request, response); user = userController.getUserByID(userID);
-     */
+    // new UserController
+    // UserController userController = new UserController(datastore);
+    // get user by ID long
+    // AuthOps auth = new AuthOps(datastore);
+    // long userID = auth.whichUserIsLoggedIn(request, response);
+    // user = userController.getUserByID(userID);
 
     // get stuff from form update
     String userName = request.getParameter("userName");

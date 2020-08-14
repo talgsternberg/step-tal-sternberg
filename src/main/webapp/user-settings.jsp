@@ -4,7 +4,8 @@
 <%--Get variables--%>
 <%
     UserData user = (UserData) request.getAttribute("settings");
-    ArrayList<String> skills = (ArrayList<String>) request.getAttribute("skillsSettings");
+    <!--ArrayList<String> skills = (ArrayList<String>) request.getAttribute("skillsSettings");-->
+    ArrayList<String> checkedStatus = (ArrayList<String>) request.getAttribute("checkedStatus");
     String majors = (String) request.getAttribute("majorsSettings");
 %>
 
@@ -41,19 +42,19 @@
         <tr>
           <td>Top Skill:</td><br>
           <td>
-            <input type="radio" value="NONE" name="skills">
+            <input type="radio" value="NONE" name="skills" <%=checkedStatus[0]%>>
             <label>None</label><br>
-            <input type="radio" value="LEADERSHIP" name="skills">
+            <input type="radio" value="LEADERSHIP" name="skills" <%=checkedStatus[1]%>>
             <label>Leadership</label><br>
-            <input type="radio" vlaue="ORGANIZATION" name="skills">
+            <input type="radio" vlaue="ORGANIZATION" name="skills" <%=checkedStatus[2]%>>
             <label>Organization</label><br>
-            <input type="radio" value="WRITING" name="skills">
+            <input type="radio" value="WRITING" name="skills" <%=checkedStatus[3]%>>
             <label>Writing</label><br>
-            <input type="radio" value="ART" name="skills">
+            <input type="radio" value="ART" name="skills" <%=checkedStatus[4]%>>
             <label>Art</label><br>
-            <input type="radio" value="WEBDEV" name="skills">
+            <input type="radio" value="WEBDEV" name="skills" <%=checkedStatus[5]%>>
             <label>WebDev</label><br>
-            <input type="radio" value="OOP" name="skills">
+            <input type="radio" value="OOP" name="skills" <%=checkedStatus[6]%>>
             <label>OOP</label><br>
           </td>
         </tr><br><br>
