@@ -104,16 +104,18 @@ public final class TaskController {
         if (task.getTaskID() != 0) {
           datastore.put(task.toEntity());
           UserController userController = new UserController(datastore);
+          ArrayList<Entity> users = new ArrayList<>();
           UserData user;
           for (long userID : task.getUsers()) {
             try {
               user = userController.getUserByID(userID);
               user.setUserTotal(user.getUserTotal() + 1);
-              datastore.put(user.toEntity());
+              users.add(user.toEntity());
             } catch (NullPointerException e) {
               System.out.println("User ID: " + userID + " cannot be found.");
             }
           }
+          datastore.put(users);
         }
         transaction.commit();
       } finally {
@@ -141,16 +143,18 @@ public final class TaskController {
         if (task.getTaskID() != 0) {
           datastore.put(task.toEntity());
           UserController userController = new UserController(datastore);
+          ArrayList<Entity> users = new ArrayList<>();
           UserData user;
           for (long userID : task.getUsers()) {
             try {
               user = userController.getUserByID(userID);
               user.setUserTotal(user.getUserTotal() - 1);
-              datastore.put(user.toEntity());
+              users.add(user.toEntity());
             } catch (NullPointerException e) {
               System.out.println("User ID: " + userID + " cannot be found.");
             }
           }
+          datastore.put(users);
         }
         transaction.commit();
       } finally {

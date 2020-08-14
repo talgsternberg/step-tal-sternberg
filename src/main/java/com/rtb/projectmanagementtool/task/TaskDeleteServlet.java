@@ -29,13 +29,14 @@ public class TaskDeleteServlet extends HttpServlet {
     // Get parameters
     long taskID = Long.parseLong(request.getParameter("taskID"));
 
-    // Set status
+    // Delete task
     TaskController taskController = new TaskController(datastore);
-    if (taskID != 0 && taskID != 1) {
+    try {
       long parentTaskID = taskController.getTaskByID(taskID).getParentTaskID();
       taskController.deleteTasks(new ArrayList<>(Arrays.asList(taskID)));
       response.sendRedirect("/task?taskID=" + parentTaskID);
-    } else {
+    } catch (IllegalArgumentException e) {
+      System.out.println("Error deleting task.");
       response.sendRedirect("/task?taskID=" + taskID);
     }
   }

@@ -47,13 +47,13 @@ public class InitTestData extends HttpServlet {
     removeAllEntities(datastore);
 
     // Create UserDataObjects
-    creatUsers(datastore);
+    createUsers(datastore);
 
     // Create ProjectDataObjects
-    creatProjects(datastore);
+    createProjects(datastore);
 
     // Create TaskDataObjects
-    creatTasks(datastore);
+    createTasks(datastore);
 
     // Load jsp for project page
     response.sendRedirect("/logout");
@@ -72,7 +72,7 @@ public class InitTestData extends HttpServlet {
     }
   }
 
-  private void creatUsers(DatastoreService datastore) {
+  private void createUsers(DatastoreService datastore) {
     System.out.println("Creating users");
     createUser(
         datastore,
@@ -144,7 +144,7 @@ public class InitTestData extends HttpServlet {
     }
   }
 
-  private void creatProjects(DatastoreService datastore) {
+  private void createProjects(DatastoreService datastore) {
     createProject(
         datastore,
         /*projectName*/ "English Project",
@@ -209,12 +209,12 @@ public class InitTestData extends HttpServlet {
     }
   }
 
-  private void creatTasks(DatastoreService datastore) {
+  private void createTasks(DatastoreService datastore) {
     // Use existing projectIds
     System.out.println("Creating tasks");
   }
 
-  private void creatTask(DatastoreService datastore) {
+  private void createTask(DatastoreService datastore) {
     // TO-DO: anyone implement
   }
 }
