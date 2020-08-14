@@ -17,9 +17,11 @@ public class CreateUserServlet extends HttpServlet {
 
   DatastoreService datastore;
   Cookie cookie;
+  UserService userService;
 
   public CreateUserServlet() {
     datastore = DatastoreServiceFactory.getDatastoreService();
+    userService = UserServiceFactory.getUserService();
   }
 
   // for testing
@@ -37,22 +39,6 @@ public class CreateUserServlet extends HttpServlet {
 
     // create new "blank" UserData object
     UserData newUser = controller.createNewUser();
-
-    // new UserService
-    UserService userService = UserServiceFactory.getUserService();
-
-    // if not logged in, redirect to login link
-    if (!userService.isUserLoggedIn()) {
-      // Get login URL
-      String urlToRedirectToAfterUserLogsIn = "/create-new-user";
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-      // redirect
-      response.sendRedirect(loginUrl);
-    }
-    // if logged in, redirect back to create-new-user
-    else if (userService.isUserLoggedIn()) {
-      response.sendRedirect("/create-new-user.jsp");
-    }
 
     // get AuthID
     String AuthID = auth.getAuthID();
@@ -85,5 +71,19 @@ public class CreateUserServlet extends HttpServlet {
 
     // redirect them to their new profile
     response.sendRedirect("/user_profile.jsp");
+  }
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get login URL
+    String urlToRedirectToAfterUserLogsIn = "/create-new-user";
+    String loginUrlNewUser = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+
+    // send to request
+    request.setAttribute("loginUrlNewUser", loginUrlNewUser);
+    request.getRequestDispatcher("login.jsp").forward(request, response);
+
+    // redirect them to their new form
+    response.sendRedirect("/create-new-user.jsp");
   }
 }

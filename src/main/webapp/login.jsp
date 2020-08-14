@@ -13,7 +13,7 @@
       <a href="${loginUrl}">
         <button>Log In</button>
         </a>
-      <a href="create-new-user.jsp">
+      <a href="${loginUrlNewUser}">
         <button>New User</button>
         </a>
 
