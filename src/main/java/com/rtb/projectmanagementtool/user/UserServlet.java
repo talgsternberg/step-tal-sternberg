@@ -4,6 +4,7 @@ package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
+import com.rtb.projectmanagementtool.user.UserData.Skills;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

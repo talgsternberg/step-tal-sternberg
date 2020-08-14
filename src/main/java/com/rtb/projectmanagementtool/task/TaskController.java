@@ -151,8 +151,11 @@ public final class TaskController {
   }
 
   public ArrayList<TaskData> getSubtasks(TaskData task) {
-    Filter filter = new FilterPredicate("parentTaskID", FilterOperator.EQUAL, task.getTaskID());
-    return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+    if (task.getTaskID() != 0) {
+      Filter filter = new FilterPredicate("parentTaskID", FilterOperator.EQUAL, task.getTaskID());
+      return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+    }
+    return new ArrayList<>();
   }
 
   private ArrayList<TaskData> getTasks(Filter filter, int limit, SortPredicate sort) {

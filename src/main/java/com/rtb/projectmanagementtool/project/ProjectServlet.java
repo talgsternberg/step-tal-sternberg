@@ -1,9 +1,13 @@
 /** Servlet responsible for loading project page */
 package com.rtb.projectmanagementtool.project;
 
+import com.google.appengine.api.datastore.*;
+import com.rtb.projectmanagementtool.auth.*;
+import com.rtb.projectmanagementtool.task.*;
+import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,30 +21,58 @@ public class ProjectServlet extends HttpServlet {
       throws ServletException, IOException {
 
     // Authentication goes here
-    // if (something something something) {
-    //   // Redirect to /login servlet if authentication fails
-    //   request.getRequestDispatcher("/login").forward(request, response);
-    //   return;
-    // }
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    AuthOps auth = new AuthOps(datastore);
 
-    // Create hard-coded project
+    // Authenticate
+    auth.loginUser(request, response);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == /*No user found*/ -1l) {
+      // If no user found, redirect to create user servlet
+      response.sendRedirect("/login");
+      return;
+    }
+
+    // Get project object
+    ProjectController projectController = new ProjectController(datastore);
     Long projectId = Long.parseLong(request.getParameter("id"));
-    String projectName = new String("Project " + projectId);
-    String projectDesc = projectName + " Description";
+    ProjectData project = projectController.getProjectById(projectId);
 
-    ProjectData project = new ProjectData(projectName, projectDesc, /*random value*/ 2l);
-    project.setId(projectId);
-    project.addAdminUser(5l);
-    project.addAdminUser(3l);
-    project.addMemberUser(1l);
+    // If the user is not a part of the project, redirect to home page
+    if (!project.hasUser(userLoggedInId)) {
+      response.sendRedirect("/home");
+      return;
+    }
 
-    // Create hard-coded project Tasks
-    ArrayList<Long> projectTasks = new ArrayList<Long>(Arrays.asList(1l, 2l, 3l, 4l, 5l));
+    // Get project tasks
+    TaskController taskController = new TaskController(datastore);
+    ArrayList<TaskData> tasks = taskController.getTasksByProjectID(projectId);
 
-    // Set attributes of request; retrieve in jsp with
-    // ([type]) request.getAttribute([attribute name]);
+    // Get project users
+    UserController userController = new UserController(datastore);
+
+    // Get project creator
+    UserData creator = userController.getUserByID(project.getCreatorId());
+
+    // Get project admins
+    HashSet<UserData> admins = new HashSet<UserData>();
+    for (Long userId : project.getAdmins()) {
+      admins.add(userController.getUserByID(userId));
+    }
+
+    // Get project members
+    HashSet<UserData> members = new HashSet<UserData>();
+    for (Long userId : project.getMembers()) {
+      members.add(userController.getUserByID(userId));
+    }
+
+    // Set attributes
+    request.setAttribute("userId", userLoggedInId);
     request.setAttribute("project", project);
-    request.setAttribute("projectTasks", projectTasks);
+    request.setAttribute("creator", creator);
+    request.setAttribute("admins", admins);
+    request.setAttribute("members", members);
+    request.setAttribute("tasks", tasks);
 
     // Load jsp for project page
     request.getRequestDispatcher("project.jsp").forward(request, response);
