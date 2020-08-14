@@ -38,25 +38,6 @@ public class UserSettingsServlet extends HttpServlet {
       return;
     }
 
-    // HARDCODE FOR TESTING
-
-    // initialize/fill hardcoded userMajors
-    // ArrayList<String> majors = new ArrayList<>();
-    // majors.add("Chemistry");
-    // majors.add("Studio Art");
-
-    // Create hardcoded user
-    // long userID = Long.parseLong(request.getParameter("userID"));
-    // String AuthID = "abc";
-    // String userName = "Name1";
-    // long userYear = 2023;
-    // ArrayList<String> userMajors = majors;
-    // Skills skills = Skills.OOP;
-    // long userTotalCompTasks = 3;
-    // UserData user =
-    // new UserData(AuthID, userName, userYear, userMajors, skills, userTotalCompTasks);
-    // user.setUserID(userID);
-
     // NON TESTING: ONCE EVERYTHING IS SET UP
 
     // new UserController
@@ -76,18 +57,12 @@ public class UserSettingsServlet extends HttpServlet {
     }
     majorsString = majorsString.replaceAll("\\s", "");
 
-    // make enum ArrayList<String>
-    // Skills userSkills = user.getUserSkills();
-    // Skills[] skillsArray = userSkills.values();
-    // ArrayList<String> skillsStringList = new ArrayList<>();
-    // for (Skills skill : skillsArray) {
-    // skillsStringList.add(skill.name());
-    // }
-
     // pre checked buttons
     ArrayList<String> checkedStatus = new ArrayList<>(Arrays.asList("", "", "", "", "", "", ""));
     Skills getSkills = user.getUserSkills();
     String skillsAsString = getSkills.name();
+
+    // currently not using: look up "switch-case"
     if (skillsAsString.equals("NONE")) {
       checkedStatus.set(0, "checked");
     } else if (skillsAsString.equals("LEADERSHIP")) {
@@ -125,23 +100,6 @@ public class UserSettingsServlet extends HttpServlet {
       response.sendRedirect("/login");
       return;
     }
-
-    // TESTING ONLY
-    // ArrayList<String> majors = new ArrayList<>();
-    // majors.add("Chemistry");
-    // majors.add("Studio Art");
-
-    // Create hardcoded user
-    // long userID1 = 2l;
-    // String AuthID1 = "abc";
-    // String userName1 = "Name1";
-    // long userYear1 = 2023;
-    // ArrayList<String> userMajors1 = majors;
-    // Skills skills1 = Skills.OOP;
-    // long userTotalCompTasks1 = 3;
-    // UserData user =
-    // new UserData(AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
-    // user.setUserID(userID1);
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
 

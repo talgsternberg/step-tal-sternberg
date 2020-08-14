@@ -34,7 +34,7 @@ public class CreateUserServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
 
     // get Auth ID from AuthOps method
-    String AuthID = auth.getAuthID(request, response);
+    String AuthID = auth.getAuthID();
 
     // new UserController object
     UserController controller = new UserController(datastore);
@@ -49,7 +49,7 @@ public class CreateUserServlet extends HttpServlet {
     long userID = controller.addUser(newUser);
 
     // get/create cookie and set value to userID
-    auth.createAndSetCookieNewUser(request, response, userID);
+    auth.setLoggedInCookie(request, response, userID);
 
     // redirect to user_settings
     response.sendRedirect("/user_settings.html");
