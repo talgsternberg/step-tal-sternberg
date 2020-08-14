@@ -35,8 +35,8 @@
       
       <div id="user-tasks-container">
         <h2><%=user.getUserName()%>'s Tasks:</h2>
-        <%for (TaskData task : userTasks) {%>
-          <p><%=task.getName()%>, <%=task.getStatus()%></p>
+        <%request.setAttribute("tasks", userTasks);%>
+        <jsp:include page="list-tasks.jsp"/>
         <%}%>
       </div>
     </div>

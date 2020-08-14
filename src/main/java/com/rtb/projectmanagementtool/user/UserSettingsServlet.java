@@ -105,6 +105,7 @@ public class UserSettingsServlet extends HttpServlet {
 
     // new UserController
     UserController userController = new UserController(datastore);
+
     // get user by ID long
     long userID = auth.whichUserIsLoggedIn(request, response);
     UserData user = userController.getUserByID(userID);

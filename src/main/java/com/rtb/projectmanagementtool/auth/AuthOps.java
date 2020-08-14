@@ -27,7 +27,6 @@ public class AuthOps {
     this.controller = new UserController(ds);
   }
 
-  // only call after Auth S
   public String getAuthID() {
     UserService userService = UserServiceFactory.getUserService();
     String AuthID = userService.getCurrentUser().getUserId();
