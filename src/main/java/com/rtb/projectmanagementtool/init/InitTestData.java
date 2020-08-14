@@ -56,7 +56,9 @@ public class InitTestData extends HttpServlet {
     creatTasks(datastore);
 
     // Load jsp for project page
-    response.sendRedirect("/logout");
+    AuthOps authOps = new AuthOps(datastore);
+    authOps.setLoggedInCookie(request, response, -1);
+    response.sendRedirect("/home");
   }
 
   public void removeAllEntities(DatastoreService datastore) {
