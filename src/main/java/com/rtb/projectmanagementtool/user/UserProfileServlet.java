@@ -42,9 +42,9 @@ public class UserProfileServlet extends HttpServlet {
     // HARDCODE FOR TESTING
 
     // initialize/fill hardcoded userMajors
-    ArrayList<String> majors = new ArrayList<>();
-    majors.add("Chemistry");
-    majors.add("Studio Art");
+    // ArrayList<String> majors = new ArrayList<>();
+    // majors.add("Chemistry");
+    // majors.add("Studio Art");
 
     // Create hardcoded user
     // long userID = Long.parseLong(request.getParameter("userID"));

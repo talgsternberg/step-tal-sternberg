@@ -41,29 +41,29 @@ public class UserSettingsServlet extends HttpServlet {
     // HARDCODE FOR TESTING
 
     // initialize/fill hardcoded userMajors
-    ArrayList<String> majors = new ArrayList<>();
-    majors.add("Chemistry");
-    majors.add("Studio Art");
+    // ArrayList<String> majors = new ArrayList<>();
+    // majors.add("Chemistry");
+    // majors.add("Studio Art");
 
     // Create hardcoded user
-    long userID = Long.parseLong(request.getParameter("userID"));
-    String AuthID = "abc";
-    String userName = "Name1";
-    long userYear = 2023;
-    ArrayList<String> userMajors = majors;
-    Skills skills = Skills.OOP;
-    long userTotalCompTasks = 3;
-    UserData user =
-        new UserData(AuthID, userName, userYear, userMajors, skills, userTotalCompTasks);
-    user.setUserID(userID);
+    // long userID = Long.parseLong(request.getParameter("userID"));
+    // String AuthID = "abc";
+    // String userName = "Name1";
+    // long userYear = 2023;
+    // ArrayList<String> userMajors = majors;
+    // Skills skills = Skills.OOP;
+    // long userTotalCompTasks = 3;
+    // UserData user =
+        // new UserData(AuthID, userName, userYear, userMajors, skills, userTotalCompTasks);
+    // user.setUserID(userID);
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
 
     // new UserController
-    // UserController userController = new UserController(datastore);
-    // get user by ID long AuthOps auth = new AuthOps(datastore);
-    // long userID = auth.whichUserIsLoggedIn(request, response);
-    // user = userController.getUserByID(userID);
+    UserController userController = new UserController(datastore);
+    // get user by ID long 
+    long userID = auth.whichUserIsLoggedIn(request, response);
+    UserData user = userController.getUserByID(userID);
 
     // make a string of majors
     String majorsString = "";
@@ -127,30 +127,29 @@ public class UserSettingsServlet extends HttpServlet {
     }
 
     // TESTING ONLY
-    ArrayList<String> majors = new ArrayList<>();
-    majors.add("Chemistry");
-    majors.add("Studio Art");
+    // ArrayList<String> majors = new ArrayList<>();
+    // majors.add("Chemistry");
+    // majors.add("Studio Art");
 
     // Create hardcoded user
-    long userID1 = 2l;
-    String AuthID1 = "abc";
-    String userName1 = "Name1";
-    long userYear1 = 2023;
-    ArrayList<String> userMajors1 = majors;
-    Skills skills1 = Skills.OOP;
-    long userTotalCompTasks1 = 3;
-    UserData user =
-        new UserData(AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
-    user.setUserID(userID1);
+    // long userID1 = 2l;
+    // String AuthID1 = "abc";
+    // String userName1 = "Name1";
+    // long userYear1 = 2023;
+    // ArrayList<String> userMajors1 = majors;
+    // Skills skills1 = Skills.OOP;
+    // long userTotalCompTasks1 = 3;
+    // UserData user =
+        // new UserData(AuthID1, userName1, userYear1, userMajors1, skills1, userTotalCompTasks1);
+    // user.setUserID(userID1);
 
     // NON TESTING: ONCE EVERYTHING IS SET UP
 
     // new UserController
-    // UserController userController = new UserController(datastore);
+    UserController userController = new UserController(datastore);
     // get user by ID long
-    // AuthOps auth = new AuthOps(datastore);
-    // long userID = auth.whichUserIsLoggedIn(request, response);
-    // user = userController.getUserByID(userID);
+    long userID = auth.whichUserIsLoggedIn(request, response);
+    UserData user = userController.getUserByID(userID);
 
     // get stuff from form update
     String userName = request.getParameter("userName");
@@ -170,5 +169,7 @@ public class UserSettingsServlet extends HttpServlet {
     user.setUserYear(userYear);
     user.setUserMajors(userMajors);
     user.setUserSkills(skills);
+
+    response.sendRedirect("/user_profile.jsp");
   }
 }

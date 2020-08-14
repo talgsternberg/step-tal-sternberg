@@ -42,19 +42,19 @@
         <tr>
           <td>Top Skill:</td><br>
           <td>
-            <input type="radio" value="NONE" name="skills" <%=checkedStatus[0]%>>
+            <input type="radio" value="NONE" name="skills">
             <label>None</label><br>
-            <input type="radio" value="LEADERSHIP" name="skills" <%=checkedStatus[1]%>>
+            <input type="radio" value="LEADERSHIP" name="skills">
             <label>Leadership</label><br>
-            <input type="radio" vlaue="ORGANIZATION" name="skills" <%=checkedStatus[2]%>>
+            <input type="radio" vlaue="ORGANIZATION" name="skills">
             <label>Organization</label><br>
-            <input type="radio" value="WRITING" name="skills" <%=checkedStatus[3]%>>
+            <input type="radio" value="WRITING" name="skills">
             <label>Writing</label><br>
-            <input type="radio" value="ART" name="skills" <%=checkedStatus[4]%>>
+            <input type="radio" value="ART" name="skills">
             <label>Art</label><br>
-            <input type="radio" value="WEBDEV" name="skills" <%=checkedStatus[5]%>>
+            <input type="radio" value="WEBDEV" name="skills">
             <label>WebDev</label><br>
-            <input type="radio" value="OOP" name="skills" <%=checkedStatus[6]%>>
+            <input type="radio" value="OOP" name="skills">
             <label>OOP</label><br>
           </td>
         </tr><br><br>
