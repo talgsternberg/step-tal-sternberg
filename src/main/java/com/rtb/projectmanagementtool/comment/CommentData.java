@@ -4,14 +4,14 @@ import com.google.appengine.api.datastore.Entity;
 import java.util.Date;
 
 /** Class containing comments. */
-public final class CommentData {
+public final class CommentData implements Comparable<CommentData> {
 
-  private final long commentID;
-  private final long taskID;
-  private final long userID;
-  private final String title;
-  private final String message;
-  private final Date timestamp;
+  private long commentID;
+  private long taskID;
+  private long userID;
+  private String title;
+  private String message;
+  private Date timestamp;
 
   public CommentData(
       long commentID, long taskID, long userID, String title, String message, Date timestamp) {
@@ -78,5 +78,61 @@ public final class CommentData {
 
   public Date getTimestamp() {
     return timestamp;
+  }
+
+  public void setCommentID(long commentID) {
+    this.commentID = commentID;
+  }
+
+  public void setTaskID(long taskID) {
+    this.taskID = taskID;
+  }
+
+  public void setUserID(long userID) {
+    this.userID = userID;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  @Override
+  public int compareTo(CommentData comment) {
+    long dif = this.commentID - comment.commentID;
+    return (int) dif;
+  }
+
+  @Override
+  public String toString() {
+    String returnString = "{\n";
+    returnString += "Comment ID: " + commentID + "\n";
+    returnString += "Task ID: " + taskID + "\n";
+    returnString += "User ID: " + userID + "\n";
+    returnString += "Title: " + title + "\n";
+    returnString += "Message: " + message + "\n";
+    returnString += "Date: " + timestamp + "\n}";
+    return returnString;
+  }
+
+  private boolean equals(CommentData a, CommentData b) {
+    return a.commentID == b.commentID
+        && a.taskID == b.taskID
+        && a.userID == b.userID
+        && a.title.equals(b.title)
+        && a.message.equals(b.message)
+        && a.timestamp.equals(b.timestamp);
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof CommentData && equals(this, (CommentData) other);
   }
 }
