@@ -1,7 +1,12 @@
 /** Servlet responsible for getting data for loading home page */
 package com.rtb.projectmanagementtool.home;
 
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.users.*;
+import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.project.*;
+import com.rtb.projectmanagementtool.task.*;
+import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
@@ -16,35 +21,38 @@ public class HomeServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    // Mock authentication
-    if (!request.getParameterMap().containsKey("user")) {
-      // Redirect to /login servlet if authentication fails
-      request.getRequestDispatcher("/login").forward(request, response);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    // Authenticate
+    AuthOps auth = new AuthOps(datastore);
+    auth.loginUser(request, response);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == /*No user found*/ -1l) {
+      // If no user found, redirect to create user servlet
+      response.sendRedirect("/login");
       return;
     }
 
-    // Create hard-coded projects
-    ArrayList<ProjectData> userProjects = new ArrayList<ProjectData>();
-    ProjectData project1 = new ProjectData("CS Project", "Description for the CS project", 1l);
-    ProjectData project2 = new ProjectData("Bio Project", "Description for the Bio project", 2l);
-    ProjectData project3 =
-        new ProjectData("English Project", "Description for the English project", 1l);
+    // Initialize controllers
+    UserController userController = new UserController(datastore);
+    ProjectController projectController = new ProjectController(datastore);
+    TaskController taskController = new TaskController(datastore);
 
-    project1.setId(1l);
-    project2.setId(2l);
-    project3.setId(3l);
+    // Get user object
+    UserData user = userController.getUserByID(userLoggedInId);
 
-    userProjects.add(project1);
-    userProjects.add(project2);
-    userProjects.add(project3);
-    // Projects are not added to database
+    // Get user projects
+    ArrayList<ProjectData> userProjects = projectController.getProjectsWithUser(userLoggedInId);
 
-    // Set attributes of request; retrieve in jsp with
-    // ([type]) request.getAttribute([attribute name]);
-    request.setAttribute("user", "Jones");
+    // Get user's tasks
+    ArrayList<TaskData> userTasks = taskController.getTasksByUserID(userLoggedInId);
+
+    // Set attributes
+    request.setAttribute("user", user);
     request.setAttribute("userProjects", userProjects);
+    request.setAttribute("userTasks", userTasks);
 
-    // Load jsp for home page
+    // Load jsp for project page
     request.getRequestDispatcher("home.jsp").forward(request, response);
   }
 }

@@ -24,7 +24,7 @@ public class AuthOps {
   }
 
   public AuthOps(DatastoreService ds) {
-    UserController controller = new UserController(ds);
+    this.controller = new UserController(ds);
   }
 
   public String getAuthID() {
@@ -61,19 +61,18 @@ public class AuthOps {
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
     currCookie = getCurrCookie(request);
     // if not logged in, call auth service
-    if (currCookie.getValue() == NO_LOGGED_IN_USER) {
+    if (currCookie.getValue().equals(NO_LOGGED_IN_USER)) {
       // call auth service
       UserService userService = UserServiceFactory.getUserService();
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
+        System.out.println("AuthID: " + AuthID);
         // find AuthID in DataStore
-        ArrayList<UserData> users = controller.getEveryUser();
-        for (UserData user : users) {
-          if (user.getAuthID() == AuthID) {
-            String userIDString = String.valueOf(user.getUserID());
-            currCookie.setValue(userIDString);
-          }
+        UserData user = controller.getUserByAuthID(AuthID);
+        if (user != null) {
+          String userIDString = String.valueOf(user.getUserID());
+          currCookie.setValue(userIDString);
         }
       }
       // send back cookie to response

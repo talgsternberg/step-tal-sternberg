@@ -1,4 +1,4 @@
-// Servlet for loading login page
+// Servlet for logging out
 
 package com.rtb.projectmanagementtool.auth;
 
@@ -12,28 +12,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/logout")
+public class LogoutServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
+    // Clear cookie
     AuthOps auth = new AuthOps(datastore);
+    auth.logoutUser(request, response);
 
-    // Don't view login page if user is logged in
-    if (auth.whichUserIsLoggedIn(request, response) != -1) {
-      response.sendRedirect("/home");
-      return;
-    }
-
-    // Get login URL
+    // Logout
     UserService userService = UserServiceFactory.getUserService();
-    String urlToRedirectToAfterUserLogsIn = "/home";
-    String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-    request.setAttribute("loginUrl", loginUrl);
-
-    // Forward to login page
-    request.getRequestDispatcher("login.jsp").forward(request, response);
+    String urlToRedirectToAfterUserLogsOut = "/login";
+    String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+    response.sendRedirect(logoutUrl);
   }
 }

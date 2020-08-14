@@ -103,14 +103,14 @@ public class AuthOpsTest {
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
-    testUsers.add(new UserData(1l, "abc"));
+    UserData user = new UserData(1l, "abc");
 
     // build and send a test cookie for logged out user
     Cookie[] testCookies = new Cookie[1];
     testCookies[0] = new Cookie("sessionUserID", "-1");
 
     // on this call in class method, return test user
-    when(controller.getEveryUser()).thenReturn(testUsers);
+    when(controller.getUserByAuthID("abc")).thenReturn(user);
 
     // when get cookies is called, pass cookies
     when(request.getCookies()).thenReturn(testCookies);
