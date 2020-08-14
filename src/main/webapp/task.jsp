@@ -3,6 +3,7 @@
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
+<%@ page import="com.rtb.projectmanagementtool.user.*"%>
 <%@ page import="java.util.ArrayList" %>
 
 <%--Get variables--%>
@@ -11,9 +12,9 @@
     TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
+    ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
 %>
 
-    <!-- ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users"); -->
     <!-- ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments"); -->
 
 
@@ -76,9 +77,15 @@
       </div>
       <div id="task-addsubtask-container">
         <%
-            // Default values
-            long projectID = 1;
-            String projectName = "Default Project Name";
+            long projectID;
+            String projectName;
+            if (project != null) { // Use real project
+                projectID = project.getId();
+                projectName = project.getName();
+            } else { // Use default values
+                projectID = 1;
+                projectName = "Default Project Name";
+            }
         %>
         <button type="button" onclick="location.href='add-task.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">
           Add Subtask
