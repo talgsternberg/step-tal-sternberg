@@ -5,6 +5,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.task.*;
+import com.rtb.projectmanagementtool.user.UserData.Skills;
 import java.io.IOException;
 import java.util.*;
 import java.util.ArrayList;
