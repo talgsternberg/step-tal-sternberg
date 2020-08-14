@@ -28,10 +28,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     // Get login URL
-    UserService userService = UserServiceFactory.getUserService();
-    String urlToRedirectToAfterUserLogsIn = "/home";
-    String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-    request.setAttribute("loginUrl", loginUrl);
+    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/home"));
 
     // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);

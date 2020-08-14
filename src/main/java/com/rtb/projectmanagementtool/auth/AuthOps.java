@@ -27,6 +27,19 @@ public class AuthOps {
     this.controller = new UserController(ds);
   }
 
+  public String getLoginLink(String returnUrl) {
+    return getLogLink(/*login*/ true, returnUrl);
+  }
+
+  public String getLogoutLink(String returnUrl) {
+    return getLogLink(/*login*/ false, returnUrl);
+  }
+
+  private String getLogLink(boolean login, String returnUrl) {
+    UserService userService = UserServiceFactory.getUserService();
+    return login ? userService.createLoginURL(returnUrl) : userService.createLogoutURL(returnUrl);
+  }
+
   // only call after Auth S
   public String getAuthID() {
     UserService userService = UserServiceFactory.getUserService();
