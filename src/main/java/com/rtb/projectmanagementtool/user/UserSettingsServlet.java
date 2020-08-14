@@ -125,8 +125,8 @@ public class UserSettingsServlet extends HttpServlet {
     /**
      * // new UserController UserController userController = new UserController(datastore);
      *
-     * <p>// get user by ID long userID = Long.parseLong(request.getParameter("userID")); user =
-     * userController.getUserByID(userID);
+     * <p>// get user by ID long AuthOps auth = new AuthOps(datastore); long userID =
+     * auth.whichUserIsLoggedIn(request, response); user = userController.getUserByID(userID);
      */
 
     // get stuff from form update
@@ -135,24 +135,8 @@ public class UserSettingsServlet extends HttpServlet {
     String userMajorsString = request.getParameter("userMajors");
     String skillsString = request.getParameter("skills");
 
-    // default to no skills
-    Skills skills = Skills.NONE;
-
-    if (skillsString.equals("leadership")) {
-      skills = Skills.LEADERSHIP;
-    } else if (skillsString.equals("organization")) {
-      skills = Skills.ORGANIZATION;
-    } else if (skillsString.equals("organization")) {
-      skills = Skills.ORGANIZATION;
-    } else if (skillsString.equals("writing")) {
-      skills = Skills.WRITING;
-    } else if (skillsString.equals("art")) {
-      skills = Skills.ART;
-    } else if (skillsString.equals("webdev")) {
-      skills = Skills.WEBDEV;
-    } else if (skillsString.equals("oop")) {
-      skills = Skills.OOP;
-    }
+    // update skills
+    Skills skills = Skills.valueOf(skillsString);
 
     // convert userMajors back to ArrayList
     String[] majorsSA = userMajorsString.split(",");

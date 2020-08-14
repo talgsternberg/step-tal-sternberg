@@ -41,19 +41,19 @@
         <tr>
           <td>Top Skill:</td><br>
           <td>
-            <input type="radio" value="none" name="skills">
+            <input type="radio" value="NONE" name="skills">
             <label>None</label><br>
-            <input type="radio" value="leadership" name="skills">
+            <input type="radio" value="LEADERSHIP" name="skills">
             <label>Leadership</label><br>
-            <input type="radio" vlaue="organization" name="skills">
+            <input type="radio" vlaue="ORGANIZATION" name="skills">
             <label>Organization</label><br>
-            <input type="radio" value="writing" name="skills">
+            <input type="radio" value="WRITING" name="skills">
             <label>Writing</label><br>
-            <input type="radio" value="art" name="skills">
+            <input type="radio" value="ART" name="skills">
             <label>Art</label><br>
-            <input type="radio" value="webdev" name="skills">
+            <input type="radio" value="WEBDEV" name="skills">
             <label>WebDev</label><br>
-            <input type="radio" value="oop" name="skills">
+            <input type="radio" value="OOP" name="skills">
             <label>OOP</label><br>
           </td>
         </tr><br><br>
