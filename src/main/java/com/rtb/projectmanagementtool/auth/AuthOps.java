@@ -67,8 +67,7 @@ public class AuthOps {
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
-        System.out.println(
-            "AuthID: " + AuthID);
+        System.out.println("AuthID: " + AuthID);
         // find AuthID in DataStore
         UserData user = controller.getUserByAuthID(AuthID);
         if (user != null) {
