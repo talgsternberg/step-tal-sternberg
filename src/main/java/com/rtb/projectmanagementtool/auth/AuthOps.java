@@ -16,7 +16,7 @@ public class AuthOps {
   // public String cookieValue;
   public Cookie currCookie;
   private final String COOKIENAME = "sessionUserID";
-  private final String NO_LOGGED_IN_USER = "-1"; // -1 = logged out
+  public static final String NO_LOGGED_IN_USER = "-1"; // -1 = logged out
 
   // for testing purposes (with mock controllers)
   public AuthOps(UserController controller) {
