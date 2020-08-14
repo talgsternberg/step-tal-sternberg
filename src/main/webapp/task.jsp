@@ -118,6 +118,12 @@
           <p>Comment 3</p>
         </li>
       </ul>
+      <div id="task-delete-container">
+        <form id="task-delete-post-form" action="/task-delete" method="POST">
+          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
+          <button type="submit" id="task-delete-button">Delete Task</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
