@@ -23,10 +23,6 @@ public class LogoutServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
     auth.logoutUser(request, response);
 
-    // Logout
-    UserService userService = UserServiceFactory.getUserService();
-    String urlToRedirectToAfterUserLogsOut = "/login";
-    String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
-    response.sendRedirect(logoutUrl);
+    response.sendRedirect(auth.getLogoutLink(/*Return URL*/ "/login"));
   }
 }

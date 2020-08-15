@@ -33,18 +33,16 @@ public class InitTestData extends HttpServlet {
 
   // The tasks
 
+  private ArrayList<Key> entityKeys; // arrays to store entity keys for batch delete
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    System.out.println("Initiatializing test data");
 
-    // Authentication goes here
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    deleteEntitiesFromPreviousRun(datastore);
 
-    // remove all entities at start
-    // this is mostly done so that the member variables of this
-    // class are initialized when the objects are created
-    removeAllEntities(datastore);
+    entityKeys = new ArrayList<Key>();
 
     // Create UserDataObjects
     creatUsers(datastore);
@@ -55,21 +53,28 @@ public class InitTestData extends HttpServlet {
     // Create TaskDataObjects
     creatTasks(datastore);
 
+    addKeys(datastore);
     // Load jsp for project page
-    response.sendRedirect("/logout");
+    AuthOps authOps = new AuthOps(datastore);
+    authOps.setLoggedInCookie(request, response, -1);
+    response.sendRedirect("/home");
   }
 
-  public void removeAllEntities(DatastoreService datastore) {
-    removeAllEntities(datastore, new Query("User"));
-    removeAllEntities(datastore, new Query("Project"));
-    removeAllEntities(datastore, new Query("Task"));
-  }
-
-  public void removeAllEntities(DatastoreService datastore, Query query) {
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity entity : results.asIterable()) {
-      datastore.delete(entity.getKey());
+  private void deleteEntitiesFromPreviousRun(DatastoreService datastore) {
+    // delete all entities from previous run
+    Entity keysEntity = datastore.prepare(new Query("Keys")).asSingleEntity();
+    if (keysEntity != null) {
+      entityKeys = (ArrayList<Key>) keysEntity.getProperty("entityKeys");
+      datastore.delete(entityKeys);
+      datastore.delete(keysEntity.getKey()); // also delete the keysEntity entity
     }
+  }
+
+  private void addKeys(DatastoreService datastore) {
+    // add keys to datastore
+    Entity entity = new Entity("Keys");
+    entity.setProperty("entityKeys", entityKeys);
+    datastore.put(entity);
   }
 
   private void creatUsers(DatastoreService datastore) {
@@ -127,7 +132,8 @@ public class InitTestData extends HttpServlet {
     entity.setProperty("userMajors", userMajors);
     entity.setProperty("skills", skill.name());
     entity.setProperty("userTotalCompTasks", userTotalCompTasks);
-    Long userId = datastore.put(entity).getId();
+    Key entityKey = datastore.put(entity);
+    Long userId = entityKey.getId();
     switch (userName) {
       case "Sandy":
         this.Sandy = userId;
@@ -142,6 +148,8 @@ public class InitTestData extends HttpServlet {
         this.Patrick = userId;
         break;
     }
+
+    entityKeys.add(entityKey);
   }
 
   private void creatProjects(DatastoreService datastore) {
@@ -207,6 +215,9 @@ public class InitTestData extends HttpServlet {
         this.spanishProject = projectId;
         break;
     }
+    Key entityKey = datastore.put(entity);
+    Long userId = entityKey.getId();
+    entityKeys.add(entityKey);
   }
 
   private void creatTasks(DatastoreService datastore) {
