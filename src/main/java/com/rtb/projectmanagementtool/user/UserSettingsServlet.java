@@ -139,6 +139,9 @@ public class UserSettingsServlet extends HttpServlet {
     // update in datastore
     userController.updateUser(user);
 
+    UserData updatedUser = userController.getUserByID(userID);
+    System.out.println(updatedUser);
+
     response.sendRedirect("/user-profile");
   }
 }
