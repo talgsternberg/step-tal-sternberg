@@ -6,18 +6,20 @@
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
 <%@ page import="com.rtb.projectmanagementtool.user.UserData.Skills"%>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.HashMap"%>
+<%@ page import="java.util.Map"%>
 
 <%--Get variables--%>
 <%
+    UserData user = (UserData) request.getAttribute("user");
     TaskData task = (TaskData) request.getAttribute("task");
     TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
-    ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments");
-    // Default user
-    UserData user = new UserData(1l, "", "Default Username", 0l, new ArrayList<String>(), Skills.NONE, 0l);
+    Map<CommentData, String> comments = (HashMap<CommentData, String>) request.getAttribute("comments");
 %>
 
 
@@ -137,25 +139,20 @@
       </div>
       <ul id="task-comments-container">
         <%
-            for (CommentData comment : comments) {
+            for (Map.Entry<CommentData, String> entry : comments.entrySet()) {
+                CommentData comment = entry.getKey();
+                String username = entry.getValue();
+                
+                // Get timestamp
+                String datePattern = "MMM d, yyyy";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                String date = dateFormat.format(comment.getTimestamp());
+                String timePattern = "HH:mm";
+                SimpleDateFormat timeFormat = new SimpleDateFormat(timePattern);
+                String time = timeFormat.format(comment.getTimestamp());
         %>
         <li class="comment">
           <h3><%=comment.getTitle()%></h3>
-          <%
-              // Get user
-              String username = "";
-              if (comment.getUserID() == user.getUserID()) {
-                  username = "You as ";
-              }
-              username += user.getUserName();
-              // Get timestamp
-              String datePattern = "MMM d, yyyy";
-              SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-              String date = dateFormat.format(comment.getTimestamp());
-              String timePattern = "HH:mm";
-              SimpleDateFormat timeFormat = new SimpleDateFormat(timePattern);
-              String time = timeFormat.format(comment.getTimestamp());
-          %>
           <h5>
             Posted on <%=date%> at <%=time%>
             <br>
