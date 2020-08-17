@@ -135,6 +135,6 @@ public class UserSettingsServlet extends HttpServlet {
     user.setUserMajors(userMajors);
     user.setUserSkills(skills);
 
-    response.sendRedirect("/user_profile.jsp");
+    response.sendRedirect("/user-profile");
   }
 }
