@@ -3,7 +3,6 @@
 package com.rtb.projectmanagementtool.auth;
 
 import com.google.appengine.api.datastore.*;
-import com.google.appengine.api.users.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import javax.servlet.ServletException;
