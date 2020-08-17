@@ -31,9 +31,6 @@ public class HomeServlet extends HttpServlet {
     Long userLoggedInId =
         auth.whichUserIsLoggedIn(request, response); // issue: this is currently -1
 
-    System.out.print("UserID from home servlet:");
-    System.out.println(userLoggedInId);
-
     if (userLoggedInId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       // If no user found, redirect to create user servlet
       response.sendRedirect("/login");
@@ -47,10 +44,6 @@ public class HomeServlet extends HttpServlet {
 
     // Get user object
     UserData user = userController.getUserByID(userLoggedInId);
-
-    // prints for debugging
-    System.out.println("Correct user:");
-    System.out.print(user);
 
     // Get user projects
     ArrayList<ProjectData> userProjects = projectController.getProjectsWithUser(userLoggedInId);

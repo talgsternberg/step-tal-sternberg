@@ -21,6 +21,9 @@ public class LoginServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     AuthOps auth = new AuthOps(datastore);
 
+    // add cookie w UserID to response
+    auth.loginUser(request, response);
+
     // Don't view login page if user is logged in
     if (auth.whichUserIsLoggedIn(request, response) != Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       response.sendRedirect("/home");
@@ -28,7 +31,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     // Get login URL
-    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/LoginServlet"));
+    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/login"));
 
     // Get login URL for first time users (on submit returns to LoginServlet)
     request.setAttribute(
@@ -36,11 +39,5 @@ public class LoginServlet extends HttpServlet {
 
     // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
-
-    // login the user with cookies
-    auth.loginUser(request, response);
-
-    // redirect back home
-    response.sendRedirect("/home"); // error here
   }
 }

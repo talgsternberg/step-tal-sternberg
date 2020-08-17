@@ -14,7 +14,10 @@ public class UserController {
   }
 
   public UserData getUserByID(long userID) {
-    Query query = new Query("User").addFilter("userID", FilterOperator.EQUAL, userID);
+    // Query query = new Query("User").addFilter("userID", FilterOperator.EQUAL, userID);
+    Query query =
+        new Query("User")
+            .addFilter("__key__", FilterOperator.EQUAL, KeyFactory.createKey("User", userID));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
     if (entity != null) {

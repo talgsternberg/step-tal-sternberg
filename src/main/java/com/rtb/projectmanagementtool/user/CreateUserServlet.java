@@ -66,11 +66,13 @@ public class CreateUserServlet extends HttpServlet {
     // create entity and put in datastore. Get userID
     long userID = controller.addUser(newUser);
 
+    System.out.println("userID from ds put: " + userID);
+
     // get/create cookie and set value to userID
     auth.setLoggedInCookie(request, response, userID);
 
     // redirect them to Login Servlet to call loginUser()
-    response.sendRedirect("/LoginServlet");
+    response.sendRedirect("/login");
   }
 
   @Override

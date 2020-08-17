@@ -29,15 +29,7 @@
       <div id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></div>
       <div id="user-majors-container"><p>Majors: <%=user.getUserMajors()%></p></div>
       <div id="user-skills-container"><p>Top Skill: <%=user.getUserSkills()%></p></div>
-      <div id="user-total-tasks-container">
-          <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
-      </div>
       
-      <div id="user-tasks-container">
-        <h2><%=user.getUserName()%>'s Tasks:</h2>
-        <%request.setAttribute("tasks", userTasks);%>
-        <jsp:include page="list-tasks.jsp"/>
-        <%}%>
       </div>
     </div>
   </body>
