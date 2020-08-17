@@ -1,7 +1,6 @@
-package com.rtb.projectmanagementtool.task;
+package com.rtb.projectmanagementtool.comment;
 
 import com.google.appengine.api.datastore.*;
-import com.rtb.projectmanagementtool.comment.*;
 import com.rtb.projectmanagementtool.project.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
@@ -32,7 +31,6 @@ public class CommentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     // Get and create parameters
-    //   public CommentData(long taskID, long userID, String title, String message)
     long taskID = Long.parseLong(request.getParameter("taskID"));
     long userID = Long.parseLong(request.getParameter("userID"));
     String title = request.getParameter("title").trim();
