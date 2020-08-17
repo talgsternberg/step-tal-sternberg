@@ -124,7 +124,7 @@
       <h2>Comments</h2>
       <div id="task-addcomments-container">
         <%
-            if (task.getTaskID() != 0) {
+            if (task.getTaskID() != 0 && task.getStatus() != Status.COMPLETE) {
         %>
         <form id="add-comment-post-form" action="/comment" method="POST">
           <input type="hidden" id="add-comment-task-input" name="taskID" value="<%=task.getTaskID()%>">
@@ -160,7 +160,7 @@
             Posted by <%=username%>
           </h5>
           <p><%=comment.getMessage()%></p>
-          <% if (comment.getUserID() == user.getUserID()) {%>
+          <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
           <form id="delete-comment-post-form" action="/comment-delete" method="POST">
             <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
             <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
