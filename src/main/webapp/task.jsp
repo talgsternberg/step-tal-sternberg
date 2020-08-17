@@ -40,10 +40,10 @@
             String status;
             String statusButtonText;
             if (task.getStatus() != Status.COMPLETE) {
-                status = "COMPLETE";
+                status = Status.COMPLETE.name();
                 statusButtonText = "Set Task Status as Complete";
             } else {
-                status = "INCOMPLETE";
+                status = Status.INCOMPLETE.name();
                 statusButtonText = "Set Task Status as Incomplete";
             }
         %>
