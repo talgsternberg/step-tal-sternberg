@@ -5,6 +5,7 @@
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
+<%@ page import="com.rtb.projectmanagementtool.user.UserData.Skills"%>
 <%@ page import="java.util.ArrayList" %>
 
 <%--Get variables--%>
@@ -15,6 +16,8 @@
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
     ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments");
+    // Default user
+    UserData user = new UserData(1l, "", "Default Username", 0l, new ArrayList<String>(), Skills.NONE, 0l);
 %>
 
 
@@ -97,10 +100,9 @@
       <div id="task-assignuser-container"></div>
         <%
             if (task.getStatus() != Status.COMPLETE) {
-                long userID = 1; // Default value
                 String servletPage;
                 String userButtonText;
-                if (!task.getUsers().contains(userID)) {
+                if (!task.getUsers().contains(user.getUserID())) {
                     servletPage = "/task-add-user";
                     userButtonText = "Assign me to this task";
                 } else {
@@ -110,18 +112,55 @@
         %>
         <form id="toggle-user-assignment-post-form" action="<%=servletPage%>" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
-          <input type="hidden" name="userID" value="<%=userID%>"/>
+          <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
           <button type="submit" id="toggle-user-assignment"><%=userButtonText%></button>
         </form>
         <%}%>
       <div id="task-users-container"></div>
 
       <h2>Comments</h2>
+      <div id="task-addcomments-container">
+        <%
+            if (task.getTaskID() != 0) {
+        %>
+        <form id="add-comment-post-form" action="/comment" method="POST">
+          <input type="hidden" id="add-comment-task-input" name="taskID" value="<%=task.getTaskID()%>">
+          <input type="hidden" id="add-comment-user-input" name="userID" value="<%=user.getUserID()%>">
+          <input type="text" name="title" required placeholder="Enter title of comment..." maxlength="40">
+          <br>
+          <br>
+          <textarea type="text" name="message" required placeholder="Enter comment message..."></textarea>
+          <br>
+          <button type="submit">Post Comment</button>
+        </form>
+        <%}%>
+      </div>
       <ul id="task-comments-container">
         <%
             for (CommentData comment : comments) {
         %>
         <li class="comment">
+          <h3><%=comment.getTitle()%></h3>
+          <%
+              // Get user
+              String username = "";
+              if (comment.getUserID() == user.getUserID()) {
+                  username = "You as ";
+              }
+              username += user.getUserName();
+              // Get timestamp
+              String datePattern = "MMM d, yyyy";
+              SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+              String date = dateFormat.format(comment.getTimestamp());
+              String timePattern = "HH:mm";
+              SimpleDateFormat timeFormat = new SimpleDateFormat(timePattern);
+              String time = timeFormat.format(comment.getTimestamp());
+          %>
+          <h5>
+            Posted on <%=date%> at <%=time%>
+            <br>
+            Posted by <%=username%>
+          </h5>
           <p><%=comment.getMessage()%></p>
         </li>
         <%}%>
