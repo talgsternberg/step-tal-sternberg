@@ -16,7 +16,7 @@ public class AuthOps {
   // public String cookieValue;
   public Cookie currCookie;
   private final String COOKIENAME = "sessionUserID";
-  private final String NO_LOGGED_IN_USER = "-1"; // -1 = logged out
+  public static final String NO_LOGGED_IN_USER = "-1"; // -1 = logged out
 
   // for testing purposes (with mock controllers)
   public AuthOps(UserController controller) {
@@ -25,6 +25,19 @@ public class AuthOps {
 
   public AuthOps(DatastoreService ds) {
     this.controller = new UserController(ds);
+  }
+
+  public String getLoginLink(String returnUrl) {
+    return getLogLink(/*login*/ true, returnUrl);
+  }
+
+  public String getLogoutLink(String returnUrl) {
+    return getLogLink(/*login*/ false, returnUrl);
+  }
+
+  private String getLogLink(boolean login, String returnUrl) {
+    UserService userService = UserServiceFactory.getUserService();
+    return login ? userService.createLoginURL(returnUrl) : userService.createLogoutURL(returnUrl);
   }
 
   // only call after Auth S

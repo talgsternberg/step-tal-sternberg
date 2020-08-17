@@ -22,16 +22,13 @@ public class LoginServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
 
     // Don't view login page if user is logged in
-    if (auth.whichUserIsLoggedIn(request, response) != -1) {
+    if (auth.whichUserIsLoggedIn(request, response) != Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       response.sendRedirect("/home");
       return;
     }
 
     // Get login URL
-    UserService userService = UserServiceFactory.getUserService();
-    String urlToRedirectToAfterUserLogsIn = "/home";
-    String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-    request.setAttribute("loginUrl", loginUrl);
+    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/home"));
 
     // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
