@@ -50,6 +50,11 @@ public class UserController {
     return users;
   }
 
+  public void updateUser(UserData user) {
+    Entity entity = user.toEntity();
+    datastore.put(entity);
+  }
+
   public long addUser(UserData user) {
     Entity entity = user.toEntity();
     Key key = datastore.put(entity);

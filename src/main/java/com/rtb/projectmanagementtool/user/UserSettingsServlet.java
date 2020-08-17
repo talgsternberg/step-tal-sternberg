@@ -103,6 +103,7 @@ public class UserSettingsServlet extends HttpServlet {
 
     if (userLoggedInId == /*No user found*/ -1l) {
       // If no user found, redirect to create user servlet
+      System.out.println("Here.Failed.");
       response.sendRedirect("/login");
       return;
     }
@@ -134,6 +135,9 @@ public class UserSettingsServlet extends HttpServlet {
     user.setUserYear(userYear);
     user.setUserMajors(userMajors);
     user.setUserSkills(skills);
+
+    // update in datastore
+    userController.updateUser(user);
 
     response.sendRedirect("/user-profile");
   }
