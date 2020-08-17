@@ -48,13 +48,13 @@ public class InitTestData extends HttpServlet {
     entityKeys = new ArrayList<Key>();
 
     // Create UserDataObjects
-    creatUsers(datastore);
+    createUsers(datastore);
 
     // Create ProjectDataObjects
-    creatProjects(datastore);
+    createProjects(datastore);
 
     // Create TaskDataObjects
-    creatTasks(datastore);
+    createTasks(datastore);
 
     addKeys(datastore);
     // Load jsp for project page
@@ -80,7 +80,7 @@ public class InitTestData extends HttpServlet {
     datastore.put(entity);
   }
 
-  private void creatUsers(DatastoreService datastore) {
+  private void createUsers(DatastoreService datastore) {
     createUser(
         datastore,
         /*authId*/ "155150131811713716817",
@@ -154,7 +154,7 @@ public class InitTestData extends HttpServlet {
     entityKeys.add(entityKey);
   }
 
-  private void creatProjects(DatastoreService datastore) {
+  private void createProjects(DatastoreService datastore) {
     createProject(
         datastore,
         /*projectName*/ "English Project",
@@ -222,7 +222,7 @@ public class InitTestData extends HttpServlet {
     }
   }
 
-  private void creatTasks(DatastoreService datastore) {
+  private void createTasks(DatastoreService datastore) {
     createTask(
         datastore,
         /*parentTaskId*/ 0l,

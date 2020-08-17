@@ -3,6 +3,7 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
+import com.rtb.projectmanagementtool.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,7 @@ public final class TaskController {
   }
 
   public void addUser(TaskData task, long userID) {
-    if (!task.getUsers().contains(userID)) {
+    if (task.getStatus() != Status.COMPLETE && !task.getUsers().contains(userID)) {
       task.getUsers().add(userID);
       if (task.getTaskID() != 0) {
         datastore.put(task.toEntity());
@@ -64,7 +65,7 @@ public final class TaskController {
   }
 
   public void removeUser(TaskData task, long userID) {
-    if (task.getUsers().contains(userID)) {
+    if (task.getStatus() != Status.COMPLETE && task.getUsers().contains(userID)) {
       task.getUsers().remove(userID);
       if (task.getTaskID() != 0) {
         datastore.put(task.toEntity());
@@ -95,9 +96,33 @@ public final class TaskController {
   }
 
   private void completeTask(TaskData task) {
-    task.setStatus(Status.COMPLETE);
-    if (task.getTaskID() != 0) {
-      datastore.put(task.toEntity());
+    if (task.getStatus() != Status.COMPLETE) {
+      TransactionOptions options = TransactionOptions.Builder.withXG(true);
+      Transaction transaction = datastore.beginTransaction(options);
+      try {
+        task.setStatus(Status.COMPLETE);
+        if (task.getTaskID() != 0) {
+          datastore.put(task.toEntity());
+          UserController userController = new UserController(datastore);
+          ArrayList<Entity> users = new ArrayList<>();
+          UserData user;
+          for (long userID : task.getUsers()) {
+            try {
+              user = userController.getUserByID(userID);
+              user.setUserTotal(user.getUserTotal() + 1);
+              users.add(user.toEntity());
+            } catch (NullPointerException e) {
+              System.out.println("User ID: " + userID + " cannot be found.");
+            }
+          }
+          datastore.put(users);
+        }
+        transaction.commit();
+      } finally {
+        if (transaction.isActive()) {
+          transaction.rollback();
+        }
+      }
     }
   }
 
@@ -110,9 +135,33 @@ public final class TaskController {
     if (parentTaskID != 0 && getTaskByID(parentTaskID).getStatus() == Status.COMPLETE) {
       return false;
     }
-    task.setStatus(Status.INCOMPLETE);
-    if (task.getTaskID() != 0) {
-      datastore.put(task.toEntity());
+    if (task.getStatus() != Status.INCOMPLETE) {
+      TransactionOptions options = TransactionOptions.Builder.withXG(true);
+      Transaction transaction = datastore.beginTransaction(options);
+      try {
+        task.setStatus(Status.INCOMPLETE);
+        if (task.getTaskID() != 0) {
+          datastore.put(task.toEntity());
+          UserController userController = new UserController(datastore);
+          ArrayList<Entity> users = new ArrayList<>();
+          UserData user;
+          for (long userID : task.getUsers()) {
+            try {
+              user = userController.getUserByID(userID);
+              user.setUserTotal(user.getUserTotal() - 1);
+              users.add(user.toEntity());
+            } catch (NullPointerException e) {
+              System.out.println("User ID: " + userID + " cannot be found.");
+            }
+          }
+          datastore.put(users);
+        }
+        transaction.commit();
+      } finally {
+        if (transaction.isActive()) {
+          transaction.rollback();
+        }
+      }
     }
     return true;
   }

@@ -151,7 +151,7 @@ public class TaskControllerTest {
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
 
     // Create task
-    TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
+    TaskData task = new TaskData(projectID1, name1, description1, Status.COMPLETE, users1);
 
     // Add task to ds with TaskController
     taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
@@ -163,13 +163,33 @@ public class TaskControllerTest {
     taskController.addUser(task, user);
 
     // Create expected users
-    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l, 4l));
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
 
     // Get users from ds with TaskController
     ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+    Status getStatus = taskController.getTaskByID(task.getTaskID()).getStatus();
+
+    // Assert no users were added while task status is complete
+    Assert.assertEquals("taskIsComplete", Status.COMPLETE, getStatus);
+    Assert.assertEquals("addUserWhenComplete", users, getUsers);
+
+    // Change task status to incomplete
+    task.setStatus(Status.INCOMPLETE);
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
+
+    // Add user to task with TaskController with TaskData object
+    taskController.addUser(task, user);
+
+    // Create expected users
+    users.add(user);
+
+    // Get users from ds with TaskController
+    getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+    getStatus = taskController.getTaskByID(task.getTaskID()).getStatus();
 
     // Assert task has correct userIDs
-    Assert.assertEquals("addUser", users, getUsers);
+    Assert.assertEquals("taskIsIncomplete", Status.INCOMPLETE, getStatus);
+    Assert.assertEquals("addUserWhenIncomplete", users, getUsers);
 
     // Attempt to add user to task with TaskController again with TaskID
     taskController.addUser(task.getTaskID(), user);
@@ -220,7 +240,7 @@ public class TaskControllerTest {
     ArrayList<Long> users1 = new ArrayList<>(Arrays.asList(1l, 2l));
 
     // Create task
-    TaskData task = new TaskData(projectID1, name1, description1, status1, users1);
+    TaskData task = new TaskData(projectID1, name1, description1, Status.COMPLETE, users1);
 
     // Add task to ds with TaskController
     taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
@@ -232,12 +252,32 @@ public class TaskControllerTest {
     taskController.removeUser(task.getTaskID(), user);
 
     // Create expected users
-    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l));
+    ArrayList<Long> users = new ArrayList<>(Arrays.asList(1l, 2l));
 
     // Get users from ds with TaskController
     ArrayList<Long> getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+    Status getStatus = taskController.getTaskByID(task.getTaskID()).getStatus();
 
     // Assert task has correct userIDs
+    Assert.assertEquals("taskIsComplete", Status.COMPLETE, getStatus);
+    Assert.assertEquals("removeUserWhenComplete", users, getUsers);
+
+    // Change task status to incomplete
+    task.setStatus(Status.INCOMPLETE);
+    taskController.addTasks(new ArrayList<TaskData>(Arrays.asList(task)));
+
+    // Remove user from task with TaskController with taskID
+    taskController.removeUser(task.getTaskID(), user);
+
+    // Create expected users
+    users.remove(user);
+
+    // Get users from ds with TaskController
+    getUsers = taskController.getTaskByID(task.getTaskID()).getUsers();
+    getStatus = taskController.getTaskByID(task.getTaskID()).getStatus();
+
+    // Assert task has correct userIDs
+    Assert.assertEquals("taskIsIncomplete", Status.INCOMPLETE, getStatus);
     Assert.assertEquals("removeUser", users, getUsers);
 
     // Attempt to remove user from task with TaskController again

@@ -2,6 +2,8 @@
 <%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
+<%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
+<%@ page import="com.rtb.projectmanagementtool.user.*"%>
 <%@ page import="java.util.ArrayList" %>
 
 <%--Get variables--%>
@@ -10,9 +12,9 @@
     TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
+    ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
 %>
 
-    <!-- ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users"); -->
     <!-- ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments"); -->
 
 
@@ -32,7 +34,25 @@
     <div id="content">
       <div id="task-title-container"><h1><%=task.getName()%></h1></div>
       <div id="task-description-container"><%=task.getDescription()%></div>
-      <div id="task-status-container">Status: <%=task.getStatus()%></div>
+      <div id="task-status-container">
+        <p>Status: <%=task.getStatus()%></p>
+        <%
+            String status;
+            String statusButtonText;
+            if (task.getStatus() != Status.COMPLETE) {
+                status = Status.COMPLETE.name();
+                statusButtonText = "Set Task Status as Complete";
+            } else {
+                status = Status.INCOMPLETE.name();
+                statusButtonText = "Set Task Status as Incomplete";
+            }
+        %>
+        <form id="toggle-status-post-form" action="/task-set-status" method="POST">
+          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
+          <input type="hidden" name="status" value="<%=status%>"/>
+          <button type="submit" id="task-toggle-status"><%=statusButtonText%></button>
+        </form>
+      </div>
       <div id="task-project-container">
         <%if (project != null) {%>
           <p class="inline">Return to Project: </p>
@@ -57,9 +77,15 @@
       </div>
       <div id="task-addsubtask-container">
         <%
-            // Default values
-            long projectID = 1;
-            String projectName = "Default Project Name";
+            long projectID;
+            String projectName;
+            if (project != null) { // Use real project
+                projectID = project.getId();
+                projectName = project.getName();
+            } else { // Use default values
+                projectID = 1;
+                projectName = "Default Project Name";
+            }
         %>
         <button type="button" onclick="location.href='add-task.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">
           Add Subtask
@@ -69,22 +95,24 @@
       <h2>Members</h2>
       <div id="task-assignuser-container"></div>
         <%
-            long userID = 1; // Default value
-            String servletPage;
-            String buttonText;
-            if (!task.getUsers().contains(userID)) {
-                servletPage = "/task-add-user";
-                buttonText = "Assign me to this task";
-            } else {
-                servletPage = "/task-remove-user";
-                buttonText = "Remove me from this task";
-            }
+            if (task.getStatus() != Status.COMPLETE) {
+                long userID = 1; // Default value
+                String servletPage;
+                String userButtonText;
+                if (!task.getUsers().contains(userID)) {
+                    servletPage = "/task-add-user";
+                    userButtonText = "Assign me to this task";
+                } else {
+                    servletPage = "/task-remove-user";
+                    userButtonText = "Remove me from this task";
+                }
         %>
         <form id="toggle-user-assignment-post-form" action="<%=servletPage%>" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="userID" value="<%=userID%>"/>
-          <button type="submit" id="toggle-user-assignment"><%=buttonText%></button>
+          <button type="submit" id="toggle-user-assignment"><%=userButtonText%></button>
         </form>
+        <%}%>
       <div id="task-users-container"></div>
 
       <h2>Comments</h2>
@@ -99,6 +127,12 @@
           <p>Comment 3</p>
         </li>
       </ul>
+      <div id="task-delete-container">
+        <form id="task-delete-post-form" action="/task-delete" method="POST">
+          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
+          <button type="submit" id="task-delete-button">Delete Task</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
