@@ -74,7 +74,8 @@ public class CreateUserServlet extends HttpServlet {
   }
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     // Get login URL
     String urlToRedirectToAfterUserLogsIn = "/create-new-user";
     String loginUrlNewUser = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
@@ -82,8 +83,5 @@ public class CreateUserServlet extends HttpServlet {
     // send to request
     request.setAttribute("loginUrlNewUser", loginUrlNewUser);
     request.getRequestDispatcher("login.jsp").forward(request, response);
-
-    // redirect them to their new form
-    response.sendRedirect("/create-new-user.jsp");
   }
 }
