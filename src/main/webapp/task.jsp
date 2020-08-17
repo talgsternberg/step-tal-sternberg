@@ -30,6 +30,7 @@
     <meta charset="UTF-8">
     <title><%=task.getName()%></title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="scripts/main.js"></script> -->
     <!-- <script src="scripts/task.js"></script> -->
   </head>
@@ -159,6 +160,13 @@
             Posted by <%=username%>
           </h5>
           <p><%=comment.getMessage()%></p>
+          <% if (comment.getUserID() == user.getUserID()) {%>
+          <form id="delete-comment-post-form" action="/comment-delete" method="POST">
+            <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
+            <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
+            <button type="submit"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+          </form>
+          <%}%>
         </li>
         <%}%>
       </ul>

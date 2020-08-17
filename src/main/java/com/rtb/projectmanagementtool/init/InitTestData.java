@@ -1,5 +1,5 @@
 /** class initiates objects to test mvp on test servers */
-package com.rtb.projectmanagementtool.project;
+package com.rtb.projectmanagementtool.init;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
@@ -63,6 +63,7 @@ public class InitTestData extends HttpServlet {
     removeAllEntities(datastore, new Query("User"));
     removeAllEntities(datastore, new Query("Project"));
     removeAllEntities(datastore, new Query("Task"));
+    removeAllEntities(datastore, new Query("Comment"));
   }
 
   public void removeAllEntities(DatastoreService datastore, Query query) {
