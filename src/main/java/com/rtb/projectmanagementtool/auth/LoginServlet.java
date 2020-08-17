@@ -30,6 +30,10 @@ public class LoginServlet extends HttpServlet {
     // Get login URL
     request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/home"));
 
+    // Get login URL for first time users
+    request.setAttribute(
+        "loginUrlNewUser", auth.getLoginLink(/*Return URL*/ "/create-new-user.jsp"));
+
     // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
   }

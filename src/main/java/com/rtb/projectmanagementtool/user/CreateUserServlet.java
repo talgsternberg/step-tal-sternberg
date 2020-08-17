@@ -69,18 +69,17 @@ public class CreateUserServlet extends HttpServlet {
     // get/create cookie and set value to userID
     auth.setLoggedInCookie(request, response, userID);
 
-    // redirect them to their new profile
-    response.sendRedirect("/user_profile.jsp");
+    // redirect them to home page
+    response.sendRedirect("/home");
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    // Get login URL
-    request.setAttribute(
-        "loginUrlNewUser", auth.getLoginLink(/*Return URL*/ "/create-new-user.jsp"));
-
-    // Forward to login page
-    request.getRequestDispatcher("login.jsp").forward(request, response);
+    // check if logged in
+    if (!userService.isUserLoggedIn()) {
+      // if not logged in, go back to login page
+      response.sendRedirect("/login.jsp");
+    }
   }
 }

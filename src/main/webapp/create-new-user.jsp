@@ -22,15 +22,15 @@
       <form action="/create-user" method="post">
         <tr>
           <td>Name:</td>
-          <td><input type="text" name="userName" value="ex: Sarah Burke" /></td>
+          <td><input type="text" name="userName" value="User Name" /></td>
         </tr><br><br>
         <tr>
           <td>Class Year:</td>
-          <td><input type="text" name="userYear" value="ex: 2020" /></td>
+          <td><input type="text" name="userYear" value="2020" /></td>
         </tr><br><br>
         <tr>
           <td>Majors (separate by commas no spaces)</td>
-          <td><input type="text" name="userMajors" value="ex: Chemistry,Math" /></td>
+          <td><input type="text" name="userMajors" value="Major1,Major2" /></td>
         </tr><br><br>
         <tr>
           <td>Top Skill:</td><br>
