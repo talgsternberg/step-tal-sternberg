@@ -1,6 +1,7 @@
 package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.*;
+import com.rtb.projectmanagementtool.comment.*;
 import com.rtb.projectmanagementtool.project.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
@@ -74,10 +75,17 @@ public class TaskServlet extends HttpServlet {
       }
     }
 
-    // // Get Comments
+    // Get Comments
     // int quantity = Integer.parseInt(request.getParameter("quantity"));
     // String sortBy = request.getParameter("sortBy");
     // String sortDirection = request.getParameter("sortDirection");
+    CommentController commentController = new CommentController(datastore);
+    ArrayList<CommentData> comments = new ArrayList<>();
+    try {
+      comments = commentController.getCommentsByTaskID(taskID);
+    } catch (NullPointerException | IllegalArgumentException e) {
+      System.out.println("TaskID doesn't exist. Cannot fetch comments.");
+    }
 
     // Send data to task.jsp
     request.setAttribute("task", task);
@@ -85,7 +93,7 @@ public class TaskServlet extends HttpServlet {
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     request.setAttribute("users", users);
-    // request.setAttribute("comments", comments);
+    request.setAttribute("comments", comments);
     request.getRequestDispatcher("task.jsp").forward(request, response);
   }
 

@@ -1,5 +1,6 @@
 <%--Class Imports--%>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.rtb.projectmanagementtool.comment.*"%>
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
@@ -13,9 +14,9 @@
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
+    ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments");
 %>
 
-    <!-- ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments"); -->
 
 
 <%--HTML--%>
@@ -117,15 +118,13 @@
 
       <h2>Comments</h2>
       <ul id="task-comments-container">
+        <%
+            for (CommentData comment : comments) {
+        %>
         <li class="comment">
-          <p>Comment 1</p>
+          <p><%=comment.getMessage()%></p>
         </li>
-        <li class="comment">
-          <p>Comment 2</p>
-        </li>
-        <li class="comment">
-          <p>Comment 3</p>
-        </li>
+        <%}%>
       </ul>
       <div id="task-delete-container">
         <form id="task-delete-post-form" action="/task-delete" method="POST">
