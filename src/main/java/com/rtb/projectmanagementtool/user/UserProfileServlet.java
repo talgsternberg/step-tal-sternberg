@@ -32,7 +32,8 @@ public class UserProfileServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
 
     // Authenticate
-    auth.loginUser(request, response);
+    // shouldn't need this line
+    // auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       // If no user found, redirect to create user servlet
@@ -51,6 +52,10 @@ public class UserProfileServlet extends HttpServlet {
     } else {
       userID = Long.parseLong(request.getParameter("userID"));
     }
+
+    // for debugging
+    System.out.println("Profile Servlet UserID:");
+    System.out.println(userLoggedInId);
 
     UserData user = userController.getUserByID(userID);
 

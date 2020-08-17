@@ -69,8 +69,8 @@ public class CreateUserServlet extends HttpServlet {
     // get/create cookie and set value to userID
     auth.setLoggedInCookie(request, response, userID);
 
-    // redirect them to home page
-    response.sendRedirect("/home");
+    // redirect them to Login Servlet to call loginUser()
+    response.sendRedirect("/LoginServlet");
   }
 
   @Override

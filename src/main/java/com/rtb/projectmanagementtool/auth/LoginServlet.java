@@ -28,13 +28,19 @@ public class LoginServlet extends HttpServlet {
     }
 
     // Get login URL
-    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/home"));
+    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/LoginServlet"));
 
-    // Get login URL for first time users
+    // Get login URL for first time users (on submit returns to LoginServlet)
     request.setAttribute(
         "loginUrlNewUser", auth.getLoginLink(/*Return URL*/ "/create-new-user.jsp"));
 
     // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
+
+    // login the user with cookies
+    auth.loginUser(request, response);
+
+    // redirect back home
+    response.sendRedirect("/home"); // error here
   }
 }

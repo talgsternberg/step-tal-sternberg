@@ -103,10 +103,6 @@ public class AuthOps {
     // get cookie value for user
     String currUserIDString = currCookie.getValue();
 
-    // prints to fix
-    System.out.println("String value of userID:");
-    System.out.println(currUserIDString);
-
     return Long.parseLong(currUserIDString);
   }
 
