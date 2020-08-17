@@ -27,7 +27,7 @@ public class HomeServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
     auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
-    if (userLoggedInId == /*No user found*/ -1l) {
+    if (userLoggedInId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       // If no user found, redirect to create user servlet
       response.sendRedirect("/login");
       return;

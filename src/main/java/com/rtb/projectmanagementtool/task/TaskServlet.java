@@ -32,77 +32,61 @@ public class TaskServlet extends HttpServlet {
       throws ServletException, IOException {
 
     // Temporary/Default task to display
-    long taskID1 = 1l;
-    long projectID1 = 1l;
-    String name1 = "Task 1";
-    String description1 = "Task 1 description...";
+    long projectID1 = -1l;
+    String name1 = "Default Task Name";
+    String description1 = "Default task description...";
     TaskData task = new TaskData(projectID1, name1, description1);
 
     // Get Task
-    long taskID = Long.parseLong(request.getParameter("taskID"));
+    long taskID;
     TaskController taskController = new TaskController(datastore);
-    if (taskID != 0 && taskID != 1) {
+    try {
+      taskID = Long.parseLong(request.getParameter("taskID"));
       task = taskController.getTaskByID(taskID);
+    } catch (NullPointerException | IllegalArgumentException e) {
+      taskID = 0l;
     }
-    // // ArrayList is for HashMap below. Is there a better way to do this?
-    // ArrayList<TaskData> taskInArrayList = new ArrayList<>(Arrays.asList(task));
 
     // Get Parent Task
     TaskData parentTask = null;
-    if (taskID != 0 && taskID != 1 && task.getParentTaskID() != 0) {
+    if (taskID != 0 && task.getParentTaskID() != 0) {
       parentTask = taskController.getTaskByID(task.getParentTaskID());
     }
 
     // Get Parent Project
     ProjectController projectController = new ProjectController(datastore);
     ProjectData project = projectController.getProjectById(task.getProjectID());
-    // ArrayList<ProjectData> projectInArrayList = new ArrayList<>(Arrays.asList(project));
 
     // Get Subtasks
     ArrayList<TaskData> subtasks = taskController.getSubtasks(task);
 
-    // // Get Comments
-    // int quantity = Integer.parseInt(request.getParameter("quantity"));
-    // String sortBy = request.getParameter("sortBy");
-    // String sortDirection = request.getParameter("sortDirection");
-
     // Get Task Users
     ArrayList<UserData> users = new ArrayList<>();
-    if (taskID != 0 && taskID != 1) {
+    if (taskID != 0) {
       UserController userController = new UserController(datastore);
       // users = userController.getUsers(task.getUsers());
       for (long userID : task.getUsers()) {
         try {
           users.add(userController.getUserByID(userID));
         } catch (NullPointerException e) {
-          System.out.println("No user exists for that userID.");
+          System.out.println("No user exists for userID: " + userID);
         }
       }
     }
 
-    System.out.println("TaskServlet");
-    System.out.println(task);
-    System.out.println(subtasks);
+    // // Get Comments
+    // int quantity = Integer.parseInt(request.getParameter("quantity"));
+    // String sortBy = request.getParameter("sortBy");
+    // String sortDirection = request.getParameter("sortDirection");
 
     // Send data to task.jsp
     request.setAttribute("task", task);
     request.setAttribute("parentTask", parentTask);
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
-    // request.setAttribute("comments", comments);
     request.setAttribute("users", users);
+    // request.setAttribute("comments", comments);
     request.getRequestDispatcher("task.jsp").forward(request, response);
-
-    // // Convert data to JSON
-    // Gson gson = new Gson();
-    // response.setContentType("application/json;");
-    // HashMap<String, ArrayList> data = new HashMap<>();
-    // data.put("task", taskInArrayList);
-    // // data.put("project", projectInArrayList);
-    // data.put("subtasks", subtasks);
-    // // data.put("comments", comments);
-    // data.put("users", users);
-    // response.getWriter().println(gson.toJson(data));
   }
 
   @Override
@@ -121,7 +105,7 @@ public class TaskServlet extends HttpServlet {
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
 
-    // // Redirect back to the parent task's task page
+    // Redirect back to the parent task's task page
     response.sendRedirect("/task?taskID=" + parentTaskID);
   }
 }

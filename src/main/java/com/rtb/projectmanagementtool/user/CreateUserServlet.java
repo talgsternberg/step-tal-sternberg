@@ -18,10 +18,13 @@ public class CreateUserServlet extends HttpServlet {
   DatastoreService datastore;
   Cookie cookie;
   UserService userService;
+  AuthOps auth;
 
   public CreateUserServlet() {
     datastore = DatastoreServiceFactory.getDatastoreService();
     userService = UserServiceFactory.getUserService();
+    // new AuthOps object
+    auth = new AuthOps(datastore);
   }
 
   // for testing
@@ -31,9 +34,6 @@ public class CreateUserServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // new AuthOps object
-    AuthOps auth = new AuthOps(datastore);
-
     // new UserController object
     UserController controller = new UserController(datastore);
 
@@ -77,11 +77,10 @@ public class CreateUserServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     // Get login URL
-    String urlToRedirectToAfterUserLogsIn = "/create-new-user";
-    String loginUrlNewUser = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+    request.setAttribute(
+        "loginUrlNewUser", auth.getLoginLink(/*Return URL*/ "/create-new-user.jsp"));
 
-    // send to request
-    request.setAttribute("loginUrlNewUser", loginUrlNewUser);
+    // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
   }
 }
