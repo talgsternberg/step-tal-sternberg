@@ -45,27 +45,40 @@ public class CommentServletTest extends Mockito {
   @Test
   public void testDoPost() throws IOException, ServletException {
 
+    // Create comment
+    CommentData comment = new CommentData(1l, 1l, "Comment 1", "Comment 1 message...");
+
     // When parameters are requested, return test values
-    when(request.getParameter("taskID")).thenReturn("1");
-    when(request.getParameter("userID")).thenReturn("1");
-    when(request.getParameter("title")).thenReturn("Comment 1");
-    when(request.getParameter("message")).thenReturn("Comment 1 message...");
+    when(request.getParameter("taskID")).thenReturn(Long.toString(comment.getTaskID()));
+    when(request.getParameter("userID")).thenReturn(Long.toString(comment.getUserID()));
+    when(request.getParameter("title")).thenReturn(comment.getTitle());
+    when(request.getParameter("message")).thenReturn(comment.getMessage());
 
     // Create writer
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(response.getWriter()).thenReturn(printWriter);
 
-    // Get quantity of tasks before posting
+    // Get quantity of comments before posting
     int quantityBefore = datastore.prepare(new Query("Comment")).countEntities();
 
     // Run doPost()
     servlet.doPost(request, response);
 
-    // Get quantity of tasks after posting
+    // Get quantity of comments after posting
     int quantityAfter = datastore.prepare(new Query("Comment")).countEntities();
 
-    // Assert a task entity was added to datastore
+    // Assert a comment entity was added to datastore
     Assert.assertEquals("doPost", quantityAfter, quantityBefore + 1);
+
+    // Get added comment from datastore
+    CommentData getComment =
+        new CommentData(datastore.prepare(new Query("Comment")).asSingleEntity());
+
+    // Assert correct comment values we're added
+    Assert.assertEquals("taskID", comment.getTaskID(), getComment.getTaskID());
+    Assert.assertEquals("userID", comment.getUserID(), getComment.getUserID());
+    Assert.assertEquals("title", comment.getTitle(), getComment.getTitle());
+    Assert.assertEquals("message", comment.getMessage(), getComment.getMessage());
   }
 }

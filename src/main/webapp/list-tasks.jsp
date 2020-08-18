@@ -14,7 +14,7 @@
 <ul>
   <%for (TaskData task : tasks) {%>
     <li class="task">
-      <button type="button" class="inline" onclick="location.href='task?taskID=<%=task.getTaskID()%>'">
+      <button type="button" class="inline deep-button" onclick="location.href='task?taskID=<%=task.getTaskID()%>'">
         <%=task.getName()%>
       </button>
       <p class="inline"><%=task.getDescription()%></p>

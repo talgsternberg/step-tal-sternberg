@@ -19,7 +19,7 @@
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
-    Map<CommentData, String> comments = (HashMap<CommentData, String>) request.getAttribute("comments");
+    ArrayList<CommentDisplayData> commentsDisplay = (ArrayList<CommentDisplayData>) request.getAttribute("comments");
 %>
 
 
@@ -57,13 +57,13 @@
         <form id="toggle-status-post-form" action="/task-set-status" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="status" value="<%=status%>"/>
-          <button type="submit" id="task-toggle-status"><%=statusButtonText%></button>
+          <button type="submit" class="deep-button" id="task-toggle-status"><%=statusButtonText%></button>
         </form>
       </div>
       <div id="task-project-container">
         <%if (project != null) {%>
           <p class="inline">Return to Project: </p>
-          <button type="button" class="inline" onclick="location.href='project?id=<%=project.getId()%>'">
+          <button type="button" class="inline flat-button" onclick="location.href='project?id=<%=project.getId()%>'">
             <%=project.getName()%>
           </button>
         <%}%>
@@ -71,7 +71,7 @@
       <div id="task-parenttask-container">
         <%if (parentTask != null) {%>
           <p class="inline">Return to Parent Task: </p>
-          <button type="button" class="inline" onclick="location.href='task?taskID=<%=parentTask.getTaskID()%>'">
+          <button type="button" class="inline flat-button" onclick="location.href='task?taskID=<%=parentTask.getTaskID()%>'">
             <%=parentTask.getName()%>
           </button>
         <%}%>
@@ -94,7 +94,7 @@
                 projectName = "Default Project Name";
             }
         %>
-        <button type="button" onclick="location.href='add-task.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">
+        <button type="button" class="deep-button" onclick="location.href='add-task.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">
           Add Subtask
         </button>
       </div>
@@ -116,10 +116,13 @@
         <form id="toggle-user-assignment-post-form" action="<%=servletPage%>" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
-          <button type="submit" id="toggle-user-assignment"><%=userButtonText%></button>
+          <button type="submit" class="deep-button" id="toggle-user-assignment"><%=userButtonText%></button>
         </form>
         <%}%>
-      <div id="task-users-container"></div>
+      <div id="task-users-container">
+        <%request.setAttribute("users", users);%>
+        <jsp:include page="list-users.jsp"/>
+      </div>
 
       <h2>Comments</h2>
       <div id="task-addcomments-container">
@@ -129,21 +132,23 @@
         <form id="add-comment-post-form" action="/comment" method="POST">
           <input type="hidden" id="add-comment-task-input" name="taskID" value="<%=task.getTaskID()%>">
           <input type="hidden" id="add-comment-user-input" name="userID" value="<%=user.getUserID()%>">
+          <h3>Write a Comment</h3>
+          <br>
           <input type="text" name="title" required placeholder="Enter title of comment..." maxlength="40">
           <br>
           <br>
           <textarea type="text" name="message" required placeholder="Enter comment message..."></textarea>
           <br>
-          <button type="submit">Post Comment</button>
+          <button type="submit" class="deep-button">Post Comment</button>
         </form>
         <%}%>
       </div>
       <ul id="task-comments-container">
         <%
-            for (Map.Entry<CommentData, String> entry : comments.entrySet()) {
-                CommentData comment = entry.getKey();
-                String username = entry.getValue();
-                
+            for (CommentDisplayData commentDisplay : commentsDisplay) {
+                CommentData comment = commentDisplay.getComment();
+                String username = commentDisplay.getUsername();
+
                 // Get timestamp
                 String datePattern = "MMM d, yyyy";
                 SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
@@ -164,16 +169,16 @@
           <form id="delete-comment-post-form" action="/comment-delete" method="POST">
             <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
             <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
-            <button type="submit"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+            <button type="submit" class="flat-button"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
           </form>
           <%}%>
         </li>
         <%}%>
       </ul>
-      <div id="task-delete-container">
+      <div id="task-delete-container" class="center">
         <form id="task-delete-post-form" action="/task-delete" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
-          <button type="submit" id="task-delete-button">Delete Task</button>
+          <button type="submit" class="deep-button" id="task-delete-button">Delete Task</button>
         </form>
       </div>
     </div>

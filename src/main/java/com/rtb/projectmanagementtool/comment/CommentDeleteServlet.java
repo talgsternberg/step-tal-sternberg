@@ -1,6 +1,7 @@
 package com.rtb.projectmanagementtool.comment;
 
 import com.google.appengine.api.datastore.*;
+import com.rtb.projectmanagementtool.auth.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +31,19 @@ public class CommentDeleteServlet extends HttpServlet {
     long commentID = Long.parseLong(request.getParameter("commentID"));
     long taskID = Long.parseLong(request.getParameter("taskID"));
 
-    // Delete comment
+    // Get comment
     CommentController commentController = new CommentController(datastore);
-    commentController.deleteComments(new ArrayList<>(Arrays.asList(commentID)));
+    CommentData comment = commentController.getCommentByID(commentID);
+
+    // Authenticate
+    AuthOps auth = new AuthOps(datastore);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == comment.getUserID()) {
+      // Delete comment
+      commentController.deleteComments(new ArrayList<>(Arrays.asList(commentID)));
+    } else {
+      System.out.println("Didn't delete comment.");
+    }
 
     // Redirect to comment's task page
     response.sendRedirect("/task?taskID=" + taskID);

@@ -55,9 +55,13 @@ public class CommentDeleteServletTest extends Mockito {
     CommentController commentController = new CommentController(datastore);
     commentController.addComments(new ArrayList<>(Arrays.asList(comment)));
 
+    // Create cookie array to authenticate
+    Cookie[] cookies = {new Cookie("sessionUserID", Long.toString(comment.getUserID()))};
+
     // When parameters are requested, return test values
     when(request.getParameter("commentID")).thenReturn(Long.toString(comment.getCommentID()));
     when(request.getParameter("taskID")).thenReturn(Long.toString(0l));
+    when(request.getCookies()).thenReturn(cookies);
 
     // Create writer
     StringWriter stringWriter = new StringWriter();

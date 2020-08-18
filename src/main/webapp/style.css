@@ -1,5 +1,4 @@
 * {
-  color: blueviolet;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -7,8 +6,12 @@ a {
   text-decoration: none;
 }
 
+html {
+  background-color: lightgray;
+}
+
 #content {
-  background-color: lavender;
+  background-color: white;
   padding: 20px;
   margin: 20px;
 }
@@ -17,16 +20,56 @@ a {
   display: inline-block;
 }
 
+.center {
+  text-align: center;
+}
+
 .task {
-  border: 2px solid blueviolet;
+  border: 2px solid dodgerblue;
+  background-color: aliceblue;
 }
 
 .comment {
-  border: 2px solid blueviolet;
+  border: 2px solid dodgerblue;
   padding: 10px;
   margin: 10px 50px;
+  background-color: aliceblue;
 }
 
+/* Add comments form */
+#task-addcomments-container {
+  padding: 30px;
+  border: 2px solid dodgerblue;
+  margin: 20px;
+  background-color: aliceblue;
+}
+
+input {
+  width: 35%;
+  border: 3px solid #9cf;
+  transition: 0.5s;
+  outline: none;
+  padding: 5px;
+}
+
+input:focus {
+  border: 3px solid dodgerblue;
+}
+
+textarea {
+  width: 100%;
+  height: 200px;
+  border: 3px solid #9cf;
+  transition: 0.5s;
+  outline: none;
+  padding: 5px;
+}
+
+textarea:focus {
+  border: 3px solid dodgerblue;
+}
+
+/* User info */
 .user-stats {
   border: 2px solid blueviolet;
   margin-right: 60%;
@@ -52,12 +95,8 @@ a {
   padding: 10px;
 }
 
-span {
-  color: white;
-}
-
-/* Regular buttons */
-button {
+/* Deep buttons */
+.deep-button {
   text-align: center;
   color: white;
   font-size: 18px;
@@ -65,20 +104,41 @@ button {
   margin: 10px;
   cursor: pointer;
   outline: none;
-  background-color: blueviolet;
+  background-color: mediumblue;
   border: none;
   border-radius: 10px;
-  box-shadow: 0 5px violet;
+  box-shadow: 0 5px royalblue;
 }
 
-button:hover {
-  background-color: rebeccapurple;
+.deep-button:hover {
+  background-color: darkblue;
 }
 
-button:active {
-  background-color: rebeccapurple;
-  box-shadow: 0 5px blueviolet;
+.deep-button:active {
+  background-color: darkblue;
+  box-shadow: 0 5px mediumblue;
   transform: translateY(5px);
+}
+
+/* Flat buttons */
+.flat-button {
+  text-align: center;
+  font-size: 18px;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  outline: none;
+  background-color: lightskyblue;
+  border: 2px solid dodgerblue;
+  border-radius: 10px;
+}
+
+.flat-button:hover {
+  background-color: dodgerblue;
+}
+
+.flat-button:active {
+  background-color: dodgerblue;
 }
 
 /* status on checklist determines task color */
