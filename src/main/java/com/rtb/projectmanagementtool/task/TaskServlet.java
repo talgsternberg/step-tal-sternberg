@@ -1,11 +1,14 @@
 package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.*;
+import com.rtb.projectmanagementtool.auth.*;
+import com.rtb.projectmanagementtool.comment.*;
 import com.rtb.projectmanagementtool.project.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +33,20 @@ public class TaskServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    // Authenticate
+    AuthOps auth = new AuthOps(datastore);
+    auth.loginUser(request, response);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == /*No user found*/ -1l) {
+      // If no user found, redirect to create user servlet
+      response.sendRedirect("/login");
+      return;
+    }
+
+    // Get current user
+    UserController userController = new UserController(datastore);
+    UserData user = userController.getUserByID(userLoggedInId);
 
     // Temporary/Default task to display
     long projectID1 = -1l;
@@ -63,7 +80,6 @@ public class TaskServlet extends HttpServlet {
     // Get Task Users
     ArrayList<UserData> users = new ArrayList<>();
     if (taskID != 0) {
-      UserController userController = new UserController(datastore);
       // users = userController.getUsers(task.getUsers());
       for (long userID : task.getUsers()) {
         try {
@@ -74,18 +90,36 @@ public class TaskServlet extends HttpServlet {
       }
     }
 
-    // // Get Comments
+    // Get Comments
     // int quantity = Integer.parseInt(request.getParameter("quantity"));
     // String sortBy = request.getParameter("sortBy");
     // String sortDirection = request.getParameter("sortDirection");
+    CommentController commentController = new CommentController(datastore);
+    ArrayList<CommentData> comments = new ArrayList<>();
+    HashMap<CommentData, String> commentsMap = new HashMap<>();
+    try {
+      comments = commentController.getCommentsByTaskID(taskID);
+      for (CommentData comment : comments) {
+        String username = "Default Username";
+        try {
+          username = userController.getUserByID(comment.getUserID()).getUserName();
+        } catch (NullPointerException | IllegalArgumentException e) {
+          System.out.println("UserID doesn't exist. Default username will be used.");
+        }
+        commentsMap.put(comment, username);
+      }
+    } catch (NullPointerException | IllegalArgumentException e) {
+      System.out.println("TaskID doesn't exist. Cannot fetch comments.");
+    }
 
     // Send data to task.jsp
+    request.setAttribute("user", user);
     request.setAttribute("task", task);
     request.setAttribute("parentTask", parentTask);
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     request.setAttribute("users", users);
-    // request.setAttribute("comments", comments);
+    request.setAttribute("comments", commentsMap);
     request.getRequestDispatcher("task.jsp").forward(request, response);
   }
 

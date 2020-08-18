@@ -52,6 +52,10 @@ a {
   padding: 10px;
 }
 
+span {
+  color: white;
+}
+
 /* Regular buttons */
 button {
   text-align: center;
