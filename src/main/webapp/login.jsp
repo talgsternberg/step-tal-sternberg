@@ -11,10 +11,10 @@
       <p>"Patrick", "Sandy", "Pearl", "Garry"</p>
 
       <a href="${loginUrl}">
-        <button>Log In</button>
+        <button class="deep-button">Log In</button>
         </a>
       <a href="${loginUrlNewUser}">
-        <button>New User</button>
+        <button class="deep-button">New User</button>
         </a>
 
         <br>
