@@ -1,5 +1,6 @@
 <%@ page import="com.rtb.projectmanagementtool.project.*" %>
 <%@ page import="com.rtb.projectmanagementtool.user.*" %>
+<%@ page import="com.rtb.projectmanagementtool.task.*" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.HashSet" %>
 
@@ -9,7 +10,7 @@
     UserData creator = (UserData) request.getAttribute("creator");
     HashSet<UserData> admins =  (HashSet<UserData>) request.getAttribute("admins");
     HashSet<UserData> members =  (HashSet<UserData>) request.getAttribute("members");
-    ArrayList<Long> tasks = (ArrayList<Long>) request.getAttribute("tasks");
+    ArrayList<TaskData> tasks = (ArrayList<TaskData>) request.getAttribute("tasks");
 %>
 
 <html>
@@ -67,8 +68,8 @@
       
       <div id="project-tasks-container">
         <h2>Tasks</h2>
-        <%for (Long taskId : tasks) {%>
-          <p>- Task with id #<%=taskId%></p>
+        <%for (TaskData task : tasks) {%>
+          <p><%=task.getName()%></p>
         <%}%>
       </div>
     </div>

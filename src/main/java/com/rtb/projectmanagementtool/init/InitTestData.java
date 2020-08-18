@@ -5,6 +5,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.task.*;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
 import com.rtb.projectmanagementtool.user.*;
 import com.rtb.projectmanagementtool.user.UserData.Skills;
 import java.io.IOException;
@@ -32,6 +33,8 @@ public class InitTestData extends HttpServlet {
   private Long spanishProject;
 
   // The tasks
+  private Long task1;
+  private Long task2;
 
   private ArrayList<Key> entityKeys; // arrays to store entity keys for batch delete
 
@@ -45,13 +48,13 @@ public class InitTestData extends HttpServlet {
     entityKeys = new ArrayList<Key>();
 
     // Create UserDataObjects
-    creatUsers(datastore);
+    createUsers(datastore);
 
     // Create ProjectDataObjects
-    creatProjects(datastore);
+    createProjects(datastore);
 
     // Create TaskDataObjects
-    creatTasks(datastore);
+    createTasks(datastore);
 
     addKeys(datastore);
     // Load jsp for project page
@@ -77,8 +80,7 @@ public class InitTestData extends HttpServlet {
     datastore.put(entity);
   }
 
-  private void creatUsers(DatastoreService datastore) {
-    System.out.println("Creating users");
+  private void createUsers(DatastoreService datastore) {
     createUser(
         datastore,
         /*authId*/ "155150131811713716817",
@@ -152,7 +154,7 @@ public class InitTestData extends HttpServlet {
     entityKeys.add(entityKey);
   }
 
-  private void creatProjects(DatastoreService datastore) {
+  private void createProjects(DatastoreService datastore) {
     createProject(
         datastore,
         /*projectName*/ "English Project",
@@ -199,7 +201,10 @@ public class InitTestData extends HttpServlet {
     entity.setProperty("description", projectDescription);
     entity.setProperty("admins", projectAdmins);
     entity.setProperty("members", projectMembers);
-    Long projectId = datastore.put(entity).getId();
+
+    Key entityKey = datastore.put(entity);
+    Long projectId = entityKey.getId();
+    entityKeys.add(entityKey);
 
     switch (projectName) {
       case "English Project":
@@ -215,17 +220,142 @@ public class InitTestData extends HttpServlet {
         this.spanishProject = projectId;
         break;
     }
+  }
+
+  private void createTasks(DatastoreService datastore) {
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ englishProject,
+        /*name*/ "Write paragraph two",
+        /*description*/ "description for 'write paragraph two' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Pearl)));
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ englishProject,
+        /*name*/ "Write paragraph four",
+        /*description*/ "description for 'Write paragraph four' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Garry)));
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ englishProject,
+        /*name*/ "Review paragraph three",
+        /*description*/ "description for 'Review paragraph three' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Garry)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ task1,
+        /*projectId*/ englishProject,
+        /*name*/ "Include annotations in paragraph",
+        /*description*/ "description for 'Include annotations in paragraph'",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Pearl)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ csProject,
+        /*name*/ "Fix bugs",
+        /*description*/ "description for 'fix bugs' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Garry, Patrick)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ csProject,
+        /*name*/ "Write test class",
+        /*description*/ "description for 'Write test class' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Garry)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ task2,
+        /*projectId*/ csProject,
+        /*name*/ "Figure out what ERROR 551 means",
+        /*description*/ "description for 'Figure out what ERROR 551 means' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Patrick)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ historyProject,
+        /*name*/ "Gather resources",
+        /*description*/ "description for 'Gather resources' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Pearl)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ historyProject,
+        /*name*/ "Meet with professor",
+        /*description*/ "description for 'Meet with professor' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Patrick)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ historyProject,
+        /*name*/ "Finish reading the book",
+        /*description*/ "description for 'Finish reading the book' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Patrick, Pearl, Garry)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ spanishProject,
+        /*name*/ "Create slide #5",
+        /*description*/ "description for 'Create slide #5' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Pearl)));
+
+    createTask(
+        datastore,
+        /*parentTaskId*/ 0l,
+        /*projectId*/ spanishProject,
+        /*name*/ "Create slide #6",
+        /*description*/ "description for 'Create slide #6' task",
+        /*status*/ Status.INCOMPLETE,
+        /*users*/ new ArrayList(Arrays.asList(Sandy)));
+  }
+
+  private void createTask(
+      DatastoreService datastore,
+      long parentTaskId,
+      long projectId,
+      String name,
+      String description,
+      Status status,
+      ArrayList<Long> users) {
+    Entity entity = new Entity("Task");
+    entity.setProperty("parentTaskID", parentTaskId);
+    entity.setProperty("projectID", projectId);
+    entity.setProperty("name", name);
+    entity.setProperty("description", description);
+    entity.setProperty("status", status.name());
+    entity.setProperty("users", users);
+
     Key entityKey = datastore.put(entity);
-    Long userId = entityKey.getId();
+    Long entityId = entityKey.getId();
     entityKeys.add(entityKey);
-  }
 
-  private void creatTasks(DatastoreService datastore) {
-    // Use existing projectIds
-    System.out.println("Creating tasks");
-  }
-
-  private void creatTask(DatastoreService datastore) {
-    // TO-DO: anyone implement
+    switch (name) {
+      case "Write paragraph two":
+        this.task1 = entityId;
+        break;
+      case "Fix bugs":
+        this.task2 = entityId;
+    }
   }
 }

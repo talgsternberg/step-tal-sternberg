@@ -81,9 +81,10 @@ public class ProjectController {
    * Adds a Project to database.
    *
    * @param project the project to add
+   * @return the datastore id of the project
    */
-  public void addProject(ProjectData project) {
-    datastore.put(project.toEntity());
+  public long addProject(ProjectData project) {
+    return datastore.put(project.toEntity()).getId();
   }
 
   /**
