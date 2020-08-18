@@ -35,7 +35,7 @@
         <tr>
           <td>Top Skill:</td><br>
           <td>
-            <input type="radio" value="NONE" name="skills">
+            <input type="radio" value="NONE" name="skills" checked>
             <label>None</label><br>
             <input type="radio" value="LEADERSHIP" name="skills">
             <label>Leadership</label><br>

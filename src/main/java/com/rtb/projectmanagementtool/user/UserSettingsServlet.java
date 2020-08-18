@@ -123,6 +123,13 @@ public class UserSettingsServlet extends HttpServlet {
     String userMajorsString = request.getParameter("userMajors");
     String skillsString = request.getParameter("skills");
 
+    System.out.println("HERE HERE HERE HERE");
+    System.out.println("HERE HERE HERE HERE");
+    System.out.println("HERE HERE HERE HERE");
+    System.out.println("HERE HERE HERE HERE");
+    System.out.println("HERE HERE HERE HERE");
+    System.out.println("skillsString: " + skillsString);
+
     // update skills
     Skills skills = Skills.valueOf(skillsString);
 
@@ -140,7 +147,6 @@ public class UserSettingsServlet extends HttpServlet {
     userController.updateUser(user);
 
     UserData updatedUser = userController.getUserByID(userID);
-    System.out.println(updatedUser);
 
     response.sendRedirect("/user-profile");
   }

@@ -44,7 +44,7 @@
             <label>None</label><br>
             <input type="radio" value="LEADERSHIP" name="skills">
             <label>Leadership</label><br>
-            <input type="radio" vlaue="ORGANIZATION" name="skills">
+            <input type="radio" value="ORGANIZATION" name="skills">
             <label>Organization</label><br>
             <input type="radio" value="WRITING" name="skills">
             <label>Writing</label><br>
