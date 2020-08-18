@@ -93,10 +93,12 @@
                 projectID = 1;
                 projectName = "Default Project Name";
             }
+            if (task.getStatus() != Status.COMPLETE) {
         %>
         <button type="button" class="deep-button" onclick="location.href='add-task.jsp?projectID=<%=projectID%>&projectName=<%=projectName%>&taskID=<%=task.getTaskID()%>&taskName=<%=task.getName()%>'">
           Add Subtask
         </button>
+        <%}%>
       </div>
 
       <h2>Members</h2>

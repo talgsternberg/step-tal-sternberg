@@ -41,7 +41,8 @@
           <br>
           <textarea type="text" name="description" required placeholder="Enter task description..."></textarea>
           <br>
-          <button type="submit">Add Task</button>
+          <br>
+          <button type="submit" class="deep-button">Add Task</button>
         </div>
         <br>
       </form>
