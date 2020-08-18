@@ -73,7 +73,7 @@
       </div>
       <div id="task-addtask-container">
         <button type="button" class="deep-button" onclick="location.href='add-task.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>&taskID=0&taskName=null'">
-          Add Subtask
+          Add Task
         </button>
       </div>
 
