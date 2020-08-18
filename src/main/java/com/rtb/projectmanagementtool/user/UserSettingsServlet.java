@@ -59,30 +59,30 @@ public class UserSettingsServlet extends HttpServlet {
     majorsString = majorsString.replaceAll("\\s", "");
 
     // pre checked buttons
-    ArrayList<String> checkedStatus = new ArrayList<>(Arrays.asList("", "", "", "", "", "", ""));
+    String[] checkedStatus = {"", "", "", "", "", "", ""};
     Skills getSkills = user.getUserSkills();
     String skillsAsString = getSkills.name();
 
     // currently not using: look up "switch-case"
     if (skillsAsString.equals("NONE")) {
-      checkedStatus.set(0, "checked");
+      checkedStatus[0] = "checked";
     } else if (skillsAsString.equals("LEADERSHIP")) {
-      checkedStatus.set(1, "checked");
+      checkedStatus[1] = "checked";
     } else if (skillsAsString.equals("ORGANIZATION")) {
-      checkedStatus.set(2, "checked");
+      checkedStatus[2] = "checked";
     } else if (skillsAsString.equals("WRITING")) {
-      checkedStatus.set(3, "checked");
+      checkedStatus[3] = "checked";
     } else if (skillsAsString.equals("ART")) {
-      checkedStatus.set(4, "checked");
+      checkedStatus[4] = "checked";
     } else if (skillsAsString.equals("WEBDEV")) {
-      checkedStatus.set(5, "checked");
+      checkedStatus[5] = "checked";
     } else {
-      checkedStatus.set(6, "checked");
+      checkedStatus[6] = "checked";
     }
 
     // Set attributes of request; retrieve in jsp with
     request.setAttribute("settings", user);
-    // request.setAttribute("checkedStatus", checkedStatus);
+    request.setAttribute("checkedStatus", checkedStatus);
     request.setAttribute("majorsSettings", majorsString);
 
     // Load jsp for user page
