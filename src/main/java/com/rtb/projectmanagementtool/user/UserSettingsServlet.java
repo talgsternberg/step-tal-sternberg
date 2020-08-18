@@ -97,13 +97,8 @@ public class UserSettingsServlet extends HttpServlet {
     auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
 
-    // for debugging
-    System.out.println("Settings Servlet UserID:");
-    System.out.println(userLoggedInId);
-
     if (userLoggedInId == /*No user found*/ -1l) {
       // If no user found, redirect to create user servlet
-      System.out.println("Here.Failed.");
       response.sendRedirect("/login");
       return;
     }
@@ -122,13 +117,6 @@ public class UserSettingsServlet extends HttpServlet {
     long userYear = Long.parseLong(request.getParameter("userYear"));
     String userMajorsString = request.getParameter("userMajors");
     String skillsString = request.getParameter("skills");
-
-    System.out.println("HERE HERE HERE HERE");
-    System.out.println("HERE HERE HERE HERE");
-    System.out.println("HERE HERE HERE HERE");
-    System.out.println("HERE HERE HERE HERE");
-    System.out.println("HERE HERE HERE HERE");
-    System.out.println("skillsString: " + skillsString);
 
     // update skills
     Skills skills = Skills.valueOf(skillsString);

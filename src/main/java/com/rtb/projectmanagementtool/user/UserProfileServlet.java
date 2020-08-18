@@ -53,10 +53,6 @@ public class UserProfileServlet extends HttpServlet {
       userID = Long.parseLong(request.getParameter("userID"));
     }
 
-    // for debugging
-    System.out.println("Profile Servlet UserID:");
-    System.out.println(userLoggedInId);
-
     UserData user = userController.getUserByID(userID);
 
     // new TaskController
