@@ -8,7 +8,6 @@ import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -96,20 +95,20 @@ public class TaskServlet extends HttpServlet {
     // String sortDirection = request.getParameter("sortDirection");
     CommentController commentController = new CommentController(datastore);
     ArrayList<CommentData> comments = new ArrayList<>();
-    HashMap<CommentData, String> commentsMap = new HashMap<>();
     try {
       comments = commentController.getCommentsByTaskID(taskID);
-      for (CommentData comment : comments) {
-        String username = "Default Username";
-        try {
-          username = userController.getUserByID(comment.getUserID()).getUserName();
-        } catch (NullPointerException | IllegalArgumentException e) {
-          System.out.println("UserID doesn't exist. Default username will be used.");
-        }
-        commentsMap.put(comment, username);
-      }
     } catch (NullPointerException | IllegalArgumentException e) {
       System.out.println("TaskID doesn't exist. Cannot fetch comments.");
+    }
+    ArrayList<CommentDisplayData> commentsDisplay = new ArrayList<>();
+    for (CommentData comment : comments) {
+      String username = "Default Username";
+      try {
+        username = userController.getUserByID(comment.getUserID()).getUserName();
+      } catch (NullPointerException | IllegalArgumentException e) {
+        System.out.println("UserID doesn't exist. Default username will be used.");
+      }
+      commentsDisplay.add(new CommentDisplayData(comment, username));
     }
 
     // Send data to task.jsp
@@ -119,7 +118,7 @@ public class TaskServlet extends HttpServlet {
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     request.setAttribute("users", users);
-    request.setAttribute("comments", commentsMap);
+    request.setAttribute("comments", commentsDisplay);
     request.getRequestDispatcher("task.jsp").forward(request, response);
   }
 

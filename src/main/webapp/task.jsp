@@ -19,7 +19,7 @@
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
-    Map<CommentData, String> comments = (HashMap<CommentData, String>) request.getAttribute("comments");
+    ArrayList<CommentDisplayData> commentsDisplay = (ArrayList<CommentDisplayData>) request.getAttribute("comments");
 %>
 
 
@@ -145,10 +145,10 @@
       </div>
       <ul id="task-comments-container">
         <%
-            for (Map.Entry<CommentData, String> entry : comments.entrySet()) {
-                CommentData comment = entry.getKey();
-                String username = entry.getValue();
-                
+            for (CommentDisplayData commentDisplay : commentsDisplay) {
+                CommentData comment = commentDisplay.getComment();
+                String username = commentDisplay.getUsername();
+
                 // Get timestamp
                 String datePattern = "MMM d, yyyy";
                 SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
