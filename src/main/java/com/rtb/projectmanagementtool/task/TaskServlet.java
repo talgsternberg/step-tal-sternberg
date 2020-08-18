@@ -36,7 +36,6 @@ public class TaskServlet extends HttpServlet {
 
     // Authenticate
     AuthOps auth = new AuthOps(datastore);
-    auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == /*No user found*/ -1l) {
       // If no user found, redirect to create user servlet
@@ -82,9 +81,10 @@ public class TaskServlet extends HttpServlet {
     if (taskID != 0) {
       // users = userController.getUsers(task.getUsers());
       for (long userID : task.getUsers()) {
-        try {
-          users.add(userController.getUserByID(userID));
-        } catch (NullPointerException e) {
+        UserData member = userController.getUserByID(userID);
+        if (member != null) {
+          users.add(member);
+        } else {
           System.out.println("No user exists for userID: " + userID);
         }
       }
