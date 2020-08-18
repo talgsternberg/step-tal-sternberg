@@ -12,8 +12,8 @@ html {
 
 #content {
   background-color: white;
-  padding: 20px;
-  margin: 20px;
+  padding: 10px 30px;
+  margin: 20px 50px;
 }
 
 .inline {
@@ -120,11 +120,36 @@ textarea:focus {
   transform: translateY(5px);
 }
 
+/* Unavailable deep buttons */
+.unavailable-deep-button {
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  outline: none;
+  background-color: dimgray;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 5px gray;
+}
+
+.unavailable-deep-button:hover {
+  background-color: #333;
+}
+
+.unavailable-deep-button:active {
+  background-color: #333;
+  box-shadow: 0 5px dimgray;
+  transform: translateY(5px);
+}
+
 /* Flat buttons */
 .flat-button {
   text-align: center;
   font-size: 18px;
-  padding: 10px;
+  padding: 3px;
   margin: 10px;
   cursor: pointer;
   outline: none;

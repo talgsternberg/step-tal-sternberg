@@ -15,6 +15,8 @@
 <%
     UserData user = (UserData) request.getAttribute("user");
     TaskData task = (TaskData) request.getAttribute("task");
+    boolean canSetComplete = (boolean) request.getAttribute("canSetComplete");
+    boolean canSetIncomplete = (boolean) request.getAttribute("canSetIncomplete");
     TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
@@ -46,18 +48,29 @@
         <%
             String status;
             String statusButtonText;
+            String availability = "deep-button";
+            String text = "";
             if (task.getStatus() != Status.COMPLETE) {
                 status = Status.COMPLETE.name();
                 statusButtonText = "Set Task Status as Complete";
+                if (!canSetComplete) {
+                    availability = "unavailable-deep-button";
+                    text = "Cannot set task's status to complete until all of its subtasks are set to complete.";
+                }
             } else {
                 status = Status.INCOMPLETE.name();
                 statusButtonText = "Set Task Status as Incomplete";
+                if (!canSetIncomplete) {
+                    availability = "unavailable-deep-button";
+                    text = "Cannot set task's status to incomplete if its parent task is set to incomplete.";
+                }
             }
         %>
         <form id="toggle-status-post-form" action="/task-set-status" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="status" value="<%=status%>"/>
-          <button type="submit" class="deep-button" id="task-toggle-status"><%=statusButtonText%></button>
+          <button type="submit" class="<%=availability%>" id="task-toggle-status"><%=statusButtonText%></button>
+          <p><%=text%></p>
         </form>
       </div>
       <div id="task-project-container">

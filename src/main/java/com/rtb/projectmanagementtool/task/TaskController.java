@@ -85,7 +85,7 @@ public final class TaskController {
     return true;
   }
 
-  private boolean allSubtasksAreComplete(TaskData task) {
+  public boolean allSubtasksAreComplete(TaskData task) {
     ArrayList<TaskData> subtasks = getSubtasks(task);
     for (TaskData subtask : subtasks) {
       if (subtask.getStatus() != Status.COMPLETE) {
@@ -131,8 +131,7 @@ public final class TaskController {
   }
 
   public boolean setIncomplete(TaskData task) {
-    Long parentTaskID = task.getParentTaskID();
-    if (parentTaskID != 0 && getTaskByID(parentTaskID).getStatus() == Status.COMPLETE) {
+    if (parentTaskIsComplete(task)) {
       return false;
     }
     if (task.getStatus() != Status.INCOMPLETE) {
@@ -164,6 +163,11 @@ public final class TaskController {
       }
     }
     return true;
+  }
+
+  public boolean parentTaskIsComplete(TaskData task) {
+    Long parentTaskID = task.getParentTaskID();
+    return parentTaskID != 0 && getTaskByID(parentTaskID).getStatus() == Status.COMPLETE;
   }
 
   // Get methods
