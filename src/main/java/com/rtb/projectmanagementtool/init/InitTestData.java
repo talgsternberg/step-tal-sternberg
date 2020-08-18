@@ -1,5 +1,5 @@
 /** class initiates objects to test mvp on test servers */
-package com.rtb.projectmanagementtool.project;
+package com.rtb.projectmanagementtool.init;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;

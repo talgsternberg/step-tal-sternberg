@@ -1,21 +1,27 @@
 <%--Class Imports--%>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.rtb.projectmanagementtool.comment.*"%>
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.rtb.projectmanagementtool.user.UserData.Skills"%>
+<%@ page import="java.text.SimpleDateFormat"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.util.HashMap"%>
+<%@ page import="java.util.Map"%>
 
 <%--Get variables--%>
 <%
+    UserData user = (UserData) request.getAttribute("user");
     TaskData task = (TaskData) request.getAttribute("task");
     TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
+    Map<CommentData, String> comments = (HashMap<CommentData, String>) request.getAttribute("comments");
 %>
 
-    <!-- ArrayList<CommentData> comments = (ArrayList<CommentData>) request.getAttribute("comments"); -->
 
 
 <%--HTML--%>
@@ -24,6 +30,7 @@
     <meta charset="UTF-8">
     <title><%=task.getName()%></title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="scripts/main.js"></script> -->
     <!-- <script src="scripts/task.js"></script> -->
   </head>
@@ -96,10 +103,9 @@
       <div id="task-assignuser-container"></div>
         <%
             if (task.getStatus() != Status.COMPLETE) {
-                long userID = 1; // Default value
                 String servletPage;
                 String userButtonText;
-                if (!task.getUsers().contains(userID)) {
+                if (!task.getUsers().contains(user.getUserID())) {
                     servletPage = "/task-add-user";
                     userButtonText = "Assign me to this task";
                 } else {
@@ -109,23 +115,60 @@
         %>
         <form id="toggle-user-assignment-post-form" action="<%=servletPage%>" method="POST">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
-          <input type="hidden" name="userID" value="<%=userID%>"/>
+          <input type="hidden" name="userID" value="<%=user.getUserID()%>"/>
           <button type="submit" id="toggle-user-assignment"><%=userButtonText%></button>
         </form>
         <%}%>
       <div id="task-users-container"></div>
 
       <h2>Comments</h2>
+      <div id="task-addcomments-container">
+        <%
+            if (task.getTaskID() != 0 && task.getStatus() != Status.COMPLETE) {
+        %>
+        <form id="add-comment-post-form" action="/comment" method="POST">
+          <input type="hidden" id="add-comment-task-input" name="taskID" value="<%=task.getTaskID()%>">
+          <input type="hidden" id="add-comment-user-input" name="userID" value="<%=user.getUserID()%>">
+          <input type="text" name="title" required placeholder="Enter title of comment..." maxlength="40">
+          <br>
+          <br>
+          <textarea type="text" name="message" required placeholder="Enter comment message..."></textarea>
+          <br>
+          <button type="submit">Post Comment</button>
+        </form>
+        <%}%>
+      </div>
       <ul id="task-comments-container">
+        <%
+            for (Map.Entry<CommentData, String> entry : comments.entrySet()) {
+                CommentData comment = entry.getKey();
+                String username = entry.getValue();
+                
+                // Get timestamp
+                String datePattern = "MMM d, yyyy";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+                String date = dateFormat.format(comment.getTimestamp());
+                String timePattern = "HH:mm";
+                SimpleDateFormat timeFormat = new SimpleDateFormat(timePattern);
+                String time = timeFormat.format(comment.getTimestamp());
+        %>
         <li class="comment">
-          <p>Comment 1</p>
+          <h3><%=comment.getTitle()%></h3>
+          <h5>
+            Posted on <%=date%> at <%=time%>
+            <br>
+            Posted by <%=username%>
+          </h5>
+          <p><%=comment.getMessage()%></p>
+          <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
+          <form id="delete-comment-post-form" action="/comment-delete" method="POST">
+            <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
+            <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
+            <button type="submit"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+          </form>
+          <%}%>
         </li>
-        <li class="comment">
-          <p>Comment 2</p>
-        </li>
-        <li class="comment">
-          <p>Comment 3</p>
-        </li>
+        <%}%>
       </ul>
       <div id="task-delete-container">
         <form id="task-delete-post-form" action="/task-delete" method="POST">
