@@ -28,7 +28,9 @@
     <div id="content">
       <h1>Add Task</h1>
       <div id="addtask-project-container"><p>This task will be under project: <%=projectName%></p></div>
+      <%if (parentTaskID != 0) {%>
       <div id="addtask-task-container"><p>This task will be under task: <%=parentTaskName%></p></div>
+      <%}%>
       <br>
       <form id="addtask-post-form" action="/task" method="POST">
         <div id="addtask-post-container">

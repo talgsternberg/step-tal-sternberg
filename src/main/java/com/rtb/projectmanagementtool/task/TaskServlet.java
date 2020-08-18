@@ -138,7 +138,12 @@ public class TaskServlet extends HttpServlet {
     TaskController taskController = new TaskController(datastore);
     taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
 
-    // Redirect back to the parent task's task page
-    response.sendRedirect("/task?taskID=" + parentTaskID);
+    if (parentTaskID != 0) {
+      // Redirect back to the parent task's task page
+      response.sendRedirect("/task?taskID=" + parentTaskID);
+    } else {
+      // Redirect back to the project's project page
+      response.sendRedirect("/project?id=" + projectID);
+    }
   }
 }
