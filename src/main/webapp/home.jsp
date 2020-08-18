@@ -25,7 +25,7 @@
           <button><%=project.getName()%></button>
         </a>
       <%}%>
-    <button>Create Project</button>
+    <a href="/create-project"><button>Create Project</button></a>
     </div>
   </body>
 </html>

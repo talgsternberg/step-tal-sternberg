@@ -40,7 +40,7 @@ public class AuthOps {
     return login ? userService.createLoginURL(returnUrl) : userService.createLogoutURL(returnUrl);
   }
 
-  // only call after Auth S
+  // only call after Auth
   public String getAuthID() {
     UserService userService = UserServiceFactory.getUserService();
     String AuthID = userService.getCurrentUser().getUserId();
@@ -83,7 +83,6 @@ public class AuthOps {
       if (userService.isUserLoggedIn()) {
         // get AuthID
         String AuthID = userService.getCurrentUser().getUserId();
-        System.out.println("AuthID: " + AuthID);
         // find AuthID in DataStore
         UserData user = controller.getUserByAuthID(AuthID);
         if (user != null) {
@@ -102,6 +101,7 @@ public class AuthOps {
 
     // get cookie value for user
     String currUserIDString = currCookie.getValue();
+
     return Long.parseLong(currUserIDString);
   }
 

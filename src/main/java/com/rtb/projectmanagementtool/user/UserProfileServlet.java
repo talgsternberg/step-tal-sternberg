@@ -32,7 +32,8 @@ public class UserProfileServlet extends HttpServlet {
     AuthOps auth = new AuthOps(datastore);
 
     // Authenticate
-    auth.loginUser(request, response);
+    // shouldn't need this line
+    // auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       // If no user found, redirect to create user servlet
