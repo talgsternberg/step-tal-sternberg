@@ -1,17 +1,12 @@
 <%--Class Imports--%>
 <%@ page import="com.rtb.projectmanagementtool.user.*,java.util.ArrayList" %>
 
-<%--Get variables--%>
-<%
-    UserData user = (UserData) request.getAttribute("settings");
-    String majors = (String) request.getAttribute("majorsSettings");
-%>
 
 <%--HTML--%>
 <html>
   <head>
     <meta charset="UTF-8">
-    <title><%=user.getUserName()%>'s Settings</title>
+    <title>New User</title>
     <link rel="stylesheet" href="style.css">
   </head>
 
@@ -22,20 +17,20 @@
     <!-- Page content -->
     <div id="content">
       <div id="title">
-        <div id="user-page-container"><h1><%=user.getUserName()%>'s Settings</h1></div>
+        <div id="user-page-container"><h1>Hi, New User!</h1></div>
       </div>
-      <form action="/user-settings" method="post">
+      <form action="/create-user" method="post">
         <tr>
           <td>Name:</td>
-          <td><input type="text" name="userName" value=<%=user.getUserName()%> /></td>
+          <td><input type="text" name="userName" value="User Name" /></td>
         </tr><br><br>
         <tr>
           <td>Class Year:</td>
-          <td><input type="text" name="userYear" value=<%=user.getUserYear()%> /></td>
+          <td><input type="text" name="userYear" value="2020" /></td>
         </tr><br><br>
         <tr>
           <td>Majors (separate by commas no spaces)</td>
-          <td><input type="text" name="userMajors" value=<%=majors%> /></td>
+          <td><input type="text" name="userMajors" value="Major1,Major2" /></td>
         </tr><br><br>
         <tr>
           <td>Top Skill:</td><br>
@@ -44,7 +39,7 @@
             <label>None</label><br>
             <input type="radio" value="LEADERSHIP" name="skills">
             <label>Leadership</label><br>
-            <input type="radio" value="ORGANIZATION" name="skills">
+            <input type="radio" vlaue="ORGANIZATION" name="skills">
             <label>Organization</label><br>
             <input type="radio" value="WRITING" name="skills">
             <label>Writing</label><br>

@@ -30,7 +30,8 @@ public class UserSettingsServlet extends HttpServlet {
       throws ServletException, IOException {
 
     // Authenticate
-    auth.loginUser(request, response);
+    // shouldn't need this line
+    // auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
       // If no user found, redirect to create user servlet
@@ -95,6 +96,7 @@ public class UserSettingsServlet extends HttpServlet {
     // Authenticate
     auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+
     if (userLoggedInId == /*No user found*/ -1l) {
       // If no user found, redirect to create user servlet
       response.sendRedirect("/login");
@@ -105,6 +107,7 @@ public class UserSettingsServlet extends HttpServlet {
 
     // new UserController
     UserController userController = new UserController(datastore);
+
     // get user by ID long
     long userID = auth.whichUserIsLoggedIn(request, response);
     UserData user = userController.getUserByID(userID);
@@ -128,6 +131,11 @@ public class UserSettingsServlet extends HttpServlet {
     user.setUserMajors(userMajors);
     user.setUserSkills(skills);
 
-    response.sendRedirect("/user_profile.jsp");
+    // update in datastore
+    userController.updateUser(user);
+
+    UserData updatedUser = userController.getUserByID(userID);
+
+    response.sendRedirect("/user-profile");
   }
 }
