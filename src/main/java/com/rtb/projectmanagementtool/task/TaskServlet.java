@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.*;
 import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.comment.*;
 import com.rtb.projectmanagementtool.project.*;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,7 +137,10 @@ public class TaskServlet extends HttpServlet {
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);
-    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+    if (parentTaskID == 0
+        || taskController.getTaskByID(parentTaskID).getStatus() != Status.COMPLETE) {
+      taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+    }
 
     if (parentTaskID != 0) {
       // Redirect back to the parent task's task page
