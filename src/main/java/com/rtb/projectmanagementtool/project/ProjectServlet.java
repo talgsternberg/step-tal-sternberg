@@ -19,7 +19,7 @@ public class ProjectServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
+    System.out.println("message in /project: " + request.getAttribute("alertMessage"));
     // Authentication goes here
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     AuthOps auth = new AuthOps(datastore);

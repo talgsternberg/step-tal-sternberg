@@ -18,8 +18,8 @@
     <meta charset="UTF-8">
     <title><%=project.getName()%></title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="scripts/project.js"></script>
   </head>
-
   <body>
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp" />
@@ -64,6 +64,14 @@
             <% } %>
           </p>
         <%}%>
+        
+        <% if (project.isCreator(userId) || project.hasAdmin(userId)) { %>
+          <button id="add-user-button" onclick="showAddUserForm()">Add user</button>
+          <div id="project-add-user-form">
+            <button id="cancel-add-user-button" onclick="hideAddUserForm()">Cancel</button>
+            <jsp:include page="project-add-user-form.jsp" />
+          </div>
+        <% } %>
       </div>
       
       <div id="project-tasks-container">

@@ -13,6 +13,20 @@ public class UserController {
     this.datastore = datastore;
   }
 
+  // Only way to find users to add to projects currently
+  // is with their name; means that we'd need to make sure there
+  // are no duplicate names in database
+  public UserData getUserByName(String userName) {
+    Query query = new Query("User").addFilter("userName", FilterOperator.EQUAL, userName);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity != null) {
+      UserData user = new UserData(entity);
+      return user;
+    }
+    return null;
+  }
+
   public UserData getUserByID(long userID) {
     // Query query = new Query("User").addFilter("userID", FilterOperator.EQUAL, userID);
     Query query =

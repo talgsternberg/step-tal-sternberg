@@ -234,3 +234,7 @@ li {
   width: 200px;
   height: 150px;
 }
+
+#project-add-user-form {
+    display: none;
+}
