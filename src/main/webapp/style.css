@@ -51,28 +51,29 @@ html {
 .unchecked {
   color: white;
   text-shadow:
-   -1px -1px 0 #000,
+    -1px -1px 0 #000,
     1px -1px 0 #000,
     -1px 1px 0 #000,
-     1px 1px 0 #000;
+    1px 1px 0 #000;
   transition: 0.5s;
 }
+
 .checked {
   color: green;
   text-shadow:
-   -1px -1px 0 green,
+    -1px -1px 0 green,
     1px -1px 0 green,
     -1px 1px 0 green,
-     1px 1px 0 green;
+    1px 1px 0 green;
   transition: 0.5s;
 }
 
 .unavailable {
   text-shadow:
-   -1px -1px 0 gray,
+    -1px -1px 0 gray,
     1px -1px 0 gray,
     -1px 1px 0 gray,
-     1px 1px 0 gray;
+    1px 1px 0 gray;
 }
 
 .checked.unavailable {
