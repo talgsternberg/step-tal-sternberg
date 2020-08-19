@@ -16,8 +16,12 @@
     <li class="user inline">
       <button type="button" class = "flat-button" onclick="location.href='user-profile'">
         <h3><%=user.getUserName()%></h3>
-        <p>Major: <%=user.getUserMajors()%></p>
-        <p>Graduation Year: <%=user.getUserYear()%></p>
+        <% if (user.getUserMajors().size() == 1) { %>
+        <p>Major: <%=user.getUserMajors().get(0)%></p>
+        <% } else { %>
+        <p>Majors: <%=user.getUserMajors().toString().substring(1, user.getUserMajors().toString().length()-1)%></p>
+        <% } %>
+        <p>Class of <%=user.getUserYear()%></p>
       </button>
     </li>
   <%}%>
