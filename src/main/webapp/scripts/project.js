@@ -1,9 +1,9 @@
 /**
  * This file contains javascript code for the project page
  */
- 
+
 /**
- * Method that shows the add user form 
+ * Method that shows the add user form
  */
 function showAddUserForm() {
   document.getElementById('project-add-user-form').style.display = 'block';
@@ -11,7 +11,7 @@ function showAddUserForm() {
 }
 
 /*
- * Method that hides the add user form 
+ * Method that hides the add user form
  */
 function hideAddUserForm() {
   document.getElementById('project-add-user-form').style.display = 'none';
