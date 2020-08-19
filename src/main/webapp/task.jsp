@@ -15,7 +15,9 @@
 <%
     UserData user = (UserData) request.getAttribute("user");
     TaskData task = (TaskData) request.getAttribute("task");
-    TaskData parentTask = (TaskData) request.getAttribute("parentTask");
+    ArrayList<TaskData> parents = (ArrayList<TaskData>) request.getAttribute("parents");
+    boolean canSetComplete = (boolean) request.getAttribute("canSetComplete");
+    boolean canSetIncomplete = (boolean) request.getAttribute("canSetIncomplete");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
@@ -39,43 +41,24 @@
     <jsp:include page="navigation-bar.jsp"/>
 
     <div id="content">
-      <div id="task-title-container"><h1><%=task.getName()%></h1></div>
-      <div id="task-description-container"><%=task.getDescription()%></div>
-      <div id="task-status-container">
-        <p>Status: <%=task.getStatus()%></p>
-        <%
-            String status;
-            String statusButtonText;
-            if (task.getStatus() != Status.COMPLETE) {
-                status = Status.COMPLETE.name();
-                statusButtonText = "Set Task Status as Complete";
-            } else {
-                status = Status.INCOMPLETE.name();
-                statusButtonText = "Set Task Status as Incomplete";
-            }
-        %>
-        <form id="toggle-status-post-form" action="/task-set-status" method="POST">
-          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
-          <input type="hidden" name="status" value="<%=status%>"/>
-          <button type="submit" class="deep-button" id="task-toggle-status"><%=statusButtonText%></button>
-        </form>
+      <div id="task-parents-container">
+        <p>
+          <b><a href="project?id=<%=project.getId()%>"><%=project.getName()%></a></b> / 
+          <%for (TaskData parent : parents) {%>
+          <a href="task?taskID=<%=parent.getTaskID()%>"><%=parent.getName()%></a> / 
+          <%}%>
+          <b><%=task.getName()%></b>
+        </p>
       </div>
-      <div id="task-project-container">
-        <%if (project != null) {%>
-          <p class="inline">Return to Project: </p>
-          <button type="button" class="inline flat-button" onclick="location.href='project?id=<%=project.getId()%>'">
-            <%=project.getName()%>
-          </button>
-        <%}%>
+      <div id="task-title-container" class="center">
+        <h1 class="inline"><%=task.getName()%></h1>
+        <%request.setAttribute("task", task);%>
+        <%request.setAttribute("clickable", true);%>
+        <%request.setAttribute("canSetComplete", canSetComplete);%>
+        <%request.setAttribute("canSetIncomplete", canSetIncomplete);%>
+        <jsp:include page="task-status-checkmark.jsp"/>
       </div>
-      <div id="task-parenttask-container">
-        <%if (parentTask != null) {%>
-          <p class="inline">Return to Parent Task: </p>
-          <button type="button" class="inline flat-button" onclick="location.href='task?taskID=<%=parentTask.getTaskID()%>'">
-            <%=parentTask.getName()%>
-          </button>
-        <%}%>
-      </div>
+      <div id="task-description-container" class="description"><%=task.getDescription()%></div>
 
       <h2>Subtasks</h2>
       <div id="task-subtasks-container">

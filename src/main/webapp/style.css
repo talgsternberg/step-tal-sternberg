@@ -12,8 +12,8 @@ html {
 
 #content {
   background-color: white;
-  padding: 20px;
-  margin: 20px;
+  padding: 10px 30px;
+  margin: 20px 50px;
 }
 
 .inline {
@@ -24,8 +24,19 @@ html {
   text-align: center;
 }
 
+.no-margin {
+  margin: 0;
+}
+
 .task {
   border: 2px solid dodgerblue;
+  background-color: aliceblue;
+}
+
+.description {
+  padding: 30px;
+  border: 2px solid dodgerblue;
+  margin: 80px;
   background-color: aliceblue;
 }
 
@@ -34,6 +45,83 @@ html {
   padding: 10px;
   margin: 10px 50px;
   background-color: aliceblue;
+}
+
+/* Status checkmarks */
+.unchecked {
+  color: white;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+  transition: 0.5s;
+}
+
+.checked {
+  color: green;
+  text-shadow:
+    -1px -1px 0 green,
+    1px -1px 0 green,
+    -1px 1px 0 green,
+    1px 1px 0 green;
+  transition: 0.5s;
+}
+
+.unavailable {
+  text-shadow:
+    -1px -1px 0 gray,
+    1px -1px 0 gray,
+    -1px 1px 0 gray,
+    1px 1px 0 gray;
+}
+
+.checked.unavailable {
+  color: gray;
+}
+
+/* Status hover message */
+.status {
+  position: relative;
+  display: inline-block;
+}
+
+.status-text {
+  font-size: 14px;
+  text-shadow: none;
+}
+
+.status .status-text {
+  visibility: hidden;
+  width: 160px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.status .status-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: gray transparent transparent transparent;
+}
+
+.status:hover .status-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Add comments form */
@@ -95,6 +183,13 @@ textarea:focus {
   padding: 10px;
 }
 
+/* Checkmark button */
+.checkmark-button {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
 /* Deep buttons */
 .deep-button {
   text-align: center;
@@ -120,11 +215,37 @@ textarea:focus {
   transform: translateY(5px);
 }
 
+/*
+.unavailable-deep-button {
+  text-align: center;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  outline: none;
+  background-color: dimgray;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 5px gray;
+}
+
+.unavailable-deep-button:hover {
+  background-color: #333;
+}
+
+.unavailable-deep-button:active {
+  background-color: #333;
+  box-shadow: 0 5px dimgray;
+  transform: translateY(5px);
+}
+*/
+
 /* Flat buttons */
 .flat-button {
   text-align: center;
   font-size: 18px;
-  padding: 10px;
+  padding: 3px;
   margin: 10px;
   cursor: pointer;
   outline: none;
