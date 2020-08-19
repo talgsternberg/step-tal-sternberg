@@ -1,8 +1,5 @@
 <%--Class Imports--%>
-<%@ page import="com.google.gson.Gson"%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
-<%@ page import="java.util.ArrayList"%>
-<%@ page import="java.util.Arrays"%>
 <%@ page import="java.util.List"%>
 
 <%--Get variables--%>

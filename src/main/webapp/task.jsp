@@ -1,15 +1,11 @@
 <%--Class Imports--%>
-<%@ page import="com.google.gson.Gson" %>
 <%@ page import="com.rtb.projectmanagementtool.comment.*"%>
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
-<%@ page import="com.rtb.projectmanagementtool.user.UserData.Skills"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.ArrayList"%>
-<%@ page import="java.util.HashMap"%>
-<%@ page import="java.util.Map"%>
 
 <%--Get variables--%>
 <%
