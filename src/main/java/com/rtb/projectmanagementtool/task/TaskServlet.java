@@ -54,8 +54,8 @@ public class TaskServlet extends HttpServlet {
     TaskData task = new TaskData(projectID1, name1, description1);
 
     // Get Task
-    long taskID;
     TaskController taskController = new TaskController(datastore);
+    long taskID;
     try {
       taskID = Long.parseLong(request.getParameter("taskID"));
       task = taskController.getTaskByID(taskID);
@@ -63,15 +63,12 @@ public class TaskServlet extends HttpServlet {
       taskID = 0l;
     }
 
+    // Get parent task stack
+    ArrayList<TaskData> parents = taskController.getParents(task);
+
     // Get Task Status options
     boolean canSetComplete = taskController.allSubtasksAreComplete(task);
     boolean canSetIncomplete = !taskController.parentTaskIsComplete(task);
-
-    // Get Parent Task
-    TaskData parentTask = null;
-    if (taskID != 0 && task.getParentTaskID() != 0) {
-      parentTask = taskController.getTaskByID(task.getParentTaskID());
-    }
 
     // Get Parent Project
     ProjectController projectController = new ProjectController(datastore);
@@ -119,9 +116,9 @@ public class TaskServlet extends HttpServlet {
     // Send data to task.jsp
     request.setAttribute("user", user);
     request.setAttribute("task", task);
+    request.setAttribute("parents", parents);
     request.setAttribute("canSetComplete", canSetComplete);
     request.setAttribute("canSetIncomplete", canSetIncomplete);
-    request.setAttribute("parentTask", parentTask);
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     request.setAttribute("users", users);

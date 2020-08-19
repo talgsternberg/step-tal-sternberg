@@ -15,9 +15,9 @@
 <%
     UserData user = (UserData) request.getAttribute("user");
     TaskData task = (TaskData) request.getAttribute("task");
+    ArrayList<TaskData> parents = (ArrayList<TaskData>) request.getAttribute("parents");
     boolean canSetComplete = (boolean) request.getAttribute("canSetComplete");
     boolean canSetIncomplete = (boolean) request.getAttribute("canSetIncomplete");
-    TaskData parentTask = (TaskData) request.getAttribute("parentTask");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
@@ -41,8 +41,17 @@
     <jsp:include page="navigation-bar.jsp"/>
 
     <div id="content">
-      <div id="task-title-container"><h1><%=task.getName()%></h1></div>
-      <div id="task-description-container"><%=task.getDescription()%></div>
+      <div id="task-parents-container">
+        <p>
+          <b><a href="project?id=<%=project.getId()%>"><%=project.getName()%></a></b> / 
+          <%for (TaskData parent : parents) {%>
+          <a href="task?taskID=<%=parent.getTaskID()%>"><%=parent.getName()%></a> / 
+          <%}%>
+          <b><%=task.getName()%></b>
+        </p>
+      </div>
+      <div id="task-title-container" class="center"><h1><%=task.getName()%></h1></div>
+      <div id="task-description-container" class="description"><%=task.getDescription()%></div>
       <div id="task-status-container">
         <p>Status: <%=task.getStatus()%></p>
         <%
@@ -72,22 +81,6 @@
           <button type="submit" class="<%=availability%>" id="task-toggle-status"><%=statusButtonText%></button>
           <p><%=text%></p>
         </form>
-      </div>
-      <div id="task-project-container">
-        <%if (project != null) {%>
-          <p class="inline">Return to Project: </p>
-          <button type="button" class="inline flat-button" onclick="location.href='project?id=<%=project.getId()%>'">
-            <%=project.getName()%>
-          </button>
-        <%}%>
-      </div>
-      <div id="task-parenttask-container">
-        <%if (parentTask != null) {%>
-          <p class="inline">Return to Parent Task: </p>
-          <button type="button" class="inline flat-button" onclick="location.href='task?taskID=<%=parentTask.getTaskID()%>'">
-            <%=parentTask.getName()%>
-          </button>
-        <%}%>
       </div>
 
       <h2>Subtasks</h2>

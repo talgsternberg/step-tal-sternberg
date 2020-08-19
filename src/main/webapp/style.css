@@ -29,6 +29,13 @@ html {
   background-color: aliceblue;
 }
 
+.description {
+  padding: 30px;
+  border: 2px solid dodgerblue;
+  margin: 80px;
+  background-color: aliceblue;
+}
+
 .comment {
   border: 2px solid dodgerblue;
   padding: 10px;

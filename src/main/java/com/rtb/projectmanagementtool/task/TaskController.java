@@ -6,6 +6,7 @@ import com.rtb.projectmanagementtool.task.TaskData.Status;
 import com.rtb.projectmanagementtool.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /** Class controlling the TaskData object. */
@@ -209,6 +210,28 @@ public final class TaskController {
       return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
     }
     return new ArrayList<>();
+  }
+
+  //   public ArrayList<TaskData> getParents(String parentsString) {
+  //     List<Long> parentIDs =
+  //         new ArrayList<>(Arrays.asList(parentsString.split("/")))
+  //             .stream()
+  //             .map(Long::parseLong)
+  //             .collect(Collectors.toList());
+  //     Filter filter = new FilterPredicate("taskID", FilterOperator.IN, parentIDs);
+  //     return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+  //   }
+
+  public ArrayList<TaskData> getParents(TaskData task) {
+    ArrayList<TaskData> parentTasks = new ArrayList<>();
+    long parentTaskID = task.getParentTaskID();
+    while (parentTaskID != 0) {
+      task = getTaskByID(parentTaskID);
+      parentTasks.add(task);
+      parentTaskID = task.getParentTaskID();
+    }
+    Collections.reverse(parentTasks);
+    return parentTasks;
   }
 
   private ArrayList<TaskData> getTasks(Filter filter, int limit, SortPredicate sort) {
