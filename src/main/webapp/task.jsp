@@ -50,38 +50,43 @@
           <b><%=task.getName()%></b>
         </p>
       </div>
-      <div id="task-title-container" class="center"><h1><%=task.getName()%></h1></div>
-      <div id="task-description-container" class="description"><%=task.getDescription()%></div>
-      <div id="task-status-container">
-        <p>Status: <%=task.getStatus()%></p>
+      <div id="task-title-container" class="center">
+        <h1 class="inline"><%=task.getName()%></h1>
         <%
+            String check;
             String status;
-            String statusButtonText;
-            String availability = "deep-button";
-            String text = "";
+            String availability = "";
+            String text;
             if (task.getStatus() != Status.COMPLETE) {
+                check = "unchecked";
                 status = Status.COMPLETE.name();
-                statusButtonText = "Set Task Status as Complete";
+                text = "Click to set status as Complete";
                 if (!canSetComplete) {
-                    availability = "unavailable-deep-button";
+                    availability = "unavailable";
                     text = "Cannot set task's status to complete until all of its subtasks are set to complete.";
                 }
             } else {
+                check = "checked";
                 status = Status.INCOMPLETE.name();
-                statusButtonText = "Set Task Status as Incomplete";
+                text = "Click to set status as Incomplete";
                 if (!canSetIncomplete) {
-                    availability = "unavailable-deep-button";
+                    availability = "unavailable";
                     text = "Cannot set task's status to incomplete if its parent task is set to incomplete.";
                 }
-            }
+            } 
         %>
-        <form id="toggle-status-post-form" action="/task-set-status" method="POST">
+        <form id="toggle-status-post-form" action="/task-set-status" method="POST" class="inline">
           <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
           <input type="hidden" name="status" value="<%=status%>"/>
-          <button type="submit" class="<%=availability%>" id="task-toggle-status"><%=statusButtonText%></button>
-          <p><%=text%></p>
+          <button type="submit" id="task-toggle-status" class="checkmark-button">
+            <h1 class="status <%=check%> <%=availability%>">
+              &#10003
+            <span class="status-text"><%=text%></span>
+            </h1>
+          </button>
         </form>
       </div>
+      <div id="task-description-container" class="description"><%=task.getDescription()%></div>
 
       <h2>Subtasks</h2>
       <div id="task-subtasks-container">

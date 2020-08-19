@@ -43,6 +43,82 @@ html {
   background-color: aliceblue;
 }
 
+/* Status checkmarks */
+.unchecked {
+  color: white;
+  text-shadow:
+   -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+     1px 1px 0 #000;
+  transition: 0.5s;
+}
+.checked {
+  color: green;
+  text-shadow:
+   -1px -1px 0 green,
+    1px -1px 0 green,
+    -1px 1px 0 green,
+     1px 1px 0 green;
+  transition: 0.5s;
+}
+
+.unavailable {
+  text-shadow:
+   -1px -1px 0 gray,
+    1px -1px 0 gray,
+    -1px 1px 0 gray,
+     1px 1px 0 gray;
+}
+
+.checked.unavailable {
+  color: gray;
+}
+
+/* Status hover message */
+.status {
+  position: relative;
+  display: inline-block;
+}
+
+.status-text {
+  font-size: 14px;
+  text-shadow: none;
+}
+
+.status .status-text {
+  visibility: hidden;
+  width: 160px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.status .status-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: gray transparent transparent transparent;
+}
+
+.status:hover .status-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* Add comments form */
 #task-addcomments-container {
   padding: 30px;
@@ -102,6 +178,13 @@ textarea:focus {
   padding: 10px;
 }
 
+/* Checkmark button */
+.checkmark-button {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
 /* Deep buttons */
 .deep-button {
   text-align: center;
@@ -127,7 +210,7 @@ textarea:focus {
   transform: translateY(5px);
 }
 
-/* Unavailable deep buttons */
+/*
 .unavailable-deep-button {
   text-align: center;
   color: white;
@@ -151,6 +234,7 @@ textarea:focus {
   box-shadow: 0 5px dimgray;
   transform: translateY(5px);
 }
+*/
 
 /* Flat buttons */
 .flat-button {
