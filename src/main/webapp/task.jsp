@@ -52,39 +52,11 @@
       </div>
       <div id="task-title-container" class="center">
         <h1 class="inline"><%=task.getName()%></h1>
-        <%
-            String check;
-            String status;
-            String availability = "";
-            String text;
-            if (task.getStatus() != Status.COMPLETE) {
-                check = "unchecked";
-                status = Status.COMPLETE.name();
-                text = "Click to set status as Complete";
-                if (!canSetComplete) {
-                    availability = "unavailable";
-                    text = "Cannot set task's status to complete until all of its subtasks are set to complete.";
-                }
-            } else {
-                check = "checked";
-                status = Status.INCOMPLETE.name();
-                text = "Click to set status as Incomplete";
-                if (!canSetIncomplete) {
-                    availability = "unavailable";
-                    text = "Cannot set task's status to incomplete if its parent task is set to incomplete.";
-                }
-            } 
-        %>
-        <form id="toggle-status-post-form" action="/task-set-status" method="POST" class="inline">
-          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
-          <input type="hidden" name="status" value="<%=status%>"/>
-          <button type="submit" id="task-toggle-status" class="checkmark-button">
-            <h1 class="status <%=check%> <%=availability%>">
-              &#10003
-            <span class="status-text"><%=text%></span>
-            </h1>
-          </button>
-        </form>
+        <%request.setAttribute("task", task);%>
+        <%request.setAttribute("clickable", true);%>
+        <%request.setAttribute("canSetComplete", canSetComplete);%>
+        <%request.setAttribute("canSetIncomplete", canSetIncomplete);%>
+        <jsp:include page="task-status-checkmark.jsp"/>
       </div>
       <div id="task-description-container" class="description"><%=task.getDescription()%></div>
 
