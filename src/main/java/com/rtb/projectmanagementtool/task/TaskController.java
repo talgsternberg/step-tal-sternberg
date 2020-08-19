@@ -212,26 +212,16 @@ public final class TaskController {
     return new ArrayList<>();
   }
 
-  //   public ArrayList<TaskData> getParents(String parentsString) {
-  //     List<Long> parentIDs =
-  //         new ArrayList<>(Arrays.asList(parentsString.split("/")))
-  //             .stream()
-  //             .map(Long::parseLong)
-  //             .collect(Collectors.toList());
-  //     Filter filter = new FilterPredicate("taskID", FilterOperator.IN, parentIDs);
-  //     return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
-  //   }
-
-  public ArrayList<TaskData> getParents(TaskData task) {
-    ArrayList<TaskData> parentTasks = new ArrayList<>();
+  public ArrayList<TaskData> getAncestors(TaskData task) {
+    ArrayList<TaskData> ancestors = new ArrayList<>();
     long parentTaskID = task.getParentTaskID();
     while (parentTaskID != 0) {
       task = getTaskByID(parentTaskID);
-      parentTasks.add(task);
+      ancestors.add(task);
       parentTaskID = task.getParentTaskID();
     }
-    Collections.reverse(parentTasks);
-    return parentTasks;
+    Collections.reverse(ancestors);
+    return ancestors;
   }
 
   private ArrayList<TaskData> getTasks(Filter filter, int limit, SortPredicate sort) {

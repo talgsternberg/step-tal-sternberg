@@ -15,7 +15,7 @@
 <%
     UserData user = (UserData) request.getAttribute("user");
     TaskData task = (TaskData) request.getAttribute("task");
-    ArrayList<TaskData> parents = (ArrayList<TaskData>) request.getAttribute("parents");
+    ArrayList<TaskData> ancestors = (ArrayList<TaskData>) request.getAttribute("ancestors");
     boolean canSetComplete = (boolean) request.getAttribute("canSetComplete");
     boolean canSetIncomplete = (boolean) request.getAttribute("canSetIncomplete");
     ProjectData project = (ProjectData) request.getAttribute("project");
@@ -41,11 +41,11 @@
     <jsp:include page="navigation-bar.jsp"/>
 
     <div id="content">
-      <div id="task-parents-container">
+      <div id="task-ancestors-container">
         <p>
           <b><a href="project?id=<%=project.getId()%>"><%=project.getName()%></a></b> / 
-          <%for (TaskData parent : parents) {%>
-          <a href="task?taskID=<%=parent.getTaskID()%>"><%=parent.getName()%></a> / 
+          <%for (TaskData ancestor : ancestors) {%>
+          <a href="task?taskID=<%=ancestor.getTaskID()%>"><%=ancestor.getName()%></a> / 
           <%}%>
           <b><%=task.getName()%></b>
         </p>
