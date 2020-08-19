@@ -106,10 +106,8 @@
       </div>
 
       <h2>Comments</h2>
+      <% if (task.getTaskID() != 0 && task.getStatus() != Status.COMPLETE) { %>
       <div id="task-addcomments-container">
-        <%
-            if (task.getTaskID() != 0 && task.getStatus() != Status.COMPLETE) {
-        %>
         <form id="add-comment-post-form" action="/comment" method="POST">
           <input type="hidden" id="add-comment-task-input" name="taskID" value="<%=task.getTaskID()%>">
           <input type="hidden" id="add-comment-user-input" name="userID" value="<%=user.getUserID()%>">
@@ -122,8 +120,8 @@
           <br>
           <button type="submit" class="deep-button">Post Comment</button>
         </form>
-        <%}%>
       </div>
+      <% } %>
       <ul id="task-comments-container">
         <%
             for (CommentDisplayData commentDisplay : commentsDisplay) {
