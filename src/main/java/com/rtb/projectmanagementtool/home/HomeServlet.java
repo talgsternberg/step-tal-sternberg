@@ -20,19 +20,14 @@ public class HomeServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
     // Authenticate
     AuthOps auth = new AuthOps(datastore);
 
-    // shouldn't need this line
-    // auth.loginUser(request, response);
-    Long userLoggedInId =
-        auth.whichUserIsLoggedIn(request, response); // issue: this is currently -1
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
 
     if (userLoggedInId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
-      // If no user found, redirect to create user servlet
       response.sendRedirect("/login");
       return;
     }
