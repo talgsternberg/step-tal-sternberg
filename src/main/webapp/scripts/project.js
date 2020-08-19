@@ -10,7 +10,7 @@ function showAddUserForm() {
   document.getElementById('add-user-button').style.display = 'none';
 }
 
-/*
+/**
  * Method that hides the add user form
  */
 function hideAddUserForm() {
