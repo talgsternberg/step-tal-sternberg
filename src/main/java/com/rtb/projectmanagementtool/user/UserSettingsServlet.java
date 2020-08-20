@@ -97,7 +97,7 @@ public class UserSettingsServlet extends HttpServlet {
     auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
 
-    if (userLoggedInId == /*No user found*/ -1) { // changed from -1l
+    if (userLoggedInId == /*No user found*/ AuthOps.NO_LOGGED_IN_USER) { // changed from -1l
       // If no user found, redirect to create user servlet
       response.sendRedirect("/login");
       return;
