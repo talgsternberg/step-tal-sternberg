@@ -92,13 +92,16 @@ public class TaskServlet extends HttpServlet {
     }
 
     // Get Comments
-    // int quantity = Integer.parseInt(request.getParameter("quantity"));
+    // int limit = Integer.parseInt(request.getParameter("limit"));
     // String sortBy = request.getParameter("sortBy");
     // String sortDirection = request.getParameter("sortDirection");
+    int limit = Integer.MAX_VALUE;
+    String sortBy = "timestamp";
+    String sortDirection = "descending";
     CommentController commentController = new CommentController(datastore);
     ArrayList<CommentData> comments = new ArrayList<>();
     try {
-      comments = commentController.getCommentsByTaskID(taskID);
+      comments = commentController.getComments(taskID, limit, sortBy, sortDirection);
     } catch (NullPointerException | IllegalArgumentException e) {
       System.out.println("TaskID doesn't exist. Cannot fetch comments.");
     }
