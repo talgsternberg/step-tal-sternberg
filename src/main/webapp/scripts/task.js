@@ -4,7 +4,8 @@
  */
 function editDescription(taskID) {
   // Get DOM elements
-  const descFormContainer = document.getElementById('task-description-container');
+  const descFormContainer =
+      document.getElementById('task-description-container');
   const descContainer = document.getElementById('task-description');
   const editContainer = document.getElementById('edit-description-container');
 
@@ -82,8 +83,8 @@ function editComment(commentID, taskID) {
   const deleteContainer = document.getElementById('delete-comment-container');
 
   // Get attributes
-  const title = titleContainer.getElementsByTagName("h3")[0].innerText;
-  const message = messageContainer.getElementsByTagName("p")[0].innerText;
+  const title = titleContainer.getElementsByTagName('h3')[0].innerText;
+  const message = messageContainer.getElementsByTagName('p')[0].innerText;
 
   // Clear DOM elements
   titleContainer.innerHTML = '';
