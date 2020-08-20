@@ -37,9 +37,15 @@ public final class PrivateCommentController {
     return privateComment;
   }
 
+  public ArrayList<PrivateCommentData> getPrivateCommentsForUser(long userID) {
+    // get a list of all private comments for a user
+    Filter filter = new FilterPredicate("userID", FilterOperator.EQUAL, userID);
+    return getPrivateComments(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+  }
+
   // only 1 private comment per task
   public PrivateCommentData getPrivateCommentByTaskID(long taskID) {
-    Query query = new Query("PirvateComment").addFilter("taskID", FilterOperator.EQUAL, taskID);
+    Query query = new Query("PrivateComment").addFilter("taskID", FilterOperator.EQUAL, taskID);
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
     if (entity != null) {

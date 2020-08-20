@@ -51,23 +51,11 @@ public class PrivateCommentListServlet extends HttpServlet {
 
     // only fill if the user is viewing their own profile
     if (userID == currentUser) {
-      for (int i = 0; i < tasks.size(); i++) {
-        Long taskID = tasks.get(i).getTaskID();
-        PrivateCommentData privateComment =
-            privateCommentController.getPrivateCommentByTaskID(taskID);
-        privateComments.add(privateComment);
-        String statusString = tasks.get(i).getStatus().name();
-        if (statusString.equals("COMPLETE")) {
-          colors[i] = "green";
-        } else {
-          colors[i] = "red";
-        }
-      }
+      privateComments = privateCommentController.getPrivateCommentsForUser(userID);
     }
 
     // Set attributes of request; retrieve in jsp with
     // request.setAttribute("userTasks", tasks); I don't need since I can pass from /user-profile
-    request.setAttribute("colors", colors);
     request.setAttribute("privateComments", privateComments);
 
     // Load jsp for user page
