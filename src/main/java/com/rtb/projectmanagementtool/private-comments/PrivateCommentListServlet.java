@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/private-comment")
-public class PrivateCommentServlet extends HttpServlet {
+public class PrivateCommentListServlet extends HttpServlet {
   DatastoreService datastore;
   AuthOps auth;
 
-  public PrivateCommentServlet() {
+  public PrivateCommentListServlet() {
     datastore = DatastoreServiceFactory.getDatastoreService();
     auth = new AuthOps(datastore);
   }
@@ -43,21 +43,31 @@ public class PrivateCommentServlet extends HttpServlet {
     // get this user's tasks
     ArrayList<TaskData> tasks = taskController.getTasksByUserID(userID);
 
-    // build list of private comments
+    // init array of color task will appear
+    String[] colors = new String[tasks.size()];
+
+    // build list of private comments and colors
     ArrayList<PrivateCommentData> privateComments = new ArrayList<>();
 
     // only fill if the user is viewing their own profile
     if (userID == currentUser) {
-      for (TaskData task : tasks) {
-        Long taskID = task.getTaskID();
+      for (int i = 0; i < tasks.size(); i++) {
+        Long taskID = tasks.get(i).getTaskID();
         PrivateCommentData privateComment =
             privateCommentController.getPrivateCommentByTaskID(taskID);
         privateComments.add(privateComment);
+        String statusString = tasks.get(i).getStatus().name();
+        if (statusString.equals("COMPLETE")) {
+          colors[i] = "green";
+        } else {
+          colors[i] = "red";
+        }
       }
     }
 
     // Set attributes of request; retrieve in jsp with
-    request.setAttribute("userTasks", tasks);
+    // request.setAttribute("userTasks", tasks); I don't need since I can pass from /user-profile
+    request.setAttribute("colors", colors);
     request.setAttribute("privateComments", privateComments);
 
     // Load jsp for user page
