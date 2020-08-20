@@ -80,18 +80,18 @@ html {
   color: gray;
 }
 
-/* Status hover message */
-.status {
+/* Hover message */
+.has-hover-text {
   position: relative;
   display: inline-block;
 }
 
-.status-text {
+.hover-text {
   font-size: 14px;
   text-shadow: none;
 }
 
-.status .status-text {
+.has-hover-text .hover-text {
   visibility: hidden;
   width: 160px;
   background-color: gray;
@@ -108,7 +108,7 @@ html {
   transition: opacity 0.3s;
 }
 
-.status .status-text::after {
+.has-hover-text .hover-text::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -119,9 +119,14 @@ html {
   border-color: gray transparent transparent transparent;
 }
 
-.status:hover .status-text {
+.has-hover-text:hover .hover-text {
   visibility: visible;
   opacity: 1;
+}
+
+.has-hover-text .small {
+  width: 60px;
+  margin-left: -30px;
 }
 
 /* Add comments form */

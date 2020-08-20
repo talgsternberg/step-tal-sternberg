@@ -60,8 +60,9 @@
           <%=task.getDescription()%>
         </div>
         <div id="edit-description-container">
-          <button type="button" id="edit-description-button" class="flat-button" onclick="editDescription(<%=task.getTaskID()%>)">
+          <button type="button" id="edit-description-button" class="has-hover-text flat-button" onclick="editDescription(<%=task.getTaskID()%>)">
             <span class="fa fa-edit" aria-hidden="true"></span>
+            <span class="hover-text small">Edit</span>
           </button>
         </div>
       </div>
@@ -159,15 +160,19 @@
             <div id="comment-message-container"><p><%=comment.getMessage()%></p></div>
             <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
             <div id="edit-comment-container" class="inline">
-              <button type="button" id="edit-comment-button" class="flat-button" onclick="editComment(<%=comment.getCommentID()%>, <%=task.getTaskID()%>)">
+              <button type="button" id="edit-comment-button" class="has-hover-text flat-button" onclick="editComment(<%=comment.getCommentID()%>, <%=task.getTaskID()%>)">
                 <span class="fa fa-edit" aria-hidden="true"></span>
+                <span class="hover-text small">Edit</span>
               </button>
             </div>
             <div id="delete-comment-container" class="inline">
               <form id="delete-comment-post-form" action="/comment-delete" method="POST" class="inline">
                 <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
                 <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
-                <button type="submit" class="flat-button"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+                <button type="submit" class="has-hover-text flat-button">
+                  <span class="fa fa-trash-o" aria-hidden="true"></span>
+                  <span class="hover-text small">Delete</span>
+                </button>
               </form>
             </div>
             <% } %>
