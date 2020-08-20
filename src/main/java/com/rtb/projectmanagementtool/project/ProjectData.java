@@ -70,7 +70,12 @@ public class ProjectData {
 
   /** @return the entity representation of this class */
   public Entity toEntity() {
-    Entity entity = new Entity("Project");
+    Entity entity;
+    if (this.id != 0) {
+      entity = new Entity("Project", this.id);
+    } else {
+      entity = new Entity("Project");
+    }
     entity.setProperty(PROPERTY_NAME, this.name);
     entity.setProperty(PROPERTY_CREATOR, this.creatorId);
     entity.setProperty(PROPERTY_DESCRIPTION, this.description);

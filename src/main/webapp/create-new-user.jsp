@@ -11,13 +11,18 @@
   </head>
 
   <body>
-    <!-- Include navigation bar -->
-    <jsp:include page="navigation-bar.jsp" />
-
     <!-- Page content -->
+    <a href="/login">
+      <button>Return to login page</button>
+    </a>
     <div id="content">
       <div id="title">
-        <div id="user-page-container"><h1>Hi, New User!</h1></div>
+        <div id="user-page-container">
+          <h1>Hello! It looks like you're a new user. 
+              <br>
+              Please let us know more about yourself to create your account!
+          </h1>
+        </div>
       </div>
       <form action="/create-user" method="post">
         <tr>
@@ -51,7 +56,7 @@
             <label>OOP</label><br>
           </td>
         </tr><br><br>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Create Account" />
       </form>
     </div>
   </body>

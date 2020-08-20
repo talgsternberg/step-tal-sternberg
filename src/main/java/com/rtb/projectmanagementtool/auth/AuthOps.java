@@ -74,8 +74,10 @@ public class AuthOps {
   }
 
   // logs in user and adds cookie with value of String userID to response
-  public void loginUser(HttpServletRequest request, HttpServletResponse response) {
+  public long loginUser(HttpServletRequest request, HttpServletResponse response) {
     currCookie = getCurrCookie(request);
+    long userId = -1l;
+
     // if not logged in, call auth service
     if (currCookie.getValue().equals(Long.toString(NO_LOGGED_IN_USER))) {
       // call auth service
@@ -93,6 +95,7 @@ public class AuthOps {
       // send back cookie to response
       response.addCookie(currCookie);
     }
+    return userId;
   }
 
   // returns the userID long (or -1) associated with the user logged in

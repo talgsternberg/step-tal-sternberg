@@ -4,11 +4,11 @@ import com.google.appengine.api.datastore.*;
 import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.comment.*;
 import com.rtb.projectmanagementtool.project.*;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +36,6 @@ public class TaskServlet extends HttpServlet {
 
     // Authenticate
     AuthOps auth = new AuthOps(datastore);
-    auth.loginUser(request, response);
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == /*No user found*/ -1l) {
       // If no user found, redirect to create user servlet
@@ -55,8 +54,8 @@ public class TaskServlet extends HttpServlet {
     TaskData task = new TaskData(projectID1, name1, description1);
 
     // Get Task
-    long taskID;
     TaskController taskController = new TaskController(datastore);
+    long taskID;
     try {
       taskID = Long.parseLong(request.getParameter("taskID"));
       task = taskController.getTaskByID(taskID);
@@ -64,11 +63,12 @@ public class TaskServlet extends HttpServlet {
       taskID = 0l;
     }
 
-    // Get Parent Task
-    TaskData parentTask = null;
-    if (taskID != 0 && task.getParentTaskID() != 0) {
-      parentTask = taskController.getTaskByID(task.getParentTaskID());
-    }
+    // Get parent task stack
+    ArrayList<TaskData> parents = taskController.getParents(task);
+
+    // Get Task Status options
+    boolean canSetComplete = taskController.allSubtasksAreComplete(task);
+    boolean canSetIncomplete = !taskController.parentTaskIsComplete(task);
 
     // Get Parent Project
     ProjectController projectController = new ProjectController(datastore);
@@ -82,9 +82,10 @@ public class TaskServlet extends HttpServlet {
     if (taskID != 0) {
       // users = userController.getUsers(task.getUsers());
       for (long userID : task.getUsers()) {
-        try {
-          users.add(userController.getUserByID(userID));
-        } catch (NullPointerException e) {
+        UserData member = userController.getUserByID(userID);
+        if (member != null) {
+          users.add(member);
+        } else {
           System.out.println("No user exists for userID: " + userID);
         }
       }
@@ -96,30 +97,32 @@ public class TaskServlet extends HttpServlet {
     // String sortDirection = request.getParameter("sortDirection");
     CommentController commentController = new CommentController(datastore);
     ArrayList<CommentData> comments = new ArrayList<>();
-    HashMap<CommentData, String> commentsMap = new HashMap<>();
     try {
       comments = commentController.getCommentsByTaskID(taskID);
-      for (CommentData comment : comments) {
-        String username = "Default Username";
-        try {
-          username = userController.getUserByID(comment.getUserID()).getUserName();
-        } catch (NullPointerException | IllegalArgumentException e) {
-          System.out.println("UserID doesn't exist. Default username will be used.");
-        }
-        commentsMap.put(comment, username);
-      }
     } catch (NullPointerException | IllegalArgumentException e) {
       System.out.println("TaskID doesn't exist. Cannot fetch comments.");
+    }
+    ArrayList<CommentDisplayData> commentsDisplay = new ArrayList<>();
+    for (CommentData comment : comments) {
+      String username = "Default Username";
+      try {
+        username = userController.getUserByID(comment.getUserID()).getUserName();
+      } catch (NullPointerException | IllegalArgumentException e) {
+        System.out.println("UserID doesn't exist. Default username will be used.");
+      }
+      commentsDisplay.add(new CommentDisplayData(comment, username));
     }
 
     // Send data to task.jsp
     request.setAttribute("user", user);
     request.setAttribute("task", task);
-    request.setAttribute("parentTask", parentTask);
+    request.setAttribute("parents", parents);
+    request.setAttribute("canSetComplete", canSetComplete);
+    request.setAttribute("canSetIncomplete", canSetIncomplete);
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     request.setAttribute("users", users);
-    request.setAttribute("comments", commentsMap);
+    request.setAttribute("comments", commentsDisplay);
     request.getRequestDispatcher("task.jsp").forward(request, response);
   }
 
@@ -137,9 +140,17 @@ public class TaskServlet extends HttpServlet {
 
     // Add task to datastore
     TaskController taskController = new TaskController(datastore);
-    taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+    if (parentTaskID == 0
+        || taskController.getTaskByID(parentTaskID).getStatus() != Status.COMPLETE) {
+      taskController.addTasks(new ArrayList<>(Arrays.asList(task)));
+    }
 
-    // Redirect back to the parent task's task page
-    response.sendRedirect("/task?taskID=" + parentTaskID);
+    if (parentTaskID != 0) {
+      // Redirect back to the parent task's task page
+      response.sendRedirect("/task?taskID=" + parentTaskID);
+    } else {
+      // Redirect back to the project's project page
+      response.sendRedirect("/project?id=" + projectID);
+    }
   }
 }
