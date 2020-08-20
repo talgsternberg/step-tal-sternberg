@@ -30,8 +30,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="scripts/main.js"></script> -->
-    <!-- <script src="scripts/task.js"></script> -->
-    <script src="scripts/comment.js"></script>
+    <!-- <script src="scripts/task-old.js"></script> -->
+    <script src="scripts/task.js"></script>
   </head>
 
   <body>
@@ -55,7 +55,16 @@
         <%request.setAttribute("canSetIncomplete", canSetIncomplete);%>
         <jsp:include page="task-status-checkmark.jsp"/>
       </div>
-      <div id="task-description-container" class="description"><%=task.getDescription()%></div>
+      <div id="task-description-container" class="description">
+        <div id="task-description">
+          <%=task.getDescription()%>
+        </div>
+        <div id="edit-description-container">
+          <button type="button" id="edit-description-button" class="flat-button" onclick="editDescription(<%=task.getTaskID()%>)">
+            <span class="fa fa-edit" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
 
       <h2>Subtasks</h2>
       <div id="task-subtasks-container">
@@ -150,7 +159,7 @@
             <div id="comment-message-container"><p><%=comment.getMessage()%></p></div>
             <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
             <div id="edit-comment-container" class="inline">
-              <button type="button" id="edit-comment-button" class="inline flat-button" onclick="editComment(<%=comment.getCommentID()%>, <%=task.getTaskID()%>)">
+              <button type="button" id="edit-comment-button" class="flat-button" onclick="editComment(<%=comment.getCommentID()%>, <%=task.getTaskID()%>)">
                 <span class="fa fa-edit" aria-hidden="true"></span>
               </button>
             </div>

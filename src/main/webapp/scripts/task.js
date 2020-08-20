@@ -1,184 +1,160 @@
 /**
- * When the Task Page loads, fetch from server to get task info. If no taskID
- * is provided in the URL, default values will be shown.
+ * Converts description into editable description form.
+ * @param {number} taskID for hidden input.
  */
-function getTaskInfo() {
-  // Can get taskID from param, or maybe just get it from the button that was
-  // pressed to arrive on task page (if we keep onclick() functions instead of
-  // <a href=''> route).
-  const params = new URLSearchParams(location.search);
-  const taskID = params.get('taskID');
-  const userID = 1; // Get current userID from cookies?
-  // const tasks = JSON.parse(gJSONtasks);
-  // Create variables to create the URL
-  const url = '/task?taskID=' + taskID;
-  console.log(url);
-  fetch(url)
-      .then((response) => response.json())
-      .then((response) => {
-        const task = response.task[0];
-        // const project = response.project[0];
-        const subtasks = response.subtasks;
-        const users = response.users;
-        // const comments = response.comments;
-        // Fill up task page
-        const title = document.getElementById('task-title-container');
-        title.innerHTML = '<h1>' + task.name + '</h1>';
-        const description =
-          document.getElementById('task-description-container');
-        description.innerText = task.description;
-        const status = document.getElementById('task-status-container');
-        status.innerText = 'Status: ' + task.status;
-        const toProject = document.getElementById('task-project-container');
-        // toProject.appendChild(getProjectReturn(project));
-        const subtaskList = document.getElementById('task-subtasks-container');
-        subtaskList.textContent = '';
-        subtaskList.appendChild(getTasks(subtasks));
-        const addSubtask = document.getElementById('task-addsubtask-container');
-        addSubtask.innerHTML = '';
-        addSubtask.appendChild(createTaskButton(
-            1,
-            'Project Name 1',
-            task.taskID,
-            task.name));
-        // addSubtask.appendChild(getCreateTaskButton(
-        //     project.projectID,
-        //     project.projectName,
-        //     task.taskID,
-        //     task.name));
-        const toggleUserAssignment =
-            document.getElementById('task-assignuser-container');
-        toggleUserAssignment.innerHTML = '';
-        toggleUserAssignment.appendChild(getUserAssignmentButton(task, userID));
-        const userList = document.getElementById('task-users-container');
-        userList.textContent = '';
-        userList.appendChild(getUsers(users));
-        // const commentList =
-        //   document.getElementById('task-comments-container');
-        // commentList.appendChild(getComments(comments));
-        doStuff(); // Test calling a function in another file
-      });
+function editDescription(taskID) {
+  // Get DOM elements
+  const descFormContainer = document.getElementById('task-description-container');
+  const descContainer = document.getElementById('task-description');
+  const editContainer = document.getElementById('edit-description-container');
+
+  // Get attributes
+  const desc = descContainer.innerText;
+
+  // Clear DOM elements
+  descFormContainer.innerHTML = '';
+  descContainer.innerHTML = '';
+  editContainer.innerHTML = '';
+
+  // Convert description into a form
+  postForm = document.createElement('form');
+  postForm.setAttribute('id', 'edit-description-post-form');
+  postForm.setAttribute('action', '/task-edit');
+  postForm.setAttribute('method', 'POST');
+  descFormContainer.appendChild(postForm);
+
+  // Create hidden taskID input
+  const taskIDInput = document.createElement('input');
+  taskIDInput.setAttribute('type', 'hidden');
+  taskIDInput.setAttribute('id', 'edit-comment-task-input');
+  taskIDInput.setAttribute('name', 'taskID');
+  taskIDInput.setAttribute('value', taskID);
+  postForm.appendChild(taskIDInput);
+
+  // Add heading to the top of the comment
+  heading = document.createElement('h3');
+  heading.innerText = 'Edit Description';
+  postForm.appendChild(heading);
+
+  // Fill description element with previous description as input
+  descInput = document.createElement('textarea');
+  descInput.setAttribute('type', 'text');
+  descInput.setAttribute('name', 'description');
+  descInput.setAttribute('required', 'true');
+  descInput.innerText = desc;
+  descContainer.appendChild(descInput);
+  postForm.appendChild(descContainer);
+
+  // Fill edit container with Post Edit button
+  editContainer.setAttribute('class', 'inline');
+  postButton = document.createElement('button');
+  postButton.setAttribute('type', 'submit');
+  postButton.setAttribute('class', 'deep-button');
+  postButton.innerText = 'Post';
+  editContainer.appendChild(postButton);
+  postForm.appendChild(editContainer);
+
+  // Create reset container with Reset Edit button
+  // Might be a Discard Changes button instead in the future
+  resetContainer = document.createElement('div');
+  resetContainer.setAttribute('id', 'reset-description-container');
+  resetContainer.setAttribute('class', 'inline');
+  resetButton = document.createElement('button');
+  resetButton.setAttribute('type', 'reset');
+  resetButton.setAttribute('class', 'deep-button');
+  resetButton.innerText = 'Reset';
+  resetContainer.appendChild(resetButton);
+  postForm.appendChild(resetContainer);
 }
 
 /**
- * Build ul element for tasks.
- * @param {Array} tasks Array of taskIDs.
- * @return {Element} HTML ul element containing a list of tasks.
+ * Converts comment into editable comment form.
+ * @param {number} commentID for hidden input.
+ * @param {number} taskID for hidden input.
  */
-function getTasks(tasks) {
-  const ulElement = document.createElement('ul');
-  for (task of tasks) {
-    ulElement.appendChild(createTaskLiElement(task));
-  }
-  return ulElement;
-}
+function editComment(commentID, taskID) {
+  // Get DOM elements
+  const commentContainer = document.getElementById('comment-container');
+  const titleContainer = document.getElementById('comment-title-container');
+  const messageContainer = document.getElementById('comment-message-container');
+  const infoContainer = document.getElementById('comment-postinfo-container');
+  const editContainer = document.getElementById('edit-comment-container');
+  const deleteContainer = document.getElementById('delete-comment-container');
 
-/**
- * Build create task button.
- * @param {number} projectID
- * @param {String} projectName
- * @param {number} taskID If not provided, set to 0.
- * @param {String} taskName If not provided, set to 'null'.
- * @return {Element} HTML button element containing goToAddTask() function.
- */
-function createTaskButton(projectID, projectName, taskID=0, taskName='null') {
-  buttonElement = document.createElement('button');
-  buttonElement.setAttribute('type', 'button');
-  buttonElement.setAttribute('onclick', 'goToAddTask(' +
-      projectID + ', \'' +
-      projectName + '\', ' +
-      taskID + ', \'' +
-      taskName + '\')');
-  if (taskID === 0) {
-    buttonElement.innerText = 'Add Task';
-  } else {
-    buttonElement.innerText = 'Add Subtask';
-  }
-  console.log(buttonElement);
-  return buttonElement;
-}
+  // Get attributes
+  const title = titleContainer.getElementsByTagName("h3")[0].innerText;
+  const message = messageContainer.getElementsByTagName("p")[0].innerText;
 
-/**
- * Redirect to Add Task Page.
- * @param {number} projectID
- * @param {String} projectName
- * @param {number} taskID If not provided, set to 0.
- * @param {String} taskName If not provided, set to 'null'.
- */
-function goToAddTask(projectID, projectName, taskID=0, taskName='null') {
-  const url =
-      'add_task.html?projectID=' + projectID +
-      '&projectName=' + projectName +
-      '&taskID=' + taskID +
-      '&taskName=' + taskName;
-  console.log(url);
-  location.href = url;
-}
+  // Clear DOM elements
+  titleContainer.innerHTML = '';
+  messageContainer.innerHTML = '';
+  editContainer.innerHTML = '';
+  deleteContainer.innerHTML = '';
 
-/**
- * Build Add Task Page
- */
-function getAddTaskInfo() {
-  const params = new URLSearchParams(location.search);
-  const projectID = params.get('projectID');
-  const projectName = params.get('projectName');
-  const taskID = params.get('taskID');
-  const taskName = params.get('taskName');
-  const parentProject = document.getElementById('addtask-project-container');
-  parentProject.innerText = 'This task will be under project: ' + projectName;
-  const parentTask = document.getElementById('addtask-task-container');
-  if (taskID != 0) {
-    parentTask.innerText = 'This task will be under task: ' + taskName;
-  } else {
-    parentTask.innerText = '';
-  }
-  const inputProjectID = document.getElementById('addtask-project-input');
-  inputProjectID.setAttribute('value', projectID);
-  const inputParentTaskID = document.getElementById('addtask-parenttask-input');
-  inputParentTaskID.setAttribute('value', taskID);
-}
+  // Convert comment into a form
+  postForm = document.createElement('form');
+  postForm.setAttribute('id', 'edit-comment-post-form');
+  postForm.setAttribute('action', '/comment-edit');
+  postForm.setAttribute('method', 'POST');
+  commentContainer.appendChild(postForm);
 
-/**
- * Get button to toggle user assignment to a task
- * @param {HashMap} task
- * @param {number} userID
- * @return {Element} HTML button element containing addUser() or removeUser().
- */
-function getUserAssignmentButton(task, userID) {
-  const buttonElement = document.createElement('button');
-  buttonElement.setAttribute('type', 'button');
-  if (task.users.includes(userID)) {
-    buttonElement.setAttribute('onclick', 'removeUser()');
-    buttonElement.innerText = 'Remove me from this task';
-  } else {
-    buttonElement.setAttribute('onclick', 'addUser()');
-    buttonElement.innerText = 'Assign me to this task';
-  }
-  return buttonElement;
-}
+  // Create hidden taskID input
+  const taskIDInput = document.createElement('input');
+  taskIDInput.setAttribute('type', 'hidden');
+  taskIDInput.setAttribute('id', 'edit-comment-task-input');
+  taskIDInput.setAttribute('name', 'taskID');
+  taskIDInput.setAttribute('value', taskID);
+  postForm.appendChild(taskIDInput);
 
-/**
- * Add user via servlet
- */
-function addUser() {
-  const getParams = new URLSearchParams(location.search);
-  const taskID = getParams.get('taskID');
-  const userID = 1; // Get current userID from cookies?
-  const params = new URLSearchParams('taskID=' + taskID + '&userID=' + userID);
-  console.log('/task-add-user', params);
-  fetch('/task-add-user', {method: 'post', body: params})
-      .then(() => getTaskInfo());
-}
+  // Create hidden commentID input
+  const commentIDInput = document.createElement('input');
+  commentIDInput.setAttribute('type', 'hidden');
+  commentIDInput.setAttribute('id', 'edit-comment-comment-input');
+  commentIDInput.setAttribute('name', 'commentID');
+  commentIDInput.setAttribute('value', commentID);
+  postForm.appendChild(commentIDInput);
 
-/**
- * Add user via servlet
- */
-function removeUser() {
-  const getParams = new URLSearchParams(location.search);
-  const taskID = getParams.get('taskID');
-  const userID = 1; // Get current userID from cookies?
-  const params = new URLSearchParams('taskID=' + taskID + '&userID=' + userID);
-  console.log('/task-remove-user', params);
-  fetch('/task-remove-user', {method: 'post', body: params})
-      .then(() => getTaskInfo());
+  // Add heading to the top of the comment
+  heading = document.createElement('h3');
+  heading.innerText = 'Edit Your Comment';
+  postForm.appendChild(heading);
+
+  // Fill title element with previous title as input
+  titleInput = document.createElement('input');
+  titleInput.setAttribute('type', 'text');
+  titleInput.setAttribute('name', 'title');
+  titleInput.setAttribute('required', 'true');
+  titleInput.setAttribute('value', title);
+  titleInput.setAttribute('maxlength', '40');
+  titleContainer.appendChild(titleInput);
+  postForm.appendChild(titleContainer);
+
+  // Reuse post info
+  postForm.appendChild(infoContainer);
+
+  // Fill message element with previous message as textarea input
+  messageInput = document.createElement('textarea');
+  messageInput.setAttribute('type', 'text');
+  messageInput.setAttribute('name', 'message');
+  messageInput.setAttribute('required', 'true');
+  messageInput.innerText = message;
+  messageContainer.appendChild(messageInput);
+  postForm.appendChild(messageContainer);
+
+  // Fill edit container with Post Edit button
+  postButton = document.createElement('button');
+  postButton.setAttribute('type', 'submit');
+  postButton.setAttribute('class', 'inline deep-button');
+  postButton.innerText = 'Post';
+  editContainer.appendChild(postButton);
+  postForm.appendChild(editContainer);
+
+  // Fill delete container with Reset Edit button
+  // Might be a Discard Changes button instead in the future
+  resetButton = document.createElement('button');
+  resetButton.setAttribute('type', 'reset');
+  resetButton.setAttribute('class', 'inline deep-button');
+  resetButton.innerText = 'Reset';
+  deleteContainer.appendChild(resetButton);
+  postForm.appendChild(deleteContainer);
 }
