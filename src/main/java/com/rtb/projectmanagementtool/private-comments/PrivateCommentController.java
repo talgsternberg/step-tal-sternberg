@@ -6,7 +6,7 @@ import com.rtb.projectmanagementtool.user.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Class controlling the CommentData object. */
+/** Class controlling the PrivateCommentData object. */
 public final class PrivateCommentController {
 
   private DatastoreService datastore;
@@ -39,11 +39,14 @@ public final class PrivateCommentController {
 
   // only 1 private comment per task
   public PrivateCommentData getPrivateCommentByTaskID(long taskID) {
-    Filter filter = new FilterPredicate("taskID", FilterOperator.EQUAL, taskID);
-    // private comments should be size = 1
-    ArrayList<PrivateCommentData> privateComments =
-        getPrivateComments(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
-    return privateComments.get(0);
+    Query query = new Query("PirvateComment").addFilter("taskID", FilterOperator.EQUAL, taskID);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity != null) {
+      PrivateCommentData privateComment = new PrivateCommentData(entity);
+      return privateComment;
+    }
+    return null;
   }
 
   public ArrayList<PrivateCommentData> getPrivateComments(

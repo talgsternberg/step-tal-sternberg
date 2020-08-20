@@ -3,7 +3,7 @@ package com.rtb.projectmanagementtool.privatecomment;
 import com.google.appengine.api.datastore.Entity;
 import java.util.Date;
 
-/** Class containing comments. */
+/** Class containing private comments. */
 public final class PrivateCommentData implements Comparable<PrivateCommentData> {
 
   private long commentID;
@@ -100,7 +100,7 @@ public final class PrivateCommentData implements Comparable<PrivateCommentData> 
   @Override
   public String toString() {
     String returnString = "{\n";
-    returnString += "Comment ID: " + commentID + "\n";
+    returnString += "Private Comment ID: " + commentID + "\n";
     returnString += "Task ID: " + taskID + "\n";
     returnString += "User ID: " + userID + "\n";
     returnString += "Message: " + message + "\n";
