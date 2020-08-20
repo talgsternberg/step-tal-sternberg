@@ -10,6 +10,10 @@ html {
   background-color: lightgray;
 }
 
+form {
+  margin-bottom: 0px;
+}
+
 #content {
   background-color: white;
   padding: 10px 30px;
@@ -34,9 +38,9 @@ html {
 }
 
 .description {
-  padding: 30px;
+  padding: 20px;
   border: 2px solid dodgerblue;
-  margin: 80px;
+  margin: 40px 100px;
   background-color: aliceblue;
 }
 
@@ -251,7 +255,7 @@ textarea:focus {
   text-align: center;
   font-size: 18px;
   padding: 3px;
-  margin: 10px;
+  margin: 3px;
   cursor: pointer;
   outline: none;
   background-color: lightskyblue;
