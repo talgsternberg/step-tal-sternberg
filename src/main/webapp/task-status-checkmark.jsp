@@ -37,9 +37,9 @@
   <input type="hidden" name="taskID" value="<%=task.getTaskID()%>"/>
   <input type="hidden" name="status" value="<%=status%>"/>
   <button type="submit" id="task-toggle-status" class="checkmark-button">
-    <h1 class="status <%=check%> <%=availability%>">
+    <h1 class="has-hover-text <%=check%> <%=availability%>">
       &#10003
-      <span class="status-text"><%=text%></span>
+      <span class="hover-text"><%=text%></span>
     </h1>
   </button>
 </form>
@@ -55,8 +55,8 @@
             text = "Task status is Complete";
         }
 %>
-<h2 class="status inline no-margin <%=check%>">
+<h2 class="has-hover-text inline no-margin <%=check%>">
   &#10003
-  <span class="status-text"><%=text%></span>
+  <span class="hover-text"><%=text%></span>
 </h2>
 <% } %>
