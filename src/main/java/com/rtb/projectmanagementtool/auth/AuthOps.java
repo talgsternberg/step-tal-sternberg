@@ -16,7 +16,7 @@ public class AuthOps {
   // public String cookieValue;
   public Cookie currCookie;
   private final String COOKIENAME = "sessionUserID";
-  public static final String NO_LOGGED_IN_USER = "-1"; // -1 = logged out
+  public static final long NO_LOGGED_IN_USER = -1; // -1 = logged out
 
   // for testing purposes (with mock controllers)
   public AuthOps(UserController controller) {
@@ -50,7 +50,7 @@ public class AuthOps {
   // get/create cookie and set value to userID
   public void setLoggedInCookie(
       HttpServletRequest request, HttpServletResponse response, long userID) {
-    Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
+    Cookie currCookie = new Cookie(COOKIENAME, Long.toString(NO_LOGGED_IN_USER));
     String userIDString = Long.toString(userID);
     currCookie.setValue(userIDString);
     // send back cookie to response
@@ -59,7 +59,7 @@ public class AuthOps {
 
   // gets cookie from request. Used in most methods.
   public Cookie getCurrCookie(HttpServletRequest request) {
-    Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
+    Cookie currCookie = new Cookie(COOKIENAME, Long.toString(NO_LOGGED_IN_USER));
     // get all cookies from request
     Cookie[] cookies = request.getCookies();
     if (cookies != null) {
@@ -77,7 +77,7 @@ public class AuthOps {
   public void loginUser(HttpServletRequest request, HttpServletResponse response) {
     currCookie = getCurrCookie(request);
     // if not logged in, call auth service
-    if (currCookie.getValue().equals(NO_LOGGED_IN_USER)) {
+    if (currCookie.getValue().equals(Long.toString(NO_LOGGED_IN_USER))) {
       // call auth service
       UserService userService = UserServiceFactory.getUserService();
       if (userService.isUserLoggedIn()) {
@@ -108,7 +108,7 @@ public class AuthOps {
   // logs out user by setting cookie value to -1
   public void logoutUser(HttpServletRequest request, HttpServletResponse response) {
     // make currCookie val = -1
-    Cookie currCookie = new Cookie(COOKIENAME, NO_LOGGED_IN_USER);
+    Cookie currCookie = new Cookie(COOKIENAME, Long.toString(NO_LOGGED_IN_USER));
 
     // write cookie back
     response.addCookie(currCookie);

@@ -24,13 +24,13 @@ public class LoginServlet extends HttpServlet {
     auth.loginUser(request, response);
 
     // Don't view login page if user is logged in
-    if (auth.whichUserIsLoggedIn(request, response) != Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
+    if (auth.whichUserIsLoggedIn(request, response) != AuthOps.NO_LOGGED_IN_USER) {
       response.sendRedirect("/home");
       return;
     }
 
     // Get login URL
-    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/login"));
+    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/home"));
 
     // Get login URL for first time users (on submit returns to LoginServlet)
     request.setAttribute(
