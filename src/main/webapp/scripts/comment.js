@@ -81,6 +81,7 @@ function editComment(commentID, taskID) {
   postForm.appendChild(editContainer);
 
   // Fill delete container with Reset Edit button
+  // Might be a Discard Changes button instead in the future
   resetButton = document.createElement('button');
   resetButton.setAttribute('type', 'reset');
   resetButton.setAttribute('class', 'inline deep-button');

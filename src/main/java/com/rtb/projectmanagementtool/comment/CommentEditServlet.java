@@ -1,6 +1,7 @@
 package com.rtb.projectmanagementtool.comment;
 
 import com.google.appengine.api.datastore.*;
+import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.project.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
@@ -39,11 +40,19 @@ public class CommentEditServlet extends HttpServlet {
     // Create CommentData object
     CommentController commentController = new CommentController(datastore);
     CommentData comment = commentController.getCommentByID(commentID);
-    comment.setTitle(title);
-    comment.setMessage(message);
 
-    // Add comment to datastore
-    commentController.addComments(new ArrayList<>(Arrays.asList(comment)));
+    // Authenticate before making any changes
+    AuthOps auth = new AuthOps(datastore);
+    Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
+    if (userLoggedInId == comment.getUserID()) {
+      // Update comment
+      comment.setTitle(title);
+      comment.setMessage(message);
+      // Add comment to datastore
+      commentController.addComments(new ArrayList<>(Arrays.asList(comment)));
+    } else {
+      System.out.println("User authentication to edit comment failed.");
+    }
 
     // Redirect back to the task's task page
     response.sendRedirect("/task?taskID=" + taskID);
