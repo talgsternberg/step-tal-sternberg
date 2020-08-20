@@ -12,15 +12,23 @@ public final class CommentData implements Comparable<CommentData> {
   private String title;
   private String message;
   private Date timestamp;
+  private boolean isEdited;
 
   public CommentData(
-      long commentID, long taskID, long userID, String title, String message, Date timestamp) {
+      long commentID,
+      long taskID,
+      long userID,
+      String title,
+      String message,
+      Date timestamp,
+      boolean isEdited) {
     this.commentID = commentID;
     this.taskID = taskID;
     this.userID = userID;
     this.title = title;
     this.message = message;
     this.timestamp = timestamp;
+    this.isEdited = isEdited;
   }
 
   public CommentData(long taskID, long userID, String title, String message) {
@@ -30,6 +38,7 @@ public final class CommentData implements Comparable<CommentData> {
     this.title = title;
     this.message = message;
     this.timestamp = new Date();
+    this.isEdited = false;
   }
 
   public CommentData(Entity entity) {
@@ -39,6 +48,7 @@ public final class CommentData implements Comparable<CommentData> {
     title = (String) entity.getProperty("title");
     message = (String) entity.getProperty("message");
     timestamp = (Date) entity.getProperty("timestamp");
+    isEdited = (boolean) entity.getProperty("isEdited");
   }
 
   public Entity toEntity() {
@@ -53,6 +63,7 @@ public final class CommentData implements Comparable<CommentData> {
     entity.setProperty("title", title);
     entity.setProperty("message", message);
     entity.setProperty("timestamp", timestamp);
+    entity.setProperty("isEdited", isEdited);
     return entity;
   }
 
@@ -80,6 +91,10 @@ public final class CommentData implements Comparable<CommentData> {
     return timestamp;
   }
 
+  public boolean getIsEdited() {
+    return isEdited;
+  }
+
   public void setCommentID(long commentID) {
     this.commentID = commentID;
   }
@@ -104,6 +119,10 @@ public final class CommentData implements Comparable<CommentData> {
     this.timestamp = timestamp;
   }
 
+  public void setIsEdited(boolean isEdited) {
+    this.isEdited = isEdited;
+  }
+
   @Override
   public int compareTo(CommentData comment) {
     long dif = this.commentID - comment.commentID;
@@ -118,7 +137,8 @@ public final class CommentData implements Comparable<CommentData> {
     returnString += "User ID: " + userID + "\n";
     returnString += "Title: " + title + "\n";
     returnString += "Message: " + message + "\n";
-    returnString += "Date: " + timestamp + "\n}";
+    returnString += "Date: " + timestamp + "\n";
+    returnString += "Is Edited: " + isEdited + "\n}";
     return returnString;
   }
 
@@ -128,7 +148,8 @@ public final class CommentData implements Comparable<CommentData> {
         && a.userID == b.userID
         && a.title.equals(b.title)
         && a.message.equals(b.message)
-        && a.timestamp.equals(b.timestamp);
+        && a.timestamp.equals(b.timestamp)
+        && a.isEdited == b.isEdited;
   }
 
   @Override

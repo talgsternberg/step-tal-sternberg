@@ -146,29 +146,38 @@
                 String timePattern = "HH:mm";
                 SimpleDateFormat timeFormat = new SimpleDateFormat(timePattern);
                 String time = timeFormat.format(comment.getTimestamp());
+
+                // Get isEdited
+                String edit = "";
+                if (comment.getIsEdited()) {
+                    edit = "(edited)";
+                }
+
+                // Get commentID
+                long cID = comment.getCommentID();
         %>
         <li class="comment">
-          <div id="comment-container">
-            <div id="comment-title-container"><h3><%=comment.getTitle()%></h3></div>
-            <div id="comment-postinfo-container">
+          <div id="comment-container-<%=cID%>">
+            <div id="comment-title-container-<%=cID%>"><h3><%=comment.getTitle()%></h3></div>
+            <div id="comment-postinfo-container-<%=cID%>">
               <h5>
-                Posted on <%=date%> at <%=time%>
+                Posted on <%=date%> at <%=time%> <%=edit%>
                 <br>
                 Posted by <%=username%>
               </h5>   
             </div>       
-            <div id="comment-message-container"><p><%=comment.getMessage()%></p></div>
+            <div id="comment-message-container-<%=cID%>"><p id="comment-message-<%=cID%>"><%=comment.getMessage()%></p></div>
             <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
-            <div id="edit-comment-container" class="inline">
-              <button type="button" id="edit-comment-button" class="has-hover-text flat-button" onclick="editComment(<%=comment.getCommentID()%>, <%=task.getTaskID()%>)">
+            <div id="edit-comment-container-<%=cID%>" class="inline">
+              <button type="button" id="edit-comment-button" class="has-hover-text flat-button" onclick="editComment(<%=cID%>, <%=task.getTaskID()%>)">
                 <span class="fa fa-edit" aria-hidden="true"></span>
                 <span class="hover-text small">Edit</span>
               </button>
             </div>
-            <div id="delete-comment-container" class="inline">
-              <form id="delete-comment-post-form" action="/comment-delete" method="POST" class="inline">
-                <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
-                <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
+            <div id="delete-comment-container-<%=cID%>" class="inline">
+              <form id="delete-comment-post-form-<%=cID%>" action="/comment-delete" method="POST" class="inline">
+                <input type="hidden" id="delete-comment-commentID-input-<%=cID%>" name="commentID" value="<%=cID%>">
+                <input type="hidden" id="delete-comment-taskID-input-<%=cID%>" name="taskID" value="<%=task.getTaskID()%>">
                 <button type="submit" class="has-hover-text flat-button">
                   <span class="fa fa-trash-o" aria-hidden="true"></span>
                   <span class="hover-text small">Delete</span>
