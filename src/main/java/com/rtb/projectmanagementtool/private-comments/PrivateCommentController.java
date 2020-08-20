@@ -38,9 +38,12 @@ public final class PrivateCommentController {
   }
 
   // only 1 private comment per task
-  public ArrayList<PrivateCommentData> getPrivateCommentByTaskID(long taskID) {
+  public PrivateCommentData getPrivateCommentByTaskID(long taskID) {
     Filter filter = new FilterPredicate("taskID", FilterOperator.EQUAL, taskID);
-    return getPrivateComments(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+    // private comments should be size = 1
+    ArrayList<PrivateCommentData> privateComments =
+        getPrivateComments(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+    return privateComments.get(0);
   }
 
   public ArrayList<PrivateCommentData> getPrivateComments(
@@ -67,45 +70,33 @@ public final class PrivateCommentController {
     return privateComments;
   }
 
-  public void deletePrivateComments(ArrayList<Long> commentIDs) {
-    datastore.delete(getKeysFromCommentIDs(commentIDs));
+  public void deletePrivateComment(Long commentID) {
+    datastore.delete(getKeyFromCommentID(commentID));
   }
 
-  public void deleteCommentsByTaskID(Long taskID) {
-    datastore.delete(getKeysFromComments(getPrivateCommentByTaskID(taskID)));
+  public void deleteCommentByTaskID(Long taskID) {
+    datastore.delete(getKeyFromComment(getPrivateCommentByTaskID(taskID)));
   }
 
   // Conversion methods
 
-  public ArrayList<Long> getCommentIDsFromKeys(ArrayList<Key> keys) {
-    ArrayList<Long> commentIDs = new ArrayList<>();
-    for (Key key : keys) {
-      commentIDs.add(key.getId());
-    }
-    return commentIDs;
+  public Long getCommentIDFromKey(Key key) {
+    Long commentID = key.getId();
+    return commentID;
   }
 
-  public ArrayList<Long> getCommentIDsFromComments(ArrayList<PrivateCommentData> privateComments) {
-    ArrayList<Long> commentIDs = new ArrayList<>();
-    for (PrivateCommentData privateComment : privateComments) {
-      commentIDs.add(privateComment.getCommentID());
-    }
-    return commentIDs;
+  public Long getCommentIDFromComment(PrivateCommentData privateComment) {
+    Long commentID = privateComment.getCommentID();
+    return commentID;
   }
 
-  public ArrayList<Key> getKeysFromCommentIDs(ArrayList<Long> commentIDs) {
-    ArrayList<Key> keys = new ArrayList<>();
-    for (long commentID : commentIDs) {
-      keys.add(KeyFactory.createKey("Comment", commentID));
-    }
-    return keys;
+  public Key getKeyFromCommentID(Long commentID) {
+    Key key = KeyFactory.createKey("Comment", commentID);
+    return key;
   }
 
-  public ArrayList<Key> getKeysFromComments(ArrayList<PrivateCommentData> privateComments) {
-    ArrayList<Key> keys = new ArrayList<>();
-    for (PrivateCommentData privateComment : privateComments) {
-      keys.add(KeyFactory.createKey("PrivateComment", privateComment.getCommentID()));
-    }
-    return keys;
+  public Key getKeyFromComment(PrivateCommentData privateComment) {
+    Key key = KeyFactory.createKey("PrivateComment", privateComment.getCommentID());
+    return key;
   }
 }
