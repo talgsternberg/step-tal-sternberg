@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="scripts/main.js"></script> -->
     <!-- <script src="scripts/task.js"></script> -->
+    <script src="scripts/comment.js"></script>
   </head>
 
   <body>
@@ -137,22 +138,33 @@
                 String time = timeFormat.format(comment.getTimestamp());
         %>
         <li class="comment">
-          <h3><%=comment.getTitle()%></h3>
-          <h5>
-            Posted on <%=date%> at <%=time%>
-            <br>
-            Posted by <%=username%>
-          </h5>
-          <p><%=comment.getMessage()%></p>
-          <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
-          <form id="delete-comment-post-form" action="/comment-delete" method="POST">
-            <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
-            <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
-            <button type="submit" class="flat-button"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
-          </form>
-          <%}%>
+          <div id="comment-container">
+            <div id="comment-title-container"><h3><%=comment.getTitle()%></h3></div>
+            <div id="comment-postinfo-container">
+              <h5>
+                Posted on <%=date%> at <%=time%>
+                <br>
+                Posted by <%=username%>
+              </h5>   
+            </div>       
+            <div id="comment-message-container"><p><%=comment.getMessage()%></p></div>
+            <% if (comment.getUserID() == user.getUserID() && task.getStatus() != Status.COMPLETE) {%>
+            <div id="edit-comment-container" class="inline">
+              <button type="button" id="edit-comment-button" class="inline flat-button" onclick="editComment(<%=comment.getCommentID()%>, <%=task.getTaskID()%>)">
+                <span class="fa fa-edit" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div id="delete-comment-container" class="inline">
+              <form id="delete-comment-post-form" action="/comment-delete" method="POST" class="inline">
+                <input type="hidden" id="delete-comment-commentID-input" name="commentID" value="<%=comment.getCommentID()%>">
+                <input type="hidden" id="delete-comment-taskID-input" name="taskID" value="<%=task.getTaskID()%>">
+                <button type="submit" class="flat-button"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+              </form>
+            </div>
+            <% } %>
+          </div>
         </li>
-        <%}%>
+        <% } %>
       </ul>
       <div id="task-delete-container" class="center">
         <form id="task-delete-post-form" action="/task-delete" method="POST">
