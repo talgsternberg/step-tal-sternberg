@@ -18,11 +18,35 @@ function hideAddUserForm() {
   document.getElementById('add-user-button').style.display = 'block';
 }
 
-var toggler = document.getElementsByClassName("task-tree-node");
+/**
+ * Add event listener to toggle tree.
+ */
+const toggler = document.getElementsByClassName('task-tree-node');
 var i;
 for (i = 0; i < toggler.length; i++) {
-  toggler[i].addEventListener("click", function() {
-    this.parentElement.querySelector(".task-tree").classList.toggle("active");
-    this.classList.toggle("task-tree-node-down");
+  toggler[i].addEventListener('click', function() {
+    this.parentElement.querySelector('.task-tree').classList.toggle('active');
+    this.classList.toggle('task-tree-node-down');
   });
+}
+
+/**
+ * Pop-up
+ */
+const popup = document.getElementById('project-tasktree-container');
+const popupButton = document.getElementById('tasktree-button');
+const popupSpan = document.getElementsByClassName('close')[0];
+
+popupButton.onclick = function () {
+  popup.style.display = 'block';
+}
+
+popupSpan.onclick = function () {
+  popup.style.display = 'none';
+}
+
+window.onclick = function () {
+  if (event.target == popup) {
+    popup.style.display = 'none';
+  }
 }
