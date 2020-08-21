@@ -43,20 +43,32 @@ public class PrivateCommentListServlet extends HttpServlet {
     // get this user's tasks
     ArrayList<TaskData> tasks = taskController.getTasksByUserID(userID);
 
-    // init array of color task will appear
-    String[] colors = new String[tasks.size()];
-
     // build list of private comments and colors
     ArrayList<PrivateCommentData> privateComments = new ArrayList<>();
 
+    // build dictionary of color per task
+    Map<TaskData, String> colors = new HashMap<TaskData, String>();
+
     // only fill if the user is viewing their own profile
     if (userID == currentUser) {
+      // build private comments
       privateComments = privateCommentController.getPrivateCommentsForUser(userID);
+
+      // add color to dict for every task
+      for (TaskData task : tasks) {
+        String statusString = task.getStatus().name();
+        if (statusString.equals("COMPLETE")) {
+          colors.put(task, "green");
+        } else {
+          colors.put(task, "red");
+        }
+      }
     }
 
     // Set attributes of request; retrieve in jsp with
     // request.setAttribute("userTasks", tasks); I don't need since I can pass from /user-profile
     request.setAttribute("privateComments", privateComments);
+    request.setAttribute("colors", colors);
 
     // Load jsp for user page
     request.getRequestDispatcher("user-private-comments.jsp").forward(request, response);

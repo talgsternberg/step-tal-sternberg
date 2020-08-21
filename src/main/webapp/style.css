@@ -33,6 +33,16 @@ html {
   background-color: aliceblue;
 }
 
+.green {
+  border: 2px solid darkgreen;
+  background-color: green;
+}
+
+.red {
+  border: 2px solid darkred;
+  background-color: red;
+}
+
 .description {
   padding: 30px;
   border: 2px solid dodgerblue;

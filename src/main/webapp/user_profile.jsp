@@ -33,9 +33,9 @@
           <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
       </div>
       <div id="task-subtasks-container">
-        <h2><%=user.getUserName()%>'s Tasks:</h2>
+        <h2><%=user.getUserName()%>'s Task Comments:</h2>
         <%request.setAttribute("tasks", userTasks);%>
-        <jsp:include page="list-tasks.jsp"/>
+        <jsp:include page="user-private-comments.jsp"/>
       </div>
     </div>
   </body>
