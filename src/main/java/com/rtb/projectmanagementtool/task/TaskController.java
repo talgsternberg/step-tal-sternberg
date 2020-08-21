@@ -7,6 +7,7 @@ import com.rtb.projectmanagementtool.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /** Class controlling the TaskData object. */
@@ -222,6 +223,40 @@ public final class TaskController {
     }
     Collections.reverse(ancestors);
     return ancestors;
+  }
+
+  public ArrayList<TaskTreeData> getTaskTree(long projectID) {
+    ArrayList<TaskTreeData> taskTree = new ArrayList<>();
+    Filter filter = new FilterPredicate("projectID", FilterOperator.EQUAL, projectID);
+    ArrayList<TaskData> tasks = getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
+    Iterator<TaskData> iterator = tasks.iterator();
+    while (iterator.hasNext()) {
+      TaskData task = iterator.next();
+      if (task.getParentTaskID() == 0) {
+        taskTree.add(new TaskTreeData(task));
+        iterator.remove();
+      }
+    }
+    buildTree(taskTree, tasks);
+    return taskTree;
+  }
+
+  private void buildTree(ArrayList<TaskTreeData> taskTree, ArrayList<TaskData> tasks) {
+    if (tasks.isEmpty()) {
+      return;
+    }
+    ArrayList<TaskTreeData> nextTreeLayer = new ArrayList<>();
+    for (TaskTreeData taskTreeNode : taskTree) {
+      Iterator<TaskData> iterator = tasks.iterator();
+      while (iterator.hasNext()) {
+        TaskData task = iterator.next();
+        if (task.getParentTaskID() == taskTreeNode.getTask().getTaskID()) {
+          nextTreeLayer.add(taskTreeNode.addSubtask(task));
+          iterator.remove();
+        }
+      }
+    }
+    buildTree(nextTreeLayer, tasks);
   }
 
   private ArrayList<TaskData> getTasks(Filter filter, int limit, SortPredicate sort) {

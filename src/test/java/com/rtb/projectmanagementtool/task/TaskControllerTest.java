@@ -713,6 +713,51 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testGetTaskTree() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Task Tree:
+    // _ 1  _ 2 _ 4
+    //     |_ 3
+    // _ 5
+    // _ 6
+
+    // Create tasks
+    TaskData task1 = new TaskData(projectID1, name1, description1);
+    TaskData task2 = new TaskData(projectID2, name2, description2);
+    TaskData task3 = new TaskData(projectID3, name3, description3);
+    TaskData task4 = new TaskData(projectID1, name1, description1);
+    TaskData task5 = new TaskData(projectID2, name2, description2);
+    TaskData task6 = new TaskData(projectID3, name3, description3);
+
+    // Add task1 with TaskController
+    taskController.addTasks(new ArrayList<>(Arrays.asList(task1, task5, task6)));
+
+    // Add subtasks  with TaskController
+    ArrayList<TaskData> subtasks = new ArrayList<>(Arrays.asList(task2, task3));
+    taskController.addSubtasks(task1, subtasks);
+    taskController.addSubtasks(task2, new ArrayList<>(Arrays.asList(task4)));
+
+    // Build expected task tree manually
+    ArrayList<TaskTreeData> taskTree = new ArrayList<>();
+    TaskTreeData taskTreeNode1 = new TaskTreeData(task1);
+    taskTree.add(taskTreeNode1);
+    TaskTreeData taskTreeNode2 = new TaskTreeData(task2);
+    taskTreeNode1.setSubtasks(
+        new ArrayList<>(Arrays.asList(taskTreeNode2, new TaskTreeData(task3))));
+    taskTreeNode2.setSubtasks(new ArrayList<>(Arrays.asList(new TaskTreeData(task4))));
+    taskTree.add(new TaskTreeData(task5));
+    taskTree.add(new TaskTreeData(task6));
+
+    // Get task tree with TaskController
+    ArrayList<TaskTreeData> getTaskTree = taskController.getTaskTree(projectID1);
+
+    // Assert subtasks retrieved are accurate
+    Assert.assertEquals("getTaskTree", taskTree, getTaskTree);
+  }
+
+  @Test
   public void testDeleteTasks() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
