@@ -33,16 +33,6 @@ html {
   background-color: aliceblue;
 }
 
-.green {
-  border: 2px solid darkgreen;
-  background-color: green;
-}
-
-.red {
-  border: 2px solid darkred;
-  background-color: red;
-}
-
 .description {
   padding: 30px;
   border: 2px solid dodgerblue;
@@ -275,6 +265,12 @@ textarea:focus {
 /* status on checklist determines task color */
 .incomplete {
   background-color: red;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+
 }
 
 .incomplete:hover {
@@ -283,6 +279,12 @@ textarea:focus {
 
 .complete {
   background-color: green;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+
 }
 
 .complete:hover {
