@@ -64,7 +64,7 @@ public class CreateUserServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     AuthOps auth = new AuthOps(datastore);
 
-    if (auth.whichUserIsLoggedIn(request, response) != Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
+    if (auth.whichUserIsLoggedIn(request, response) != AuthOps.NO_LOGGED_IN_USER) {
       response.sendRedirect("/home");
       return;
     }
