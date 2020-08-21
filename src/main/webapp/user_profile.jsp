@@ -1,11 +1,17 @@
 <%--Class Imports--%>
-<%@ page import="com.rtb.projectmanagementtool.user.*,java.util.ArrayList,
-  com.rtb.projectmanagementtool.task.*" %>
+<%@ page import="com.google.gson.Gson"%>
+<%@ page import="com.rtb.projectmanagementtool.task.*"%>
+<%@ page import="com.rtb.projectmanagementtool.user.*"%>
+<%@ page import="com.rtb.projectmanagementtool.privatecomment.*"%>
+<%@ page import="java.util.*"%>
 
 <%--Get variables--%>
 <%
     UserData user = (UserData) request.getAttribute("UserData");
     ArrayList<TaskData> userTasks = (ArrayList<TaskData>) request.getAttribute("UserTasks");
+    Map<Long, PrivateCommentData> privateCommentsMap = (HashMap<Long, PrivateCommentData>) request.getAttribute("privateCommentMap");
+    boolean currUser = (boolean) request.getAttribute("currentUser");
+
 %>
 
 <%--HTML--%>
@@ -32,11 +38,14 @@
        <div id="user-total-tasks-container">
           <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
       </div>
-      <div id="task-subtasks-container">
-        <h2><%=user.getUserName()%>'s Task Comments:</h2>
-        <%request.setAttribute("tasks", userTasks);%>
-        <jsp:include page="user-private-comments.jsp"/>
-      </div>
+      <%if (currUser) {%>
+        <div id="task-subtasks-container">
+          <h2><%=user.getUserName()%>'s Task Comments:</h2>
+          <%request.setAttribute("tasks", userTasks);%>
+          <%request.setAttribute("privateCommentsMap", privateCommentsMap);%>
+          <jsp:include page="user-private-comments.jsp"/>
+        </div>
+    <%}%>
     </div>
   </body>
 </html>
