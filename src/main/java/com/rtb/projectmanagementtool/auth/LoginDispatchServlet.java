@@ -32,7 +32,7 @@ public class LoginDispatchServlet extends HttpServlet {
 
     // If user successfully logged in with google but their entity doesn't exist,
     // send them to the create user page
-    if (userId == Long.parseLong(AuthOps.NO_LOGGED_IN_USER)) {
+    if (userId == AuthOps.NO_LOGGED_IN_USER) {
       response.sendRedirect("/create-user");
       return;
     }
