@@ -22,7 +22,7 @@ function hideAddUserForm() {
  * Add event listener to toggle tree.
  */
 const toggler = document.getElementsByClassName('task-tree-node');
-var i;
+let i;
 for (i = 0; i < toggler.length; i++) {
   toggler[i].addEventListener('click', function() {
     this.parentElement.querySelector('.task-tree').classList.toggle('active');
@@ -37,16 +37,16 @@ const popup = document.getElementById('project-tasktree-container');
 const popupButton = document.getElementById('tasktree-button');
 const popupSpan = document.getElementsByClassName('close')[0];
 
-popupButton.onclick = function () {
+popupButton.onclick = function() {
   popup.style.display = 'block';
-}
+};
 
-popupSpan.onclick = function () {
+popupSpan.onclick = function() {
   popup.style.display = 'none';
-}
+};
 
-window.onclick = function () {
+window.onclick = function() {
   if (event.target == popup) {
     popup.style.display = 'none';
   }
-}
+};

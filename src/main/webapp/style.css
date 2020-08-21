@@ -183,7 +183,7 @@ ul.task-tree {
   display: block;
 }
 
-/* Task Tree Pop-Up*/
+/* Task Tree Pop-Up */
 .popup {
   display: none;
   position: fixed;
@@ -193,7 +193,7 @@ ul.task-tree {
   width: 100%;
   height: 100%;
   overflow: 100%;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .popup-content {
@@ -211,7 +211,8 @@ ul.task-tree {
   font-weight: bold;
 }
 
-.close:hover, .close:focus {
+.close:hover,
+.close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;

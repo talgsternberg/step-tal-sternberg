@@ -103,7 +103,6 @@ function editComment(commentID, taskID) {
   postForm.setAttribute('id', 'edit-comment-post-form-' + commentID);
   postForm.setAttribute('action', '/comment-edit');
   postForm.setAttribute('method', 'POST');
-  postForm.setAttribute('onsubmit', 'replaceEditedComment(' + commentID + ', document.getElementById(\'title-edit\'), document.getElementById(\'message-edit\'))');
   commentContainer.appendChild(postForm);
 
   // Create hidden taskID input
@@ -169,15 +168,11 @@ function editComment(commentID, taskID) {
   postForm.appendChild(deleteContainer);
 }
 
-function replaceEditedComment(commentID, title, message) {
-  console.log('pass');
-}
-
 /**
  * Add event listener to toggle tree.
  */
 const toggler = document.getElementsByClassName('task-tree-node');
-var i;
+let i;
 for (i = 0; i < toggler.length; i++) {
   toggler[i].addEventListener('click', function() {
     this.parentElement.querySelector('.task-tree').classList.toggle('active');
@@ -192,16 +187,16 @@ const popup = document.getElementById('task-tasktree-container');
 const popupButton = document.getElementById('tasktree-button');
 const popupSpan = document.getElementsByClassName('close')[0];
 
-popupButton.onclick = function () {
+popupButton.onclick = function() {
   popup.style.display = 'block';
-}
+};
 
-popupSpan.onclick = function () {
+popupSpan.onclick = function() {
   popup.style.display = 'none';
-}
+};
 
-window.onclick = function () {
+window.onclick = function() {
   if (event.target == popup) {
     popup.style.display = 'none';
   }
-}
+};
