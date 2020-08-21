@@ -7,7 +7,7 @@
 <%--Get variables--%>
 <%
     List<TaskData> tasks = (List<TaskData>)(List<?>) request.getAttribute("tasks");
-    ArrayList<PrivateCommentData> privateComments = (ArrayList<PrivateCommentData>) request.getAttribute("privateComments");
+    Map<Long, PrivateCommentData> privateCommentsMap = (HashMap<Long, PrivateCommentData>) request.getAttribute("privateCommentsMap");
 %>
 
 <%--HTML--%>
@@ -21,9 +21,15 @@
       <%}%>
         <%=task.getName()%>
       </button>
-      <td class="inline"><input type="text" name="<%=task.getName()%>" value=<%=privateComments.get(something)%> /></td>
-      <br><br>
+      <form class="inline" id="add-private-comment-post-form" action="/private-comment" method="POST">
+        <input type="hidden" id="add-private-comment-task-input" name="<%=task.getName()%>" value="<%=task.getTaskID()%>">
+        <br>
+        <input type="text" name="message-<%=task.getName()%>" value="<%=privateCommentsMap.get(task.getTaskID())%>"></input>
+        <br>
+        <button type="submit" class="deep-button">Update</button>
+      </form>
       <%request.setAttribute("task", task);%>
+      <%}%>
+      <br><br>
     </li>
-  <%}%>
 </ul>
