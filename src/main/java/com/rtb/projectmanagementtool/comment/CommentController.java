@@ -52,6 +52,14 @@ public final class CommentController {
     return getComments(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
 
+  public ArrayList<CommentData> getComments(
+      long taskID, int limit, String sortBy, String sortDirection) {
+    Filter filter = new FilterPredicate("taskID", FilterOperator.EQUAL, taskID);
+    SortPredicate sort =
+        new SortPredicate(sortBy, SortDirection.valueOf(sortDirection.toUpperCase()));
+    return getComments(filter, limit, sort);
+  }
+
   public ArrayList<CommentData> getComments(int limit, String sortBy, String sortDirection) {
     SortPredicate sort =
         new SortPredicate(sortBy, SortDirection.valueOf(sortDirection.toUpperCase()));

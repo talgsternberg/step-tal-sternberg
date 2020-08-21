@@ -75,16 +75,22 @@ function editDescription(taskID) {
  */
 function editComment(commentID, taskID) {
   // Get DOM elements
-  const commentContainer = document.getElementById('comment-container');
-  const titleContainer = document.getElementById('comment-title-container');
-  const messageContainer = document.getElementById('comment-message-container');
-  const infoContainer = document.getElementById('comment-postinfo-container');
-  const editContainer = document.getElementById('edit-comment-container');
-  const deleteContainer = document.getElementById('delete-comment-container');
+  const commentContainer =
+      document.getElementById('comment-container-' + commentID);
+  const titleContainer =
+      document.getElementById('comment-title-container-' + commentID);
+  const messageContainer =
+      document.getElementById('comment-message-container-' + commentID);
+  const infoContainer =
+      document.getElementById('comment-postinfo-container-' + commentID);
+  const editContainer =
+      document.getElementById('edit-comment-container-' + commentID);
+  const deleteContainer =
+      document.getElementById('delete-comment-container-' + commentID);
 
   // Get attributes
-  const title = titleContainer.getElementsByTagName('h3')[0].innerText;
-  const message = messageContainer.getElementsByTagName('p')[0].innerText;
+  const title = titleContainer.innerText;
+  const message = messageContainer.innerText;
 
   // Clear DOM elements
   titleContainer.innerHTML = '';
@@ -94,7 +100,7 @@ function editComment(commentID, taskID) {
 
   // Convert comment into a form
   postForm = document.createElement('form');
-  postForm.setAttribute('id', 'edit-comment-post-form');
+  postForm.setAttribute('id', 'edit-comment-post-form-' + commentID);
   postForm.setAttribute('action', '/comment-edit');
   postForm.setAttribute('method', 'POST');
   commentContainer.appendChild(postForm);

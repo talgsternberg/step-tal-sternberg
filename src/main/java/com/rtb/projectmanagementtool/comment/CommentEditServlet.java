@@ -46,6 +46,9 @@ public class CommentEditServlet extends HttpServlet {
     Long userLoggedInId = auth.whichUserIsLoggedIn(request, response);
     if (userLoggedInId == comment.getUserID()) {
       // Update comment
+      if (!title.equals(comment.getTitle()) || !message.equals(comment.getMessage())) {
+        comment.setIsEdited(true);
+      }
       comment.setTitle(title);
       comment.setMessage(message);
       // Add comment to datastore

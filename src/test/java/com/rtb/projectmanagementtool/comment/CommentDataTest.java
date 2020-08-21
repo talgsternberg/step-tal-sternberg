@@ -23,6 +23,7 @@ public class CommentDataTest {
   private static final String title1 = "Comment 1";
   private static final String message1 = "Comment 1 message...";
   private static final Date timestamp1 = new Date();
+  private static final boolean isEdited1 = true;
 
   // Comment 2 attributes
   private static final long commentID2 = 2l;
@@ -31,6 +32,7 @@ public class CommentDataTest {
   private static final String title2 = "Comment 2";
   private static final String message2 = "Comment 2 message...";
   private static final Date timestamp2 = new Date();
+  private static final boolean isEdited2 = false;
 
   // Comment 3 attributes
   private static final long commentID3 = 3l;
@@ -39,6 +41,7 @@ public class CommentDataTest {
   private static final String title3 = "Comment 3";
   private static final String message3 = "Comment 3 message...";
   private static final Date timestamp3 = new Date();
+  private static final boolean isEdited3 = false;
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
@@ -68,6 +71,7 @@ public class CommentDataTest {
     entity1.setProperty("title", title1);
     entity1.setProperty("message", message1);
     entity1.setProperty("timestamp", timestamp1);
+    entity1.setProperty("isEdited", isEdited1);
 
     // Build task entity 2
     Entity entity2 = new Entity("Comment");
@@ -76,6 +80,7 @@ public class CommentDataTest {
     entity2.setProperty("title", title2);
     entity2.setProperty("message", message2);
     entity2.setProperty("timestamp", timestamp2);
+    entity1.setProperty("isEdited", isEdited2);
 
     // Add task entities to ds
     ds.put(entity1);
@@ -99,7 +104,7 @@ public class CommentDataTest {
   public void testCreateCommentFromLongConstructor() {
     // Build CommentData object
     CommentData comment =
-        new CommentData(commentID1, taskID1, userID1, title1, message1, timestamp1);
+        new CommentData(commentID1, taskID1, userID1, title1, message1, timestamp1, isEdited1);
 
     // Assert CommentData parameters were stored correctly
     Assert.assertEquals("commentID", commentID1, comment.getCommentID());
@@ -108,6 +113,7 @@ public class CommentDataTest {
     Assert.assertEquals("title", title1, comment.getTitle());
     Assert.assertEquals("message", message1, comment.getMessage());
     Assert.assertEquals("timestamp", timestamp1, comment.getTimestamp());
+    Assert.assertEquals("isEdited", isEdited1, comment.getIsEdited());
   }
 
   @Test
@@ -132,6 +138,7 @@ public class CommentDataTest {
     entity.setProperty("title", title2);
     entity.setProperty("message", message2);
     entity.setProperty("timestamp", timestamp2);
+    entity.setProperty("isEdited", isEdited2);
 
     // Build CommentData object from entity
     CommentData comment = new CommentData(entity);
@@ -143,6 +150,7 @@ public class CommentDataTest {
     Assert.assertEquals("title", title2, comment.getTitle());
     Assert.assertEquals("message", message2, comment.getMessage());
     Assert.assertEquals("timestamp", timestamp2, comment.getTimestamp());
+    Assert.assertEquals("isEdited", isEdited2, comment.getIsEdited());
   }
 
   @Test
@@ -154,6 +162,7 @@ public class CommentDataTest {
     entity.setProperty("title", title2);
     entity.setProperty("message", message2);
     entity.setProperty("timestamp", timestamp2);
+    entity.setProperty("isEdited", isEdited2);
 
     // Build CommentData object from entity
     CommentData comment = new CommentData(entity);
@@ -165,13 +174,14 @@ public class CommentDataTest {
     Assert.assertEquals("title", title2, comment.getTitle());
     Assert.assertEquals("message", message2, comment.getMessage());
     Assert.assertEquals("timestamp", timestamp2, comment.getTimestamp());
+    Assert.assertEquals("isEdited", isEdited2, comment.getIsEdited());
   }
 
   @Test
   public void testCreateEntityFromComment() {
     // Build CommentData object
     CommentData comment =
-        new CommentData(commentID3, taskID3, userID3, title3, message3, timestamp3);
+        new CommentData(commentID3, taskID3, userID3, title3, message3, timestamp3, isEdited3);
 
     // Create comment entity from CommentData object
     Entity entity = comment.toEntity();
@@ -183,6 +193,7 @@ public class CommentDataTest {
     String entityTitle = (String) entity.getProperty("title");
     String entityMessage = (String) entity.getProperty("message");
     Date entityTimestamp = (Date) entity.getProperty("timestamp");
+    boolean entityIsEdited = (boolean) entity.getProperty("isEdited");
 
     // Assert comment entity attributes equal CommentData attributes
     Assert.assertEquals("commentID", commentID3, entityCommentID);
@@ -191,6 +202,7 @@ public class CommentDataTest {
     Assert.assertEquals("title", title3, entityTitle);
     Assert.assertEquals("message", message3, entityMessage);
     Assert.assertEquals("timestamp", timestamp3, entityTimestamp);
+    Assert.assertEquals("isEdited", isEdited3, entityIsEdited);
   }
 
   @Test
