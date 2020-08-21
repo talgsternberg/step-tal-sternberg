@@ -51,6 +51,16 @@ form {
   background-color: aliceblue;
 }
 
+/* Lists */
+ul {
+  list-style-type: none;
+  padding: 10px;
+}
+
+li {
+  margin: 10px;
+}
+
 /* Status checkmarks */
 .unchecked {
   color: white;
@@ -131,6 +141,46 @@ form {
 .has-hover-text .small {
   width: 60px;
   margin-left: -30px;
+}
+
+/* Task Tree */
+ul.task-tree {
+  list-style-type: none;
+  padding: 0;
+  margin-left: 20px;
+}
+
+.task-tree {
+  padding: 0;
+}
+
+.task-tree-leaf-node {
+  margin-left: 22px;
+}
+
+.task-tree-node {
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+.task-tree-node::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.task-tree-node-down::before {
+  transform: rotate(90deg);
+}
+
+.task-tree .task-tree {
+  display: none;
+}
+
+.task-tree .active {
+  display: block;
 }
 
 /* Add comments form */
@@ -286,16 +336,6 @@ textarea:focus {
 
 .complete:hover {
   background-color: darkgreen;
-}
-
-/* Lists */
-ul {
-  list-style-type: none;
-  padding: 10px;
-}
-
-li {
-  margin: 10px;
 }
 
 /* Style Login Page */

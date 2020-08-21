@@ -103,6 +103,7 @@ function editComment(commentID, taskID) {
   postForm.setAttribute('id', 'edit-comment-post-form-' + commentID);
   postForm.setAttribute('action', '/comment-edit');
   postForm.setAttribute('method', 'POST');
+  postForm.setAttribute('onsubmit', 'replaceEditedComment(' + commentID + ', document.getElementById(\'title-edit\'), document.getElementById(\'message-edit\'))');
   commentContainer.appendChild(postForm);
 
   // Create hidden taskID input
@@ -129,6 +130,7 @@ function editComment(commentID, taskID) {
   // Fill title element with previous title as input
   titleInput = document.createElement('input');
   titleInput.setAttribute('type', 'text');
+  titleInput.setAttribute('id', 'title-edit');
   titleInput.setAttribute('name', 'title');
   titleInput.setAttribute('required', 'true');
   titleInput.setAttribute('value', title);
@@ -142,6 +144,7 @@ function editComment(commentID, taskID) {
   // Fill message element with previous message as textarea input
   messageInput = document.createElement('textarea');
   messageInput.setAttribute('type', 'text');
+  messageInput.setAttribute('id', 'message-edit');
   messageInput.setAttribute('name', 'message');
   messageInput.setAttribute('required', 'true');
   messageInput.innerText = message;
@@ -164,4 +167,8 @@ function editComment(commentID, taskID) {
   resetButton.innerText = 'Reset';
   deleteContainer.appendChild(resetButton);
   postForm.appendChild(deleteContainer);
+}
+
+function replaceEditedComment(commentID, title, message) {
+  console.log('pass');
 }

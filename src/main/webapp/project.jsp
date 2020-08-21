@@ -85,6 +85,12 @@
         </button>
       </div>
 
+      <div id="project-tasktree-container">
+        <h2>Task Tree</h2>
+        <%request.setAttribute("projectID", project.getId());%>
+        <jsp:include page="/task-tree"/>
+      </div>
+
     </div>
   </body>
 </html>
