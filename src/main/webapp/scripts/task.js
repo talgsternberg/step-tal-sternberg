@@ -171,32 +171,41 @@ function editComment(commentID, taskID) {
 /**
  * Add event listener to toggle tree.
  */
-const toggler = document.getElementsByClassName('task-tree-node');
-let i;
-for (i = 0; i < toggler.length; i++) {
-  toggler[i].addEventListener('click', function() {
-    this.parentElement.querySelector('.task-tree').classList.toggle('active');
-    this.classList.toggle('task-tree-node-down');
-  });
+function treeToggle() {
+  const toggler = document.getElementsByClassName('task-tree-node');
+  let i;
+  for (i = 0; i < toggler.length; i++) {
+    toggler[i].addEventListener('click', function() {
+      this.parentElement.querySelector('.task-tree').classList.toggle('active');
+      this.classList.toggle('task-tree-node-down');
+    });
+  }
 }
 
 /**
  * Pop-up
  */
-const popup = document.getElementById('task-tasktree-container');
-const popupButton = document.getElementById('tasktree-button');
-const popupSpan = document.getElementsByClassName('close')[0];
+function popup() {
+  const popup = document.getElementById('task-tasktree-container');
+  const popupButton = document.getElementById('tasktree-button');
+  const popupSpan = document.getElementsByClassName('close')[0];
 
-popupButton.onclick = function() {
-  popup.style.display = 'block';
-};
+  popupButton.onclick = function() {
+    popup.style.display = 'block';
+  };
 
-popupSpan.onclick = function() {
-  popup.style.display = 'none';
-};
-
-window.onclick = function() {
-  if (event.target == popup) {
+  popupSpan.onclick = function() {
     popup.style.display = 'none';
-  }
-};
+  };
+
+  window.onclick = function() {
+    if (event.target == popup) {
+      popup.style.display = 'none';
+    }
+  };
+}
+
+function loadTaskPage() {
+  treeToggle();
+  popup();
+}

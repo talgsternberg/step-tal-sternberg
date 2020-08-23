@@ -34,7 +34,7 @@
     <script defer src="scripts/task.js"></script>
   </head>
 
-  <body>
+  <body onload="loadTaskPage()">
     <jsp:include page="navigation-bar.jsp"/>
 
     <div id="content">
