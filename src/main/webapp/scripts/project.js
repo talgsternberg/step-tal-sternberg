@@ -55,6 +55,9 @@ function popup() {
   };
 }
 
+/**
+ * Body onload function for Project Page.
+ */
 function loadProjectPage() {
   treeToggle();
   popup();

@@ -205,6 +205,9 @@ function popup() {
   };
 }
 
+/**
+ * Body onload function for Task Page.
+ */
 function loadTaskPage() {
   treeToggle();
   popup();
