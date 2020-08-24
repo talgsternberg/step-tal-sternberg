@@ -92,8 +92,14 @@
           <span class="close">&times;</span>
           <h2>Task Tree</h2>
           <%request.setAttribute("projectID", project.getId());%>
+          <%request.setAttribute("select", false);%>
           <jsp:include page="/task-tree"/>
         </div>
+      </div>
+      <div id="project-addtaskblocker-container" class="inline">
+        <button id="addtaskblocker-button" class="deep-button" onclick="location.href='add-task-blocker.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>'">
+          Add Task Blocker
+        </button>
       </div>
 
     </div>

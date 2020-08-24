@@ -98,6 +98,7 @@
           <span class="close">&times;</span>
           <h2>Task Tree</h2>
           <%request.setAttribute("projectID", project.getId());%>
+          <%request.setAttribute("select", false);%>
           <jsp:include page="/task-tree"/>
         </div>
       </div>

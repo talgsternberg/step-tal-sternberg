@@ -14,6 +14,11 @@ form {
   margin-bottom: 0;
 }
 
+label {
+  padding: 0;
+  margin: 0;
+}
+
 #content {
   background-color: white;
   padding: 10px 30px;
@@ -30,6 +35,12 @@ form {
 
 .no-margin {
   margin: 0;
+}
+
+.hidden {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .task {
@@ -49,6 +60,10 @@ form {
   padding: 10px;
   margin: 10px 50px;
   background-color: aliceblue;
+}
+
+.selected {
+  border: 1px solid black;
 }
 
 /* Lists */
@@ -183,6 +198,11 @@ ul.task-tree {
   display: block;
 }
 
+.blocker,
+.blocked {
+  cursor: pointer;
+}
+
 /* Task Tree Pop-Up */
 .popup {
   display: none;
@@ -226,7 +246,7 @@ ul.task-tree {
   background-color: aliceblue;
 }
 
-input {
+input:not(.hidden) {
   width: 35%;
   border: 3px solid #9cf;
   transition: 0.5s;
@@ -234,7 +254,7 @@ input {
   padding: 5px;
 }
 
-input:focus {
+input:focus:not(.hidden) {
   border: 3px solid dodgerblue;
 }
 
