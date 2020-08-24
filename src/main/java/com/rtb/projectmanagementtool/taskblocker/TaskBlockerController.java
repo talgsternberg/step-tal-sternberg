@@ -6,6 +6,9 @@ import com.rtb.projectmanagementtool.task.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /** Class controlling the TaskBlockerData object. */
 public final class TaskBlockerController {
@@ -43,28 +46,64 @@ public final class TaskBlockerController {
     }
     // Add taskBlocker
     if (task.getStatus() != Status.COMPLETE) {
-      TransactionOptions options = TransactionOptions.Builder.withXG(true);
-      Transaction transaction = datastore.beginTransaction(options);
-      try {
-        datastore.put(taskBlocker.toEntity());
-        assert containsCycle() == false;
-        transaction.commit();
-      } finally {
-        if (transaction.isActive()) {
-          transaction.rollback();
-        }
+      if (!containsPath(taskBlocker.getBlockerID(), taskBlocker.getTaskID())) {
+        taskBlocker.setTaskBlockerID(datastore.put(taskBlocker.toEntity()).getId());
+      } else {
+        System.out.println("Cannot block a task that would create a cycle.");
       }
     } else {
       System.out.println("Cannot block a task set to COMPLETE.");
     }
   }
 
-  private boolean containsCycle() {
-    // TODO: Implement cycle detection algorithm
+  private boolean containsPath(long start, long end) {
+    HashSet<TaskBlockerData> taskBlockers = getAllTaskBlockers();
+    Map<Long, Boolean> taskBlockersVisited =
+        taskBlockers
+            .stream()
+            .collect(Collectors.toMap(x -> x.getTaskID(), x -> false, (x1, x2) -> x1));
+    // boolean visited[] = new boolean[taskBlockers.size()];
+    LinkedList<Long> queue = new LinkedList<>();
+    taskBlockersVisited.put(start, true);
+    queue.add(start);
+    Long blockerID;
+    ArrayList<TaskBlockerData> toRemove = new ArrayList<>();
+    while (queue.size() != 0) {
+      start = queue.poll();
+      for (TaskBlockerData taskBlocker : taskBlockers) {
+        if (taskBlocker.getTaskID() == start) {
+          blockerID = taskBlocker.getBlockerID();
+          if (blockerID == end) {
+            return true;
+          }
+          if (taskBlockersVisited.containsKey(blockerID)
+              && taskBlockersVisited.get(blockerID) == false) {
+            taskBlockersVisited.put(blockerID, true);
+            queue.add(blockerID);
+          }
+          toRemove.add(taskBlocker);
+        }
+      }
+      taskBlockers.removeAll(toRemove);
+      toRemove.clear();
+    }
     return false;
   }
 
   // Get methods
+
+  public TaskBlockerData getTaskBlockerByID(long taskBlockerID) {
+    Query query =
+        new Query("TaskBlocker")
+            .addFilter(
+                "__key__",
+                FilterOperator.EQUAL,
+                KeyFactory.createKey("TaskBlocker", taskBlockerID));
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    TaskBlockerData taskBlocker = new TaskBlockerData(entity);
+    return taskBlocker;
+  }
 
   public HashSet<TaskBlockerData> getAllTaskBlockers() {
     return getTaskBlockers(NO_FILTER);

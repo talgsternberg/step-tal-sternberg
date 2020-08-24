@@ -68,6 +68,94 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
+  public void testCycleDetectionSmall() {
+    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+
+    // Create 2 task blockers that block each other
+    TaskBlockerData tb1 = new TaskBlockerData(task1.getTaskID(), task2.getTaskID());
+    TaskBlockerData tb2 = new TaskBlockerData(task2.getTaskID(), task1.getTaskID());
+
+    // Add task blockers to ds
+    ctl.addTaskBlocker(tb1);
+    ctl.addTaskBlocker(tb2);
+
+    // Assert only the first task blocker was added successfully
+    Assert.assertTrue(tb1.getTaskBlockerID() != 0);
+    Assert.assertEquals(0, tb2.getTaskBlockerID());
+    Assert.assertEquals(1, ctl.getAllTaskBlockers().size());
+    Assert.assertEquals(tb1, ctl.getAllTaskBlockers().iterator().next());
+  }
+
+  @Test
+  public void testCycleDetectionLarge() {
+    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+
+    // Create 2 task blockers that block each other
+    TaskBlockerData tb1 = new TaskBlockerData(task1.getTaskID(), task2.getTaskID());
+    TaskBlockerData tb2 = new TaskBlockerData(task1.getTaskID(), task3.getTaskID());
+    TaskBlockerData tb3 = new TaskBlockerData(task2.getTaskID(), task3.getTaskID());
+    TaskBlockerData tb4 = new TaskBlockerData(task2.getTaskID(), task4.getTaskID());
+    TaskBlockerData tb5 = new TaskBlockerData(task4.getTaskID(), task5.getTaskID());
+    TaskBlockerData tb6 = new TaskBlockerData(task4.getTaskID(), task6.getTaskID());
+
+    // Add task blockers to ds
+    ctl.addTaskBlocker(tb1);
+    ctl.addTaskBlocker(tb2);
+    ctl.addTaskBlocker(tb3);
+    ctl.addTaskBlocker(tb4);
+    ctl.addTaskBlocker(tb5);
+    ctl.addTaskBlocker(tb6);
+
+    // Assert 6 task blockers were added successfully
+    Assert.assertEquals(6, ctl.getAllTaskBlockers().size());
+
+    // Attempt to add task blockers that would cause a cycle
+    TaskBlockerData tb7 = new TaskBlockerData(task5.getTaskID(), task2.getTaskID());
+    TaskBlockerData tb8 = new TaskBlockerData(task6.getTaskID(), task1.getTaskID());
+    TaskBlockerData tb9 = new TaskBlockerData(task4.getTaskID(), task1.getTaskID());
+    ctl.addTaskBlocker(tb7);
+    ctl.addTaskBlocker(tb8);
+    ctl.addTaskBlocker(tb9);
+
+    // Assert only the first set of task blocker were added successfully
+    Assert.assertEquals(6, ctl.getAllTaskBlockers().size());
+  }
+
+  @Test
+  public void testGetTaskBlockerByID() {
+    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+
+    // Create 3 task blockers
+    TaskBlockerData tb1 = new TaskBlockerData(task1.getTaskID(), task2.getTaskID());
+    TaskBlockerData tb2 = new TaskBlockerData(task2.getTaskID(), task3.getTaskID());
+    TaskBlockerData tb3 = new TaskBlockerData(task2.getTaskID(), task4.getTaskID());
+
+    // Add task blockers to ds
+    ctl.addTaskBlocker(tb1);
+    ctl.addTaskBlocker(tb2);
+    ctl.addTaskBlocker(tb3);
+
+    // Assert 3 task blockers were added
+    HashSet<TaskBlockerData> blockers = ctl.getAllTaskBlockers();
+    Assert.assertEquals(3, blockers.size());
+
+    // Get id's from task blocker objects
+    long taskBlockerID1 = tb1.getTaskBlockerID();
+    long taskBlockerID2 = tb2.getTaskBlockerID();
+    long taskBlockerID3 = tb3.getTaskBlockerID();
+
+    // Get task blockers by id via controller
+    TaskBlockerData getTaskBlocker1 = ctl.getTaskBlockerByID(taskBlockerID1);
+    TaskBlockerData getTaskBlocker2 = ctl.getTaskBlockerByID(taskBlockerID2);
+    TaskBlockerData getTaskBlocker3 = ctl.getTaskBlockerByID(taskBlockerID3);
+
+    // Assert correct task blockers were found
+    Assert.assertEquals(tb1, getTaskBlocker1);
+    Assert.assertEquals(tb2, getTaskBlocker2);
+    Assert.assertEquals(tb3, getTaskBlocker3);
+  }
+
+  @Test
   public void testGetBlockersByTaskId() {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 

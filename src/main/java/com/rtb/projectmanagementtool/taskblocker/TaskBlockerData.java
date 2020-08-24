@@ -44,6 +44,10 @@ public final class TaskBlockerData {
     return blockerID;
   }
 
+  public void setTaskBlockerID(long taskBlockerID) {
+    this.taskBlockerID = taskBlockerID;
+  }
+
   @Override
   public String toString() {
     String returnString = "{\n";
