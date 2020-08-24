@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.task.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /** Class controlling the TaskBlockerData object. */
@@ -67,6 +68,15 @@ public final class TaskBlockerController {
 
   public HashSet<TaskBlockerData> getAllTaskBlockers() {
     return getTaskBlockers(NO_FILTER);
+  }
+
+  public ArrayList<TaskData> getTaskBlockerTasks(long taskID) {
+    HashSet<TaskBlockerData> taskBlockers = getTaskBlockers(taskID);
+    ArrayList<TaskData> tasks = new ArrayList<>();
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      tasks.add(taskController.getTaskByID(taskBlocker.getBlockerID()));
+    }
+    return tasks;
   }
 
   public HashSet<TaskBlockerData> getTaskBlockers(long taskID) {

@@ -3,6 +3,7 @@
 <%@ page import="com.rtb.projectmanagementtool.project.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.task.TaskData.Status"%>
+<%@ page import="com.rtb.projectmanagementtool.taskblocker.*"%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.ArrayList"%>
@@ -14,6 +15,7 @@
     ArrayList<TaskData> ancestors = (ArrayList<TaskData>) request.getAttribute("ancestors");
     boolean canSetComplete = (boolean) request.getAttribute("canSetComplete");
     boolean canSetIncomplete = (boolean) request.getAttribute("canSetIncomplete");
+    ArrayList<TaskData> blockers = (ArrayList<TaskData>) request.getAttribute("blockers");
     ProjectData project = (ProjectData) request.getAttribute("project");
     ArrayList<TaskData> subtasks = (ArrayList<TaskData>) request.getAttribute("subtasks");
     ArrayList<UserData> users = (ArrayList<UserData>) request.getAttribute("users");
@@ -54,6 +56,8 @@
         <%request.setAttribute("canSetComplete", canSetComplete);%>
         <%request.setAttribute("canSetIncomplete", canSetIncomplete);%>
         <jsp:include page="task-status-checkmark.jsp"/>
+        <%request.setAttribute("blockers", blockers);%>
+        <jsp:include page="task-blocker-symbol.jsp"/>
       </div>
       <div id="task-description-container" class="description">
         <div id="task-description">

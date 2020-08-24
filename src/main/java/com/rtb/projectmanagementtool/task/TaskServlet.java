@@ -5,6 +5,7 @@ import com.rtb.projectmanagementtool.auth.*;
 import com.rtb.projectmanagementtool.comment.*;
 import com.rtb.projectmanagementtool.project.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
+import com.rtb.projectmanagementtool.taskblocker.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,6 +71,11 @@ public class TaskServlet extends HttpServlet {
     boolean canSetComplete = taskController.allSubtasksAreComplete(task);
     boolean canSetIncomplete = !taskController.parentTaskIsComplete(task);
 
+    // Get Task Blocker status
+    TaskBlockerController taskBlockerController =
+        new TaskBlockerController(datastore, taskController);
+    ArrayList<TaskData> blockers = taskBlockerController.getTaskBlockerTasks(taskID);
+
     // Get Parent Project
     ProjectController projectController = new ProjectController(datastore);
     ProjectData project = projectController.getProjectById(task.getProjectID());
@@ -122,6 +128,7 @@ public class TaskServlet extends HttpServlet {
     request.setAttribute("ancestors", ancestors);
     request.setAttribute("canSetComplete", canSetComplete);
     request.setAttribute("canSetIncomplete", canSetIncomplete);
+    request.setAttribute("blockers", blockers);
     request.setAttribute("project", project);
     request.setAttribute("subtasks", subtasks);
     request.setAttribute("users", users);
