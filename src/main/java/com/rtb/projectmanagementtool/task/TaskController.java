@@ -190,6 +190,9 @@ public final class TaskController {
 
   public ArrayList<TaskData> getTasksByIDs(ArrayList<Long> taskIDs) {
     ArrayList<Key> keys = getKeysFromTaskIDs(taskIDs);
+    if (keys.isEmpty()) {
+      return new ArrayList<>();
+    }
     Filter filter = new FilterPredicate("__key__", FilterOperator.IN, keys);
     return getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
