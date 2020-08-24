@@ -3,6 +3,7 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
+import com.rtb.projectmanagementtool.taskblocker.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,6 +81,10 @@ public final class TaskController {
 
   public boolean setComplete(TaskData task) {
     if (!allSubtasksAreComplete(task)) {
+      return false;
+    }
+    TaskBlockerController taskBlockerController = new TaskBlockerController(datastore, this);
+    if (!taskBlockerController.getTaskBlockers(task.getTaskID()).isEmpty()) {
       return false;
     }
     completeTask(task);
