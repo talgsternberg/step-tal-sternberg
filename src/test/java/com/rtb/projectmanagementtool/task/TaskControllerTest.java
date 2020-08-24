@@ -734,24 +734,24 @@ public class TaskControllerTest {
     // Add task1 with TaskController
     taskController.addTasks(new ArrayList<>(Arrays.asList(task1, task5, task6)));
 
-    // Add subtasks  with TaskController
+    // Add subtasks with TaskController
     ArrayList<TaskData> subtasks = new ArrayList<>(Arrays.asList(task2, task3));
     taskController.addSubtasks(task1, subtasks);
     taskController.addSubtasks(task2, new ArrayList<>(Arrays.asList(task4)));
 
     // Build expected task tree manually
-    ArrayList<TaskTreeData> taskTree = new ArrayList<>();
-    TaskTreeData taskTreeNode1 = new TaskTreeData(task1);
+    ArrayList<TaskTreeNode> taskTree = new ArrayList<>();
+    TaskTreeNode taskTreeNode1 = new TaskTreeNode(task1);
     taskTree.add(taskTreeNode1);
-    TaskTreeData taskTreeNode2 = new TaskTreeData(task2);
+    TaskTreeNode taskTreeNode2 = new TaskTreeNode(task2);
     taskTreeNode1.setSubtasks(
-        new ArrayList<>(Arrays.asList(taskTreeNode2, new TaskTreeData(task3))));
-    taskTreeNode2.setSubtasks(new ArrayList<>(Arrays.asList(new TaskTreeData(task4))));
-    taskTree.add(new TaskTreeData(task5));
-    taskTree.add(new TaskTreeData(task6));
+        new ArrayList<>(Arrays.asList(taskTreeNode2, new TaskTreeNode(task3))));
+    taskTreeNode2.setSubtasks(new ArrayList<>(Arrays.asList(new TaskTreeNode(task4))));
+    taskTree.add(new TaskTreeNode(task5));
+    taskTree.add(new TaskTreeNode(task6));
 
     // Get task tree with TaskController
-    ArrayList<TaskTreeData> getTaskTree = taskController.getTaskTree(projectID1);
+    ArrayList<TaskTreeNode> getTaskTree = taskController.getTaskTree(projectID1);
 
     // Assert subtasks retrieved are accurate
     Assert.assertEquals("getTaskTree", taskTree, getTaskTree);

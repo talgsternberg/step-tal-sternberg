@@ -3,11 +3,11 @@ package com.rtb.projectmanagementtool.task;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
+import com.rtb.projectmanagementtool.taskblocker.*;
 import com.rtb.projectmanagementtool.user.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /** Class controlling the TaskData object. */
@@ -81,6 +81,10 @@ public final class TaskController {
 
   public boolean setComplete(TaskData task) {
     if (!allSubtasksAreComplete(task)) {
+      return false;
+    }
+    TaskBlockerController taskBlockerController = new TaskBlockerController(datastore, this);
+    if (!taskBlockerController.getTaskBlockers(task.getTaskID()).isEmpty()) {
       return false;
     }
     completeTask(task);
@@ -225,36 +229,42 @@ public final class TaskController {
     return ancestors;
   }
 
-  public ArrayList<TaskTreeData> getTaskTree(long projectID) {
-    ArrayList<TaskTreeData> taskTree = new ArrayList<>();
+  public ArrayList<TaskTreeNode> getTaskTree(long projectID) {
+    ArrayList<TaskTreeNode> taskTree = new ArrayList<>();
     Filter filter = new FilterPredicate("projectID", FilterOperator.EQUAL, projectID);
     ArrayList<TaskData> tasks = getTasks(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
-    Iterator<TaskData> iterator = tasks.iterator();
-    while (iterator.hasNext()) {
-      TaskData task = iterator.next();
-      if (task.getParentTaskID() == 0) {
-        taskTree.add(new TaskTreeData(task));
-        iterator.remove();
-      }
-    }
     buildTree(taskTree, tasks);
     return taskTree;
   }
 
-  private void buildTree(ArrayList<TaskTreeData> taskTree, ArrayList<TaskData> tasks) {
+  private void buildTree(ArrayList<TaskTreeNode> taskTree, ArrayList<TaskData> tasks) {
+    // No tasks left to add
     if (tasks.isEmpty()) {
       return;
     }
-    ArrayList<TaskTreeData> nextTreeLayer = new ArrayList<>();
-    for (TaskTreeData taskTreeNode : taskTree) {
-      Iterator<TaskData> iterator = tasks.iterator();
-      while (iterator.hasNext()) {
-        TaskData task = iterator.next();
-        if (task.getParentTaskID() == taskTreeNode.getTask().getTaskID()) {
-          nextTreeLayer.add(taskTreeNode.addSubtask(task));
-          iterator.remove();
+    // Load root tasks
+    ArrayList<TaskData> toRemove = new ArrayList<>();
+    if (taskTree.isEmpty()) {
+      for (TaskData task : tasks) {
+        if (task.getParentTaskID() == 0) {
+          taskTree.add(new TaskTreeNode(task));
+          toRemove.add(task);
         }
       }
+      tasks.removeAll(toRemove);
+      toRemove.clear();
+    }
+    // Load subtasks
+    ArrayList<TaskTreeNode> nextTreeLayer = new ArrayList<>();
+    for (TaskTreeNode taskTreeNode : taskTree) {
+      for (TaskData task : tasks) {
+        if (task.getParentTaskID() == taskTreeNode.getParentTask().getTaskID()) {
+          nextTreeLayer.add(taskTreeNode.addSubtask(task));
+          toRemove.add(task);
+        }
+      }
+      tasks.removeAll(toRemove);
+      toRemove.clear();
     }
     buildTree(nextTreeLayer, tasks);
   }

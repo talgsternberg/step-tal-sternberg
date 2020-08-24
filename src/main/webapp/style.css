@@ -14,6 +14,11 @@ form {
   margin-bottom: 0;
 }
 
+label {
+  padding: 0;
+  margin: 0;
+}
+
 #content {
   background-color: white;
   padding: 10px 30px;
@@ -30,6 +35,12 @@ form {
 
 .no-margin {
   margin: 0;
+}
+
+.hidden {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .task {
@@ -49,6 +60,10 @@ form {
   padding: 10px;
   margin: 10px 50px;
   background-color: aliceblue;
+}
+
+.selected {
+  border: 1px solid black;
 }
 
 /* Lists */
@@ -94,6 +109,25 @@ li {
   color: gray;
 }
 
+/* Blocker no-entry symbol */
+.filled {
+  color: red;
+  text-shadow:
+    -1px -1px 0 red,
+    1px -1px 0 red,
+    -1px 1px 0 red,
+    1px 1px 0 red;
+}
+
+.unfilled {
+  color: white;
+  text-shadow:
+    -1px -1px 0 gray,
+    1px -1px 0 gray,
+    -1px 1px 0 gray,
+    1px 1px 0 gray;
+}
+
 /* Hover message */
 .has-hover-text {
   position: relative;
@@ -109,7 +143,7 @@ li {
   visibility: hidden;
   width: 160px;
   background-color: gray;
-  color: #fff;
+  color: white;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
@@ -120,6 +154,11 @@ li {
   margin-left: -80px;
   opacity: 0;
   transition: opacity 0.3s;
+}
+
+.hover-text a {
+  color: white;
+  text-decoration: underline;
 }
 
 .has-hover-text .hover-text::after {
@@ -183,6 +222,11 @@ ul.task-tree {
   display: block;
 }
 
+.blocker,
+.blocked {
+  cursor: pointer;
+}
+
 /* Task Tree Pop-Up */
 .popup {
   display: none;
@@ -226,7 +270,7 @@ ul.task-tree {
   background-color: aliceblue;
 }
 
-input {
+input:not(.hidden) {
   width: 35%;
   border: 3px solid #9cf;
   transition: 0.5s;
@@ -234,7 +278,7 @@ input {
   padding: 5px;
 }
 
-input:focus {
+input:focus:not(.hidden) {
   border: 3px solid dodgerblue;
 }
 
