@@ -9,9 +9,8 @@
 <%
     UserData user = (UserData) request.getAttribute("UserData");
     ArrayList<TaskData> userTasks = (ArrayList<TaskData>) request.getAttribute("UserTasks");
-    Map<Long, PrivateCommentData> privateCommentsMap = (HashMap<Long, PrivateCommentData>) request.getAttribute("privateCommentMap");
+    HashMap<Long, PrivateCommentData> privateCommentsMap = (HashMap <Long, PrivateCommentData>) request.getAttribute("privateCommentsMap");
     boolean currUser = (boolean) request.getAttribute("currentUser");
-
 %>
 
 <%--HTML--%>
@@ -38,14 +37,12 @@
        <div id="user-total-tasks-container">
           <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
       </div>
-      <%if (currUser) {%>
-        <div id="task-subtasks-container">
-          <h2><%=user.getUserName()%>'s Task Comments:</h2>
-          <%request.setAttribute("tasks", userTasks);%>
-          <%request.setAttribute("privateCommentsMap", privateCommentsMap);%>
-          <jsp:include page="user-private-comments.jsp"/>
-        </div>
-    <%}%>
+      <div id="task-subtasks-container">
+        <%request.setAttribute("tasks", userTasks);%>
+        <%request.setAttribute("privateCommentsMap", privateCommentsMap);%>
+        <%request.setAttribute("currUser", currUser);%>
+        <jsp:include page="user-private-comments.jsp"/>
+      </div>
     </div>
   </body>
 </html>
