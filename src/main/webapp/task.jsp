@@ -31,10 +31,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- <script src="scripts/main.js"></script> -->
     <!-- <script src="scripts/task-old.js"></script> -->
-    <script src="scripts/task.js"></script>
+    <script defer src="scripts/task.js"></script>
   </head>
 
-  <body>
+  <body onload="loadTaskPage()">
     <jsp:include page="navigation-bar.jsp"/>
 
     <div id="content">
@@ -72,7 +72,7 @@
         <%request.setAttribute("tasks", subtasks);%>
         <jsp:include page="list-tasks.jsp"/>
       </div>
-      <div id="task-addsubtask-container">
+      <div id="task-addsubtask-container" class="inline">
         <%
             long projectID;
             String projectName;
@@ -89,6 +89,17 @@
           Add Subtask
         </button>
         <%}%>
+      </div>
+      <div id="task-tasktree-button-container" class="inline">
+        <button id="tasktree-button" class="deep-button">View Task Tree</button>
+      </div>
+      <div id="task-tasktree-container" class="popup">
+        <div class="popup-content">
+          <span class="close">&times;</span>
+          <h2>Task Tree</h2>
+          <%request.setAttribute("projectID", project.getId());%>
+          <jsp:include page="/task-tree"/>
+        </div>
       </div>
 
       <h2>Members</h2>

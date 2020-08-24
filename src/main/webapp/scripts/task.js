@@ -129,6 +129,7 @@ function editComment(commentID, taskID) {
   // Fill title element with previous title as input
   titleInput = document.createElement('input');
   titleInput.setAttribute('type', 'text');
+  titleInput.setAttribute('id', 'title-edit');
   titleInput.setAttribute('name', 'title');
   titleInput.setAttribute('required', 'true');
   titleInput.setAttribute('value', title);
@@ -142,6 +143,7 @@ function editComment(commentID, taskID) {
   // Fill message element with previous message as textarea input
   messageInput = document.createElement('textarea');
   messageInput.setAttribute('type', 'text');
+  messageInput.setAttribute('id', 'message-edit');
   messageInput.setAttribute('name', 'message');
   messageInput.setAttribute('required', 'true');
   messageInput.innerText = message;
@@ -164,4 +166,49 @@ function editComment(commentID, taskID) {
   resetButton.innerText = 'Reset';
   deleteContainer.appendChild(resetButton);
   postForm.appendChild(deleteContainer);
+}
+
+/**
+ * Add event listener to toggle tree.
+ */
+function treeToggle() {
+  const toggler = document.getElementsByClassName('task-tree-node');
+  let i;
+  for (i = 0; i < toggler.length; i++) {
+    toggler[i].addEventListener('click', function() {
+      this.parentElement.querySelector('.task-tree').classList.toggle('active');
+      this.classList.toggle('task-tree-node-down');
+    });
+  }
+}
+
+/**
+ * Pop-up
+ */
+function popup() {
+  const popup = document.getElementById('task-tasktree-container');
+  const popupButton = document.getElementById('tasktree-button');
+  const popupSpan = document.getElementsByClassName('close')[0];
+
+  popupButton.onclick = function() {
+    popup.style.display = 'block';
+  };
+
+  popupSpan.onclick = function() {
+    popup.style.display = 'none';
+  };
+
+  window.onclick = function() {
+    if (event.target == popup) {
+      popup.style.display = 'none';
+    }
+  };
+}
+
+/**
+ * Body onload function for Task Page.
+ */
+function loadTaskPage() {
+  treeToggle();
+  popup();
 }

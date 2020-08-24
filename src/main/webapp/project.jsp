@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="style.css">
     <script defer src="scripts/project.js"></script>
   </head>
-  <body>
+  <body onload="loadProjectPage()">
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp" />
 
@@ -79,10 +79,21 @@
         <%request.setAttribute("tasks", tasks);%>
         <jsp:include page="list-tasks.jsp"/>
       </div>
-      <div id="project-addtask-container">
+      <div id="project-addtask-container" class="inline">
         <button type="button" class="deep-button" onclick="location.href='add-task.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>&taskID=0&taskName=null'">
           Add Task
         </button>
+      </div>
+      <div id="project-tasktree-button-container" class="inline">
+        <button id="tasktree-button" class="deep-button">View Task Tree</button>
+      </div>
+      <div id="project-tasktree-container" class="popup">
+        <div class="popup-content">
+          <span class="close">&times;</span>
+          <h2>Task Tree</h2>
+          <%request.setAttribute("projectID", project.getId());%>
+          <jsp:include page="/task-tree"/>
+        </div>
       </div>
 
     </div>
