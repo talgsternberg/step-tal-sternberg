@@ -168,10 +168,10 @@ function editComment(commentID, taskID) {
   postForm.appendChild(deleteContainer);
 }
 
+let timer;
 /**
  * Add event listener to toggle tree.
  */
-let timer;
 function treeToggle() {
   const toggler = document.getElementsByClassName('task-tree-node');
   let i;
@@ -179,7 +179,11 @@ function treeToggle() {
     toggler[i].addEventListener('click', function() {
       if (timer) clearTimeout(timer);
       timer = setTimeout(function() {
-        this.parentElement.querySelector('.task-tree').classList.toggle('active');
+        this
+            .parentElement
+            .querySelector('.task-tree')
+            .classList
+            .toggle('active');
         this.classList.toggle('task-tree-node-down');
       }.bind(this), 250);
     });
