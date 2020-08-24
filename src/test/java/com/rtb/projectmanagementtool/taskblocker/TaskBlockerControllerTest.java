@@ -112,7 +112,7 @@ public class TaskBlockerControllerTest {
     // Attempt to add task blockers that would cause a cycle
     TaskBlockerData tb7 = new TaskBlockerData(task5.getTaskID(), task2.getTaskID());
     TaskBlockerData tb8 = new TaskBlockerData(task6.getTaskID(), task1.getTaskID());
-    TaskBlockerData tb9 = new TaskBlockerData(task4.getTaskID(), task1.getTaskID());
+    TaskBlockerData tb9 = new TaskBlockerData(task4.getTaskID(), task4.getTaskID());
     ctl.addTaskBlocker(tb7);
     ctl.addTaskBlocker(tb8);
     ctl.addTaskBlocker(tb9);
