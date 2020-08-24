@@ -72,21 +72,32 @@ public class UserProfileServlet extends HttpServlet {
     Map<Long, PrivateCommentData> privateCommentsMap = new HashMap<Long, PrivateCommentData>();
 
     // preset each comment for each task empty
-    for (TaskData task : tasks) {
-      privateCommentsMap.put(
-          task.getTaskID(), new PrivateCommentData(task.getTaskID(), userID, ""));
+    if (privateCommentsMap.isEmpty()) {
+      for (TaskData task : tasks) {
+        privateCommentsMap.put(
+            task.getTaskID(), new PrivateCommentData(task.getTaskID(), userID, ""));
+      }
+    }
+    String userMajorsString = "";
+    for (String major : user.getUserMajors()) {
+      if (userMajorsString.equals("")) {
+        userMajorsString = major;
+      } else {
+        userMajorsString = userMajorsString + ", " + major;
+      }
     }
 
     // if the user has private comments, load them into map
     for (int i = 0; i < privateComments.size(); i++) {
       PrivateCommentData commentObject = privateComments.get(i);
-      privateCommentsMap.put(privateComments.get(i).getTaskID(), commentObject);
+      privateCommentsMap.replace(privateComments.get(i).getTaskID(), commentObject);
     }
 
     // Set attributes of request; retrieve in jsp with
     request.setAttribute("UserData", user);
     request.setAttribute("UserTasks", tasks);
     request.setAttribute("privateCommentsMap", privateCommentsMap);
+    request.setAttribute("userMajorsString", userMajorsString);
     // will be used to check and see if we should load private comments
     request.setAttribute("currentUser", currentUser);
 

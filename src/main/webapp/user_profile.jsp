@@ -11,6 +11,7 @@
     ArrayList<TaskData> userTasks = (ArrayList<TaskData>) request.getAttribute("UserTasks");
     HashMap<Long, PrivateCommentData> privateCommentsMap = (HashMap <Long, PrivateCommentData>) request.getAttribute("privateCommentsMap");
     boolean currUser = (boolean) request.getAttribute("currentUser");
+    String userMajorsString = (String) request.getAttribute("userMajorsString");
 %>
 
 <%--HTML--%>
@@ -32,7 +33,8 @@
       </div>
       <div id="user-name-container"><p>Name: <%=user.getUserName()%></p></div>
       <div id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></div>
-      <div id="user-majors-container"><p>Majors: <%=user.getUserMajors()%></p></div>
+      <div id="user-majors-container"><p>Majors: <%=userMajorsString %></p></div>
+      
       <div id="user-skills-container"><p>Top Skill: <%=user.getUserSkills()%></p></div>
        <div id="user-total-tasks-container">
           <p>Total Completed Tasks: <%=user.getUserTotal()%></p>

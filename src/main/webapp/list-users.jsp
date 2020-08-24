@@ -1,5 +1,6 @@
 <%--Class Imports--%>
 <%@ page import="com.rtb.projectmanagementtool.user.*"%>
+<%@ page import="com.rtb.projectmanagementtool.auth.*"%>
 <%@ page import="java.util.List"%>
 
 <%--Get variables--%>
@@ -11,7 +12,7 @@
 <ul>
   <%for (UserData user : users) {%>
     <li class="user inline">
-      <button type="button" class = "flat-button" onclick="location.href='user-profile'">
+      <button type="button" class = "flat-button" onclick="location.href='user-profile?userID=<%=user.getUserID()%>'">
         <h3><%=user.getUserName()%></h3>
         <% if (user.getUserMajors().size() == 1) { %>
         <p>Major: <%=user.getUserMajors().get(0)%></p>
