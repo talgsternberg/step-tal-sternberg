@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="style.css">
     <script defer src="scripts/project.js"></script>
   </head>
-  <body onload="loadProjectPage()">
+  <body onload="initEventListeners()">
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp" />
 

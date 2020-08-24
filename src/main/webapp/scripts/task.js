@@ -248,7 +248,7 @@ function popup() {
 /**
  * Body onload function for Task Page.
  */
-function loadTaskPage() {
+function initEventListeners() {
   treeToggle();
   popup();
 }
@@ -256,7 +256,7 @@ function loadTaskPage() {
 /**
  * Body onload function for Task Blocker Page.
  */
-function loadTaskBlockerPage() {
+function initTaskBlockerEventListeners() {
   treeToggle();
   treeSelect();
 }

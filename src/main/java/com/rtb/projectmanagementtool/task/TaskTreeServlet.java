@@ -31,7 +31,7 @@ public class TaskTreeServlet extends HttpServlet {
     // Get tree
     TaskController taskController = new TaskController(datastore);
     long projectID = (long) request.getAttribute("projectID");
-    ArrayList<TaskTreeData> taskTree = taskController.getTaskTree(projectID);
+    ArrayList<TaskTreeNode> taskTree = taskController.getTaskTree(projectID);
 
     // Send tree to task-tree.jsp
     request.setAttribute("taskTree", taskTree);

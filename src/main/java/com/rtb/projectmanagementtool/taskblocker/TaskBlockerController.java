@@ -4,9 +4,7 @@ import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
 import com.rtb.projectmanagementtool.task.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
-import java.util.Collectors;
 import java.util.HashSet;
-import java.util.Map;
 
 /** Class controlling the TaskBlockerData object. */
 public final class TaskBlockerController {

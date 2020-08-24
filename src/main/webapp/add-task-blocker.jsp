@@ -18,7 +18,7 @@
     <script src="scripts/task.js"></script>
   </head>
 
-  <body onload="loadTaskBlockerPage()">
+  <body onload="initTaskBlockerEventListeners()">
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp"/>
 

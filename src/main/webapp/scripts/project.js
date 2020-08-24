@@ -58,7 +58,7 @@ function popup() {
 /**
  * Body onload function for Project Page.
  */
-function loadProjectPage() {
+function initEventListeners() {
   treeToggle();
   popup();
 }
