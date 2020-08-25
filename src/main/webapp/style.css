@@ -558,7 +558,47 @@ textarea:focus {
   display: block;
 }
 
+/* MODALS */
+
+.modal {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  width: auto;
+  height: auto;
+  background-color: white;
+  border-radius: 8px;
+  text-align: center;
+  padding: 20px 50px;
+  position: relative;
+}
+
+.modal-content > * {
+  display: block;
+  margin: 10 auto;
+}
+
+.modal-close {
+  top: 0;
+  right: 10px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.modal-close i {
+  font-size: 20px;
+}
+
 /* NAVIGATION BAR */
+
 #navigation ul {
   list-style-type: none;
   margin: 0;

@@ -57,6 +57,44 @@ function hideUsersSection() {
   usersSection.style.display = 'none';
 }
 
+/* PAGE MODALS */
+const addUserModal = document.querySelector('.modal.add-user-to-project');
+const messageModal = document.querySelector('.modal.message');
+
+// Hides the add-user modal when clicked
+document.querySelector('.modal-close.add-user-to-project').addEventListener(
+'click',
+    () => {
+      addUserModal.style.display = 'none';
+    }
+);
+
+// Opens the add-user modal when clicked
+document.getElementById('add-user-button').addEventListener(
+'click',
+    () => {
+      document.getElementById('user-email').value = '';
+      addUserModal.style.display = 'flex';
+    }
+);
+
+/**
+ * Displays the message modal
+ *@param {String} message the message to display
+ */
+function showMessage(message) {
+  messageModalMessage.innerHTML = message;
+  messageModal.style.display = 'flex';
+}
+
+// Closes the message modal
+document.getElementById('message-modal-close').addEventListener(
+'click',
+    () => {
+      messageModal.style.display = 'none';
+    }
+);
+
 /**
  * Add event listener to toggle tree.
  */

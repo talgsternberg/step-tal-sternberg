@@ -109,5 +109,8 @@
       </a>
       <% } %>
     </div>
+
+    <!-- Include modals -->
+    <jsp:include page="add-user-to-project-modal.jsp" />
   </body>
 </html>
