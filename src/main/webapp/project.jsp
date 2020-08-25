@@ -36,7 +36,7 @@
             <ul>
                 <li class="action-list-item"><a href="javascript:hideActions();toggleDescription();"><i class="fas fa-info"></i><p>Toggle description</p></a></li>
                 <% if (project.isCreator(userId) || project.hasAdmin(userId)) { %>
-                <li class="action-list-item"><a href="#"><i class="fas fa-edit"></i><p>Edit project details</p></a></li>
+                <li class="action-list-item"><a href="javascript:hideActions();showEditProjectModal();"><i class="fas fa-edit"></i><p>Edit project details</p></a></li>
                 <% } %>
                 <% if (project.isCreator(userId)) { %>
                 <li class="action-list-item"><a href="#"><i class="fas fa-check"></i><p id="set-project">Complete Project</p></a></li>
@@ -113,5 +113,6 @@
     <!-- Include modals -->
     <jsp:include page="add-user-to-project-modal.jsp" />
     <jsp:include page="message-modal.jsp" />
+    <jsp:include page="edit-project-details-modal.jsp" />
   </body>
 </html>

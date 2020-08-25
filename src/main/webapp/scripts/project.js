@@ -198,6 +198,8 @@ function initEventListeners() {
 const projectActions = document.querySelector('.page-header-actions');
 const projectDescription = document.
 querySelector('.page-header-description');
+const editProjectDetailsModal = document.
+querySelector('.modal.edit-project-details');
 
 /**
  * Displays user actions in header of project page
@@ -235,5 +237,82 @@ function toggleDescription() {
  */
 function hideActions() {
   projectActions.style.display = 'none';
+}
+
+// Hides the modal when clicked
+document.querySelector('.modal-close.edit-project-details').addEventListener(
+    'click',
+    () => {
+      editProjectDetailsModal.style.display = 'none';
+    }
+);
+
+/**
+ * Opens the modal when clicked
+ */
+function showEditProjectModal() {
+  document.getElementById('project-name').value =
+  document.getElementById('main-project-name').innerHTML;
+  document.getElementById('project-desc').value =
+  document.getElementById('main-project-description').innerHTML;
+  editProjectDetailsModal.style.display = 'flex';
+}
+
+/**
+ * Edits the project details
+ *@param {String} projectId id of the project
+ */
+function editProjectDetails(projectId) {
+  // Get user inputs
+  const projectName = document.getElementById('project-name').value;
+  const projectDesc = document.getElementById('project-desc').value;
+
+  // If userEmail is empty, show error message
+  if (projectDesc === '' || projectName === '') {
+    editProjectDetailsModal.style.display = 'none';
+    if (projectName === '' && projectDesc === '') {
+      showMessage('Invalid inputs.');
+    } else if (projectName === '') {
+      showMessage('Invalid email.');
+    } else if (projectDesc === '') {
+      showMessage('Invalid description.');
+    }
+    return;
+  }
+
+  // Generate query string & use it to call the servlet
+  const queryString = '/edit-project-details?project=' + projectId +
+  '&projectName=' + projectName + '&projectDesc=' + projectDesc;
+  fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
+  then((response) => {
+    if (response.message === 'Updated project name and description.') {
+      updateProjectName(projectName);
+      updateProjectDescription(projectDesc);
+    } else if (response.message === 'Updated project name.') {
+      updateProjectName(projectName);
+    } else if (response.message === 'Updated project description.') {
+      updateProjectDescription(projectDesc);
+    }
+
+    // After call to servlet, show message on page describing outcome
+    editProjectDetailsModal.style.display = 'none';
+    showMessage(response.message);
+  });
+}
+
+/**
+ * Updates the project name on project page
+ *@param {String} newName the new name
+ */
+function updateProjectName(newName) {
+  document.getElementById('main-project-name').innerHTML = newName;
+}
+
+/**
+ * Updates the project desc on project page
+ *@param {String} newDesc the new description
+ */
+function updateProjectDescription(newDesc) {
+  document.getElementById('main-project-description').innerHTML = newDesc;
 }
 
