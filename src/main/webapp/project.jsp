@@ -34,7 +34,7 @@
             <a href="javascript:showActions();"><i id="angle-down" class="fas fa-angle-down"></i></a>
             <div class="page-header-actions">
             <ul>
-                <li class="action-list-item"><a href="#"><i class="fas fa-info"></i><p>Toggle description</p></a></li>
+                <li class="action-list-item"><a href="javascript:hideActions();toggleDescription();"><i class="fas fa-info"></i><p>Toggle description</p></a></li>
                 <% if (project.isCreator(userId) || project.hasAdmin(userId)) { %>
                 <li class="action-list-item"><a href="#"><i class="fas fa-edit"></i><p>Edit project details</p></a></li>
                 <% } %>

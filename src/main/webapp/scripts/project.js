@@ -81,6 +81,7 @@ document.getElementById('add-user-button').addEventListener(
 );
 
 /* PAGE FUNCTIONS */
+
 /**
  * Adds a user to the project; called from addUserModal
  *@param {String} projectId id of the project
@@ -195,6 +196,8 @@ function initEventListeners() {
 /* USER ACTIONS DROP-DOWN */
 
 const projectActions = document.querySelector('.page-header-actions');
+const projectDescription = document.
+querySelector('.page-header-description');
 
 /**
  * Displays user actions in header of project page
@@ -216,8 +219,21 @@ document.addEventListener('click', (event) => {
 });
 
 /**
+ * Toggles the state of the description text of a project to shown or hidden
+ */
+function toggleDescription() {
+  if (projectDescription.style.display === 'none' ||
+  projectDescription.style.display === '') {
+    projectDescription.style.display = 'block';
+  } else {
+    projectDescription.style.display = 'none';
+  }
+}
+
+/**
  * Hides user actions
  */
 function hideActions() {
   projectActions.style.display = 'none';
 }
+
