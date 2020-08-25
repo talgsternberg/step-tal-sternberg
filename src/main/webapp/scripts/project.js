@@ -61,6 +61,7 @@ function hideUsersSection() {
 
 const addUserModal = document.querySelector('.modal.add-user-to-project');
 const messageModal = document.querySelector('.modal.message');
+const messageModalMessage = document.getElementById('message-modal-message');
 
 // Hides the add-user modal when clicked
 document.querySelector('.modal-close.add-user-to-project').addEventListener(

@@ -112,5 +112,6 @@
 
     <!-- Include modals -->
     <jsp:include page="add-user-to-project-modal.jsp" />
+    <jsp:include page="message-modal.jsp" />
   </body>
 </html>

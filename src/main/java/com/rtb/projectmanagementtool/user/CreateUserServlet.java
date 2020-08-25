@@ -27,6 +27,7 @@ public class CreateUserServlet extends HttpServlet {
 
     // get AuthID
     String AuthID = auth.getAuthID();
+    String email = auth.getEmail();
 
     // get stuff from form update
     String userName = request.getParameter("userName");
@@ -47,6 +48,7 @@ public class CreateUserServlet extends HttpServlet {
     newUser.setUserMajors(userMajors);
     newUser.setUserSkills(skills);
     newUser.setAuthID(AuthID);
+    newUser.setEmail(email);
 
     // create entity and put in datastore. Get userID
     long userID = controller.addUser(newUser);
