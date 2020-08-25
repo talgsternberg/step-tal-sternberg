@@ -6,6 +6,10 @@
   width: auto;
 }
 
+i {
+  font-size: 12px;
+}
+
 a {
   text-decoration: none;
 }
@@ -69,7 +73,6 @@ label {
 /* Lists */
 ul {
   list-style-type: none;
-  padding: 10px;
 }
 
 /* Status checkmarks */

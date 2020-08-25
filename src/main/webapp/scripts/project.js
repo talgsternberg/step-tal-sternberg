@@ -3,22 +3,6 @@
  */
 
 /**
- * Method that shows the add user form
- */
-function showAddUserForm() {
-  document.getElementById('project-add-user-form').style.display = 'block';
-  document.getElementById('add-user-button').style.display = 'none';
-}
-
-/**
- * Method that hides the add user form
- */
-function hideAddUserForm() {
-  document.getElementById('project-add-user-form').style.display = 'none';
-  document.getElementById('add-user-button').style.display = 'block';
-}
-
-/**
  * Add event listener to toggle tree.
  */
 function treeToggle() {
@@ -61,4 +45,33 @@ function popup() {
 function initEventListeners() {
   treeToggle();
   popup();
+}
+
+/* USER ACTIONS DROP-DOWN */
+const projectActions = document.querySelector('.page-header-actions');
+
+/**
+ * Displays user actions in header of project page
+ */
+function showActions() {
+  if (projectActions.style.display === 'block') {
+    hideActions();
+    return;
+  }
+  projectActions.style.display = 'block';
+}
+
+// Close the actions menu when page is clicked
+document.addEventListener('click', (event) => {
+  if (!document.querySelector('.page-header-actions-selector').
+      contains(event.target)) {
+    projectActions.style.display = 'none';
+  }
+});
+
+/**
+ * Hides user actions
+ */
+function hideActions() {
+  projectActions.style.display = 'none';
 }
