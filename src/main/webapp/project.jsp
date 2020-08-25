@@ -62,33 +62,52 @@
     </div>
     </div>
     
-    <div id="project-tasks-container">
-    <h2>Tasks</h2>
-    <%request.setAttribute("tasks", tasks);%>
-    <jsp:include page="list-tasks.jsp"/>
-    </div>
-    <div id="project-addtask-container" class="inline">
-    <button type="button" class="deep-button" onclick="location.href='add-task.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>&taskID=0&taskName=null'">
+    <!-- Task Section -->
+    <div class="project-section tasks active">
+      <%request.setAttribute("tasks", tasks);%>
+      <div id="project-addtask-container" class="inline">
+      <button type="button" class="deep-button" onclick="location.href='add-task.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>&taskID=0&taskName=null'">
         Add Task
-    </button>
-    </div>
-    <div id="project-tasktree-button-container" class="inline">
-    <button id="tasktree-button" class="deep-button">View Task Tree</button>
-    </div>
-    <div id="project-tasktree-container" class="popup">
-    <div class="popup-content">
+      </button>
+      </div>
+      <div id="project-tasktree-button-container" class="inline">
+      <button id="tasktree-button" class="deep-button">View Task Tree</button>
+      </div>
+      <div id="project-tasktree-container" class="popup">
+      <div class="popup-content">
         <span class="close">&times;</span>
         <h2>Task Tree</h2>
         <%request.setAttribute("projectID", project.getId());%>
         <%request.setAttribute("select", false);%>
         <jsp:include page="/task-tree"/>
-    </div>
-    </div>
-    <div id="project-addtaskblocker-container" class="inline">
-    <button id="addtaskblocker-button" class="deep-button" onclick="location.href='add-task-blocker.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>'">
-        Add Task Blocker
-    </button>
+      </div>
+      </div>
+      <div id="project-addtaskblocker-container" class="inline">
+      <button id="addtaskblocker-button" class="deep-button" onclick="location.href='add-task-blocker.jsp?projectID=<%=project.getId()%>&projectName=<%=project.getName()%>'">
+          Add Task Blocker
+      </button>
+      </div>
+      <jsp:include page="list-tasks.jsp"/>
     </div>
 
+    <!-- User Section -->
+    <div class="project-section users">
+      <% if (project.hasAdmin(userId) || project.isCreator(userId)) { %>
+      <button id="add-user-button">add user</button>
+      <% } %>
+       <a href="user-profile?userID=<%=creator.getUserID()%>">
+        <p>creator: <%=creator.getUserName()%></p>
+      </a>
+      <% for (UserData user : admins) { %>
+      <a href="user-profile?userID=<%=user.getUserID()%>">
+        <p>admin: <%=user.getUserName()%></p>
+      </a>
+      <% } %>
+      <% for (UserData user : members) { %>
+      <a href="user-profile?userID=<%=user.getUserID()%>">
+        <p>member: <%=user.getUserName()%></p>
+      </a>
+      <% } %>
+    </div>
   </body>
 </html>

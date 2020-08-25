@@ -548,6 +548,16 @@ textarea:focus {
   color: white;
 }
 
+.project-section {
+  display: none;
+  margin: 100px auto;
+  width: 60%;
+}
+
+.project-section.active {
+  display: block;
+}
+
 /* NAVIGATION BAR */
 #navigation ul {
   list-style-type: none;

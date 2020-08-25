@@ -2,6 +2,61 @@
  * This file contains javascript code for the project page
  */
 
+/* PAGE SECTIONS */
+const taskSection = document.querySelector('.project-section.tasks');
+const usersSection = document.querySelector('.project-section.users');
+
+// Get all tabs
+const tabs = document.querySelectorAll('.project-header-tab');
+tabs.forEach((clickedTab) => {
+  // Add onClick event for each tab
+  clickedTab.addEventListener('click', (e) => {
+    // Remove the active class from all tabs
+    tabs.forEach((tab) => {
+      tab.classList.remove('active');
+    });
+    const clickedClassList = clickedTab.classList;
+    // Add the active class on the clicked tab
+    clickedClassList.add('active');
+    if (clickedClassList.contains('tasks')) {
+      showTaskSection();
+    }
+    if (clickedClassList.contains('users')) {
+      showUsersSection();
+    }
+  });
+});
+
+/**
+ * Displays the task section
+ */
+function showTaskSection() {
+  hideUsersSection();
+  taskSection.style.display = 'block';
+}
+
+/**
+ * Hides the task section
+ */
+function hideTaskSection() {
+  taskSection.style.display = 'none';
+}
+
+/**
+ * Displays the users section
+ */
+function showUsersSection() {
+  hideTaskSection();
+  usersSection.style.display = 'block';
+}
+
+/**
+ * Hides the users section
+ */
+function hideUsersSection() {
+  usersSection.style.display = 'none';
+}
+
 /**
  * Add event listener to toggle tree.
  */
@@ -48,6 +103,7 @@ function initEventListeners() {
 }
 
 /* USER ACTIONS DROP-DOWN */
+
 const projectActions = document.querySelector('.page-header-actions');
 
 /**
