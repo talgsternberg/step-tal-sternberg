@@ -40,7 +40,7 @@
                 <% } %>
                 <% if (project.isCreator(userId)) { %>
                 <li class="action-list-item"><a href="javascript:hideActions();completeProject(<%=project.getId()%>);"><i class="fas fa-check"></i><p id="set-project"><%=project.isComplete() ? "Set Project Incomplete" : "Set Project Complete"%></p></a></li>
-                <li class="action-list-item"><a href="#"><i class="far fa-trash-alt"></i><p>Delete project</p></a></li>
+                <li class="action-list-item"><a href="/delete-project?project=<%=project.getId()%>"><i class="far fa-trash-alt"></i><p>Delete project</p></a></li>
                 <% } %>
             </ul>
             </div>
