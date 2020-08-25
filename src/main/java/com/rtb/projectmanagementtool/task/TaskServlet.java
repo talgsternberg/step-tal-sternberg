@@ -74,7 +74,7 @@ public class TaskServlet extends HttpServlet {
     // Get Task Blocker status
     TaskBlockerController taskBlockerController =
         new TaskBlockerController(datastore, taskController);
-    ArrayList<TaskData> blockers = taskBlockerController.getTaskBlockerTasks(taskID);
+    ArrayList<TaskData> blockers = taskBlockerController.getBlockersForTask(taskID);
 
     // Get Parent Project
     ProjectController projectController = new ProjectController(datastore);
