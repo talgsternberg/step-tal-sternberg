@@ -25,12 +25,13 @@
           <%=task.getName()%>
         </button>
         <form action="/user-profile" method="POST">
-          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>">
+          <input type="hidden" name="taskID-"<%=task.getName()%> value="<%=task.getTaskID()%>">
           <br>
-          <textarea style="width:300px; height:100px;" type="text" name="message" rows="6" cols="50"><%=(privateCommentsMap.get(task.getTaskID())).getMessage().trim()%></textarea>
+          <textarea style="width:300px; height:100px;" type="text" name="message-"<%=task.getName()%> rows="6" cols="50"><%=(privateCommentsMap.get(task.getTaskID())).getMessage().trim()%></textarea>
           <br>
           <button class="deep-button" type="submit" class="deep-button">Update</button>
         </form>
+        <%request.setAttribute("task", task);%>
         <br><br>
       </li>
     <%}%>

@@ -109,14 +109,16 @@ public class UserProfileServlet extends HttpServlet {
       throws ServletException, IOException {
 
     // get parameters
-    long taskID = Long.parseLong(request.getParameter("taskID"));
-    String message = request.getParameter("message");
+    TaskData task = (TaskData) request.getParameter("task")
+    long taskID = Long.parseLong(request.getParameter("taskID-" + task.getName()));
+    String message = request.getParameter("message-" + task.getName());
 
     // new controller for methods
     PrivateCommentController pcController = new PrivateCommentController(datastore);
 
     // if a pcomment already exists with this taskID. Get it and update it.
     if (pcController.getPrivateCommentByTaskID(taskID) != null) {
+      System.out.println("THIS PC EXISTS. THIS PC EXISTS.");
       PrivateCommentData pcData = pcController.getPrivateCommentByTaskID(taskID);
       // update message
       pcData.setMessage(message);
@@ -127,6 +129,8 @@ public class UserProfileServlet extends HttpServlet {
 
     // otherwise, create a new pcData and put that in ds
     else {
+      System.out.println(
+          "THIS PC DOESN'T EXIST AND IS BEING CREATED. THIS PC DOESN'T EXIST AND IS BEING CREATED.");
       PrivateCommentData pcData = new PrivateCommentData(userID, taskID, message);
       pcController.addPrivateComment(pcData);
     }
