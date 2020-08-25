@@ -109,9 +109,9 @@ public class UserProfileServlet extends HttpServlet {
       throws ServletException, IOException {
 
     // get parameters
-    TaskData task = (TaskData) request.getAttribute("task");
-    long taskID = Long.parseLong(request.getParameter("taskID-" + task.getName()));
-    String message = request.getParameter("message-" + task.getName());
+    long taskID = Long.parseLong(request.getParameter("taskID"));
+    String message = request.getParameter("message-" + taskID);
+    long userID = auth.whichUserIsLoggedIn(request, response);
 
     // new controller for methods
     PrivateCommentController pcController = new PrivateCommentController(datastore);
@@ -128,7 +128,7 @@ public class UserProfileServlet extends HttpServlet {
 
     // otherwise, create a new pcData and put that in ds
     else {
-      PrivateCommentData pcData = new PrivateCommentData(userID, taskID, message);
+      PrivateCommentData pcData = new PrivateCommentData(taskID, userID, message);
       pcController.addPrivateComment(pcData);
     }
 
