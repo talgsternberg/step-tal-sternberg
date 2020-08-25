@@ -69,7 +69,6 @@ public final class TaskBlockerController {
     taskBlockersVisited.put(start, true);
     queue.add(start);
     Long blockerID;
-    ArrayList<TaskBlockerData> toRemove = new ArrayList<>();
     while (queue.size() != 0) {
       start = queue.poll();
       for (TaskBlockerData taskBlocker : taskBlockers) {
@@ -83,11 +82,8 @@ public final class TaskBlockerController {
             taskBlockersVisited.put(blockerID, true);
             queue.add(blockerID);
           }
-          toRemove.add(taskBlocker);
         }
       }
-      taskBlockers.removeAll(toRemove);
-      toRemove.clear();
     }
     return false;
   }
