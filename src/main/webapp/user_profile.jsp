@@ -31,6 +31,7 @@
       <div id="title">
         <div id="user-page-container"><h1><%=user.getUserName()%></h1></div>
       </div>
+      <div id="user-inviteCode-container"><p>invite code: <%=user.getInviteCode()%></p></div>
       <div id="user-name-container"><p>Name: <%=user.getUserName()%></p></div>
       <div id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></div>
       <div id="user-majors-container"><p>Majors: <%=userMajorsString %></p></div>

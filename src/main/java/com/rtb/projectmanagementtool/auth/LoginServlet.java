@@ -1,5 +1,3 @@
-// Servlet for loading login page
-
 package com.rtb.projectmanagementtool.auth;
 
 import com.google.appengine.api.datastore.*;
@@ -19,21 +17,26 @@ public class LoginServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     AuthOps auth = new AuthOps(datastore);
 
-    // Don't view login page if user is logged in
-    if (auth.whichUserIsLoggedIn(request, response) != AuthOps.NO_LOGGED_IN_USER) {
-      response.sendRedirect("/home");
-      return;
+    String authID = auth.getAuthID();
+    // If user has no auth id,
+    if (authID != null) {
+      auth.loginUser(request, response); // try to log in
+      UserController userController = new UserController(datastore);
+      UserData user = userController.getUserByAuthID(authID);
+
+      if (userController.getUserByAuthID(authID)
+          == null) { // If user doesn't exist, redirect to /create-user
+        response.sendRedirect("/create-user");
+      } else { // If user exists, redirect to /home
+        response.sendRedirect("/home");
+      }
     }
 
     // Get login URL
-    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/login-dispatch"));
-
-    // Get login URL for first time users (on submit returns to LoginServlet)
-    request.setAttribute(
-        "loginUrlNewUser", auth.getLoginLink(/*Return URL*/ "/create-new-user.jsp"));
-    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/login-dispatch"));
+    request.setAttribute("loginUrl", auth.getLoginLink(/*Return URL*/ "/login"));
 
     // Forward to login page
     request.getRequestDispatcher("login.jsp").forward(request, response);
+    return;
   }
 }

@@ -2,17 +2,133 @@ package com.rtb.projectmanagementtool.taskblocker;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
+import com.rtb.projectmanagementtool.task.*;
+import com.rtb.projectmanagementtool.task.TaskData.Status;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /** Class controlling the TaskBlockerData object. */
 public final class TaskBlockerController {
-  public TaskBlockerController() {}
+  private DatastoreService datastore;
+  private TaskController taskController;
+  private Filter NO_FILTER = null;
 
-  public HashSet<TaskBlockerData> getTaskBlockers(DatastoreService datastore, long taskID) {
-    Query query = new Query("TaskBlocker");
-    // Filter by taskID here
+  public TaskBlockerController(DatastoreService datastore, TaskController taskController) {
+    this.datastore = datastore;
+    this.taskController = taskController;
+  }
+
+  // Add methods
+
+  public void addTaskBlocker(long taskID, long blockerID) {
+    addTaskBlocker(new TaskBlockerData(taskID, blockerID));
+  }
+
+  public void addTaskBlocker(TaskBlockerData taskBlocker) {
+    // Ensure the tasks exist
+    ArrayList<TaskData> tasks =
+        taskController.getTasksByIDs(
+            new ArrayList<>(Arrays.asList(taskBlocker.getTaskID(), taskBlocker.getBlockerID())));
+    if (tasks.size() < 2) {
+      System.out.println("Cannot find tasks with provided taskID or blockerID");
+      return;
+    }
+    // Ensure the blocked task isn't already set to COMPLETE
+    if (tasks.get(0).getStatus() == Status.COMPLETE
+        || tasks.get(1).getStatus() == Status.COMPLETE) {
+      System.out.println("One or more tasks are already set to COMPLETE.");
+      return;
+    }
+    // Ensure a cycle wouldn't be created if the TaskBlocker is added
+    if (containsPath(taskBlocker.getBlockerID(), taskBlocker.getTaskID())) {
+      System.out.println("Cannot block a task if it would create a cycle.");
+      return;
+    }
+    // Add the TaskBlocker
+    taskBlocker.setTaskBlockerID(datastore.put(taskBlocker.toEntity()).getId());
+  }
+
+  private boolean containsPath(long start, long end) {
+    HashSet<TaskBlockerData> taskBlockers = getAllTaskBlockers();
+    Map<Long, Boolean> taskBlockersVisited =
+        taskBlockers
+            .stream()
+            .collect(Collectors.toMap(x -> x.getTaskID(), x -> false, (x1, x2) -> x1));
+    LinkedList<Long> queue = new LinkedList<>();
+    taskBlockersVisited.put(start, true);
+    queue.add(start);
+    Long blockerID;
+    ArrayList<TaskBlockerData> toRemove = new ArrayList<>();
+    while (queue.size() != 0) {
+      start = queue.poll();
+      for (TaskBlockerData taskBlocker : taskBlockers) {
+        if (taskBlocker.getTaskID() == start) {
+          blockerID = taskBlocker.getBlockerID();
+          if (blockerID == end) {
+            return true;
+          }
+          if (taskBlockersVisited.containsKey(blockerID)
+              && taskBlockersVisited.get(blockerID) == false) {
+            taskBlockersVisited.put(blockerID, true);
+            queue.add(blockerID);
+          }
+          toRemove.add(taskBlocker);
+        }
+      }
+      taskBlockers.removeAll(toRemove);
+      toRemove.clear();
+    }
+    return false;
+  }
+
+  // Get methods
+
+  public TaskBlockerData getTaskBlockerByID(long taskBlockerID) {
+    Query query =
+        new Query("TaskBlocker")
+            .addFilter(
+                "__key__",
+                FilterOperator.EQUAL,
+                KeyFactory.createKey("TaskBlocker", taskBlockerID));
     PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    TaskBlockerData taskBlocker = new TaskBlockerData(entity);
+    return taskBlocker;
+  }
 
+  public HashSet<TaskBlockerData> getAllTaskBlockers() {
+    return getTaskBlockers(NO_FILTER);
+  }
+
+  public ArrayList<TaskData> getBlockersForTask(long taskID) {
+    HashSet<TaskBlockerData> taskBlockers = getTaskBlockers(taskID);
+    ArrayList<Long> taskIDs = new ArrayList<>();
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      taskIDs.add(taskBlocker.getBlockerID());
+    }
+    return taskController.getTasksByIDs(taskIDs);
+  }
+
+  public HashSet<TaskBlockerData> getTaskBlockers(long taskID) {
+    Filter filter = new FilterPredicate("taskID", FilterOperator.EQUAL, taskID);
+    return getTaskBlockers(filter);
+  }
+
+  public HashSet<TaskBlockerData> getTaskBlockersByBlockerID(long blockerID) {
+    Filter filter = new FilterPredicate("blockerID", FilterOperator.EQUAL, blockerID);
+    return getTaskBlockers(filter);
+  }
+
+  private HashSet<TaskBlockerData> getTaskBlockers(Filter filter) {
+    Query query = new Query("TaskBlocker");
+    if (filter != NO_FILTER) {
+      query.setFilter(filter);
+    }
+    PreparedQuery results = datastore.prepare(query);
     HashSet<TaskBlockerData> blockers = new HashSet<>();
     for (Entity entity : results.asIterable()) {
       TaskBlockerData blocker = new TaskBlockerData(entity);
@@ -21,8 +137,43 @@ public final class TaskBlockerController {
     return blockers;
   }
 
-  public void addTaskBlocker(DatastoreService datastore, long taskID, long blockerID) {
-    TaskBlockerData blocker = new TaskBlockerData(taskID, blockerID);
-    datastore.put(blocker.toEntity());
+  // Delete methods
+
+  public void deleteByBlockerID(long blockerID) {
+    datastore.delete(getKeysFromTaskBlockers(getTaskBlockersByBlockerID(blockerID)));
+  }
+
+  // Conversion methods
+
+  public HashSet<Long> getTaskBlockerIDsFromKeys(HashSet<Key> keys) {
+    HashSet<Long> taskBlockerIDs = new HashSet<>();
+    for (Key key : keys) {
+      taskBlockerIDs.add(key.getId());
+    }
+    return taskBlockerIDs;
+  }
+
+  public HashSet<Long> getTaskBlockerIDsFromTaskBlockers(HashSet<TaskBlockerData> taskBlockers) {
+    HashSet<Long> taskBlockerIDs = new HashSet<>();
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      taskBlockerIDs.add(taskBlocker.getTaskBlockerID());
+    }
+    return taskBlockerIDs;
+  }
+
+  public HashSet<Key> getKeysFromTaskBlockerIDs(HashSet<Long> taskBlockerIDs) {
+    HashSet<Key> keys = new HashSet<>();
+    for (long taskBlockerID : taskBlockerIDs) {
+      keys.add(KeyFactory.createKey("TaskBlocker", taskBlockerID));
+    }
+    return keys;
+  }
+
+  public HashSet<Key> getKeysFromTaskBlockers(HashSet<TaskBlockerData> taskBlockers) {
+    HashSet<Key> keys = new HashSet<>();
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      keys.add(KeyFactory.createKey("TaskBlocker", taskBlocker.getTaskBlockerID()));
+    }
+    return keys;
   }
 }

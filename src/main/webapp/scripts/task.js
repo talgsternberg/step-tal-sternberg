@@ -168,6 +168,7 @@ function editComment(commentID, taskID) {
   postForm.appendChild(deleteContainer);
 }
 
+let timer;
 /**
  * Add event listener to toggle tree.
  */
@@ -176,8 +177,51 @@ function treeToggle() {
   let i;
   for (i = 0; i < toggler.length; i++) {
     toggler[i].addEventListener('click', function() {
-      this.parentElement.querySelector('.task-tree').classList.toggle('active');
-      this.classList.toggle('task-tree-node-down');
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function() {
+        this
+            .parentElement
+            .querySelector('.task-tree')
+            .classList
+            .toggle('active');
+        this.classList.toggle('task-tree-node-down');
+      }.bind(this), 250);
+    });
+  }
+}
+
+/**
+ * Add event listener to select tasks in task tree.
+ */
+function treeSelect() {
+  let tasks = document.getElementsByClassName('blocker');
+  console.log(tasks);
+  let i;
+  let j;
+  for (i = 0; i < tasks.length; i++) {
+    tasks[i].addEventListener('dblclick', function() {
+      clearTimeout(timer);
+      const blocker = document.getElementById('addtaskblocker-blocker-name');
+      blocker.innerText = this.innerText;
+      tasks = document.getElementsByClassName('blocker');
+      for (j = 0; j < tasks.length; j++) {
+        tasks[j].classList.remove('selected');
+      }
+      this.classList.add('selected');
+    });
+  }
+  tasks = document.getElementsByClassName('blocked');
+  console.log(tasks);
+  for (i = 0; i < tasks.length; i++) {
+    tasks[i].addEventListener('dblclick', function() {
+      clearTimeout(timer);
+      const blocker = document.getElementById('addtaskblocker-blocked-name');
+      blocker.innerText = this.innerText;
+      tasks = document.getElementsByClassName('blocked');
+      for (j = 0; j < tasks.length; j++) {
+        tasks[j].classList.remove('selected');
+      }
+      this.classList.add('selected');
     });
   }
 }
@@ -208,7 +252,15 @@ function popup() {
 /**
  * Body onload function for Task Page.
  */
-function loadTaskPage() {
+function initEventListeners() {
   treeToggle();
   popup();
+}
+
+/**
+ * Body onload function for Task Blocker Page.
+ */
+function initTaskBlockerEventListeners() {
+  treeToggle();
+  treeSelect();
 }
