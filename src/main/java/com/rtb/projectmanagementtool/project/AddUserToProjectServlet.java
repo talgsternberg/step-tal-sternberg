@@ -15,6 +15,7 @@ public class AddUserToProjectServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    response.setContentType("application/json");
 
     // initialize controllers
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -22,18 +23,27 @@ public class AddUserToProjectServlet extends HttpServlet {
     UserController userController = new UserController(datastore);
 
     // get request parameters
-    Long projectId = Long.parseLong(request.getParameter("projectId"));
-    String userName = request.getParameter("user-name");
-    String userRole = request.getParameter("user-role");
+    Long projectId = Long.parseLong(request.getParameter("project"));
+    String userEmail = request.getParameter("userEmail");
+    String userRole = request.getParameter("userRole");
 
     // create objects
     ProjectData project = projectController.getProjectById(projectId);
-    UserData user = userController.getUserByName(userName);
+    UserData user = userController.getUserByEmail(userEmail);
 
     // if user is not in database or they are already in the project,
     // redirect back to project page
-    if (user == null || project.hasUser(user.getUserID())) {
-      response.sendRedirect("/project?id=" + project.getId());
+    if (user == null) {
+      response
+          .getWriter()
+          .println(generateResponseForFailedOperation(/*message*/ "User not found."));
+      return;
+    }
+
+    if (project.hasUser(user.getUserID())) {
+      response
+          .getWriter()
+          .println(generateResponseForFailedOperation(/*message*/ "User already in project."));
       return;
     }
 
@@ -51,6 +61,34 @@ public class AddUserToProjectServlet extends HttpServlet {
     projectController.addProject(project);
 
     // Redirect to project page
-    response.sendRedirect("/project?id=" + project.getId());
+    response
+        .getWriter()
+        .println(
+            generateResponse(
+                /*message*/ user.getUserName() + " successfully added to project",
+                user.getUserName(),
+                user.getUserID()));
+  }
+
+  // Method generates a json for servlet response
+  public String generateResponse(String message, String userName, Long userId) {
+    String response = "{";
+    response += "\"message\": ";
+    response += "\"" + message + "\"";
+    if (userId != null && userName != null) {
+      response += ", ";
+      response += "\"userName\": ";
+      response += "\"" + userName + "\"";
+      response += ", ";
+      response += "\"userId\": ";
+      response += "\"" + userId + "\"";
+    }
+    response += "}";
+    return response;
+  }
+
+  // Method generates a json for servlet response
+  public String generateResponseForFailedOperation(String message) {
+    return generateResponse(message, /*userName*/ null, /*userId*/ null);
   }
 }

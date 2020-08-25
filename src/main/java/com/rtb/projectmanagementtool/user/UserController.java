@@ -52,6 +52,17 @@ public class UserController {
     return null;
   }
 
+  public UserData getUserByEmail(String email) {
+    Query query = new Query("User").addFilter("email", FilterOperator.EQUAL, email);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity != null) {
+      UserData user = new UserData(entity);
+      return user;
+    }
+    return null;
+  }
+
   // get users+data to direct/display user's profiles later
   public ArrayList<UserData> getEveryUser() {
     Query query = new Query("User");
@@ -81,7 +92,7 @@ public class UserController {
     ArrayList<String> majors = new ArrayList<>();
 
     // create new UserData object with UserID
-    UserData newUser = new UserData("", "", 0, majors, Skills.NONE, 0);
+    UserData newUser = new UserData("", "", "", 0, majors, Skills.NONE, 0);
     return newUser;
   }
 

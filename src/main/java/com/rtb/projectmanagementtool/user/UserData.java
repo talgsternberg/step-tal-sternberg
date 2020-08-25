@@ -24,6 +24,7 @@ public class UserData {
 
   private long userID;
   private String AuthID; // this will be the ID from API
+  private String email;
   private String userName;
   private long userYear;
   private ArrayList<String> userMajors;
@@ -33,6 +34,7 @@ public class UserData {
   public UserData(
       long userID,
       String AuthID,
+      String email,
       String userName,
       long userYear,
       ArrayList<String> userMajors,
@@ -40,6 +42,7 @@ public class UserData {
       long userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
+    this.email = email;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
@@ -49,6 +52,7 @@ public class UserData {
 
   public UserData(
       String AuthID,
+      String email,
       String userName,
       long userYear,
       ArrayList<String> userMajors,
@@ -56,6 +60,7 @@ public class UserData {
       long userTotalCompTasks) {
     this.userID = 0;
     this.AuthID = AuthID;
+    this.email = email;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
@@ -63,14 +68,16 @@ public class UserData {
     this.userTotalCompTasks = userTotalCompTasks;
   }
 
-  public UserData(long userID, String AuthID) {
+  public UserData(long userID, String AuthID, String email) {
     this.userID = userID;
     this.AuthID = AuthID;
+    this.email = email;
   }
 
   public UserData(Entity entity) {
     userID = (long) entity.getKey().getId();
     AuthID = (String) entity.getProperty("AuthID");
+    email = (String) entity.getProperty("email");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
     userMajors = (ArrayList<String>) entity.getProperty("userMajors");
@@ -87,6 +94,7 @@ public class UserData {
     }
     entity.setProperty("userID", entity.getKey().getId());
     entity.setProperty("AuthID", AuthID);
+    entity.setProperty("email", email);
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
@@ -101,6 +109,10 @@ public class UserData {
 
   public String getAuthID() {
     return AuthID;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   public String getUserName() {
@@ -131,6 +143,10 @@ public class UserData {
     this.AuthID = AuthID;
   }
 
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
   public void setUserName(String userName) {
     this.userName = userName;
   }
@@ -156,6 +172,7 @@ public class UserData {
     String returnString = "{\n";
     returnString += "User ID: " + userID + "\n";
     returnString += "Auth ID: " + AuthID + "\n";
+    returnString += "email: " + email + "\n";
     returnString += "User Name: " + userName + "\n";
     returnString += "Year: " + userYear + "\n";
     returnString += "Majors: " + userMajors.toString() + "\n";

@@ -57,7 +57,8 @@ public class UserDataTest {
   @Test
   public void testCreateFromConstructor() {
     // create user by passing paramets to constructor
-    UserData user1 = new UserData(userID1, AuthID1, name1, year1, majors1, skills1, total1);
+    UserData user1 =
+        new UserData(userID1, AuthID1, /*email*/ "", name1, year1, majors1, skills1, total1);
 
     // ensure values are stored correct
     Assert.assertEquals("userID", userID1, user1.getUserID());
@@ -96,7 +97,8 @@ public class UserDataTest {
   @Test
   public void testCreateEntityFromUser() {
     // Build UserData object
-    UserData user3 = new UserData(userID3, AuthID3, name3, year3, majors3, skills3, total3);
+    UserData user3 =
+        new UserData(userID3, AuthID3, /*email*/ "", name3, year3, majors3, skills3, total3);
 
     // Create user entity
     Entity entity2 = user3.toEntity();

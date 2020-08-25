@@ -71,9 +71,9 @@ public class AuthOpsTest {
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
-    testUsers.add(new UserData(1l, "abc"));
-    testUsers.add(new UserData(2l, "opq"));
-    testUsers.add(new UserData(3l, "xyz"));
+    testUsers.add(new UserData(1l, "abc", ""));
+    testUsers.add(new UserData(2l, "opq", ""));
+    testUsers.add(new UserData(3l, "xyz", ""));
 
     // new controller
     UserController controller = mock(UserController.class);
@@ -103,7 +103,7 @@ public class AuthOpsTest {
 
     // add list of mock users
     ArrayList<UserData> testUsers = new ArrayList<UserData>();
-    UserData user = new UserData(1l, "abc");
+    UserData user = new UserData(1l, "abc", "");
 
     // build and send a test cookie for logged out user
     Cookie[] testCookies = new Cookie[1];

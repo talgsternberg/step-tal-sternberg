@@ -45,11 +45,11 @@ public class UserControllerTest {
 
   // UserData
   private static final UserData user1 =
-      new UserData(userID1, AuthID1, name1, year1, majors1, skills1, totalCompTasks1);
+      new UserData(userID1, AuthID1, /*email*/ "", name1, year1, majors1, skills1, totalCompTasks1);
   private static final UserData user2 =
-      new UserData(userID2, AuthID2, name2, year2, majors2, skills2, totalCompTasks2);
+      new UserData(userID2, AuthID2, /*email*/ "", name2, year2, majors2, skills2, totalCompTasks2);
   private static final UserData user3 =
-      new UserData(userID3, AuthID3, name3, year3, majors3, skills3, totalCompTasks3);
+      new UserData(userID3, AuthID3, /*email*/ "", name3, year3, majors3, skills3, totalCompTasks3);
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(

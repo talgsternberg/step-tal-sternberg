@@ -58,6 +58,7 @@ function hideUsersSection() {
 }
 
 /* PAGE MODALS */
+
 const addUserModal = document.querySelector('.modal.add-user-to-project');
 const messageModal = document.querySelector('.modal.message');
 
@@ -77,6 +78,56 @@ document.getElementById('add-user-button').addEventListener(
       addUserModal.style.display = 'flex';
     }
 );
+
+/* PAGE FUNCTIONS */
+/**
+ * Adds a user to the project; called from addUserModal
+ *@param {String} projectId id of the project
+ */
+function addUserToProject(projectId) {
+  // Get user input for userName
+  const userEmail = document.getElementById('user-email').value;
+
+  // If userEmail is empty, show error message
+  if (userEmail === '') {
+    addUserModal.style.display = 'none';
+    showMessage('Invalid email');
+    return;
+  }
+
+  // Get user input for userRole
+  const userRole = document.getElementById('user-role').value;
+
+  // Generate query string & use it t call the servlet
+  const queryString = '/add-user-to-project?project=' + projectId +
+  '&userEmail=' + userEmail + '&userRole=' + userRole;
+  fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
+  then((response) => {
+    if (response.hasOwnProperty('userId') &&
+    response.hasOwnProperty('userName')) {
+      addUserToProjectPage(response.userName, userRole, response.userId);
+    }
+
+    // After call to servlet, show message on page describing outcome
+    addUserModal.style.display = 'none';
+    showMessage(response.message);
+  });
+}
+
+/**
+ * Adds the user to the page so that a page reload isn't necessary
+ *@param {String} userName name of the user
+ *@param {String} userRole role of the user
+ *@param {String} userId id of user to generate link to their page
+ */
+function addUserToProjectPage(userName, userRole, userId) {
+  const a = document.createElement('a');
+  const p = document.createElement('p');
+  p.innerHTML = userRole + ': ' + userName;
+  a.appendChild(p);
+  a.href = '/user-profile?userID=' + userId;
+  usersSection.appendChild(a);
+}
 
 /**
  * Displays the message modal
