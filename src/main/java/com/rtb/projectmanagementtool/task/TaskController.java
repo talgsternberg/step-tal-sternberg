@@ -286,14 +286,6 @@ public final class TaskController {
   }
 
   // Delete methods
-  public void deleteTasksGivenTaskData(ArrayList<TaskData> tasks) {
-    ArrayList<Long> taskIDs = new ArrayList<Long>();
-    for (TaskData task : tasks) {
-      taskIDs.add(task.getTaskID());
-    }
-    deleteTasks(taskIDs);
-  }
-
   public void deleteTasks(ArrayList<Long> taskIDs) {
     TransactionOptions options = TransactionOptions.Builder.withXG(true);
     Transaction transaction = datastore.beginTransaction(options);

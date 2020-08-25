@@ -54,7 +54,7 @@ public class CompleteProjectServlet extends HttpServlet {
       }
     }
 
-    // All project tasks are incomplete
+    // All project tasks are complete
     project.setComplete();
     projectController.addProject(project);
 

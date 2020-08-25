@@ -2,6 +2,7 @@ package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.*;
+import java.util.UUID;
 
 /**
  * Enum containing skills for user. enum Skills { NONE, LEADERSHIP, ORGANIZATION, WRITING, ART,
@@ -24,7 +25,7 @@ public class UserData {
 
   private long userID;
   private String AuthID; // this will be the ID from API
-  private String email;
+  private String inviteCode; // code used to add user to a project
   private String userName;
   private long userYear;
   private ArrayList<String> userMajors;
@@ -34,7 +35,6 @@ public class UserData {
   public UserData(
       long userID,
       String AuthID,
-      String email,
       String userName,
       long userYear,
       ArrayList<String> userMajors,
@@ -42,17 +42,16 @@ public class UserData {
       long userTotalCompTasks) {
     this.userID = userID;
     this.AuthID = AuthID;
-    this.email = email;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
     this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
+    setInviteCode();
   }
 
   public UserData(
       String AuthID,
-      String email,
       String userName,
       long userYear,
       ArrayList<String> userMajors,
@@ -60,24 +59,24 @@ public class UserData {
       long userTotalCompTasks) {
     this.userID = 0;
     this.AuthID = AuthID;
-    this.email = email;
     this.userName = userName;
     this.userYear = userYear;
     this.userMajors = userMajors;
     this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
+    setInviteCode();
   }
 
-  public UserData(long userID, String AuthID, String email) {
+  public UserData(long userID, String AuthID) {
     this.userID = userID;
     this.AuthID = AuthID;
-    this.email = email;
+    setInviteCode();
   }
 
   public UserData(Entity entity) {
     userID = (long) entity.getKey().getId();
     AuthID = (String) entity.getProperty("AuthID");
-    email = (String) entity.getProperty("email");
+    inviteCode = (String) entity.getProperty("inviteCode");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
     userMajors = (ArrayList<String>) entity.getProperty("userMajors");
@@ -94,7 +93,7 @@ public class UserData {
     }
     entity.setProperty("userID", entity.getKey().getId());
     entity.setProperty("AuthID", AuthID);
-    entity.setProperty("email", email);
+    entity.setProperty("inviteCode", inviteCode);
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
@@ -111,16 +110,16 @@ public class UserData {
     return AuthID;
   }
 
-  public String getEmail() {
-    return email;
-  }
-
   public String getUserName() {
     return userName;
   }
 
   public long getUserYear() {
     return userYear;
+  }
+
+  public String getInviteCode() {
+    return inviteCode;
   }
 
   public ArrayList<String> getUserMajors() {
@@ -135,16 +134,17 @@ public class UserData {
     return userTotalCompTasks;
   }
 
+  public void
+      setInviteCode() { // can allow user to randomly update their invite code w/ this method
+    this.inviteCode = UUID.randomUUID().toString().replaceAll("-", "");
+  }
+
   public void setUserID(long userID) {
     this.userID = userID;
   }
 
   public void setAuthID(String AuthID) {
     this.AuthID = AuthID;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public void setUserName(String userName) {
@@ -172,7 +172,7 @@ public class UserData {
     String returnString = "{\n";
     returnString += "User ID: " + userID + "\n";
     returnString += "Auth ID: " + AuthID + "\n";
-    returnString += "email: " + email + "\n";
+    returnString += "inviteCode: " + inviteCode + "\n";
     returnString += "User Name: " + userName + "\n";
     returnString += "Year: " + userYear + "\n";
     returnString += "Majors: " + userMajors.toString() + "\n";

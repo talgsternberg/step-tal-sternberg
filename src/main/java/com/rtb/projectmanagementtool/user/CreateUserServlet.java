@@ -48,7 +48,6 @@ public class CreateUserServlet extends HttpServlet {
     newUser.setUserMajors(userMajors);
     newUser.setUserSkills(skills);
     newUser.setAuthID(AuthID);
-    newUser.setEmail(email);
 
     // create entity and put in datastore. Get userID
     long userID = controller.addUser(newUser);

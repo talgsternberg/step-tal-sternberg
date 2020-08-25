@@ -24,12 +24,12 @@ public class AddUserToProjectServlet extends HttpServlet {
 
     // get request parameters
     Long projectId = Long.parseLong(request.getParameter("project"));
-    String userEmail = request.getParameter("userEmail");
+    String userInviteCode = request.getParameter("userInviteCode");
     String userRole = request.getParameter("userRole");
 
     // create objects
     ProjectData project = projectController.getProjectById(projectId);
-    UserData user = userController.getUserByEmail(userEmail);
+    UserData user = userController.getUserByInviteCode(userInviteCode);
 
     // if user is not in database or they are already in the project,
     // redirect back to project page

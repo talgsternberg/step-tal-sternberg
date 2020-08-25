@@ -31,7 +31,8 @@ public class DeleteProjectServlet extends HttpServlet {
     Long projectId = Long.parseLong(request.getParameter("project"));
 
     // Delete project tasks
-    taskController.deleteTasksGivenTaskData(taskController.getTasksByProjectID(projectId));
+    taskController.deleteTasks(
+        taskController.getTaskIDsFromTasks(taskController.getTasksByProjectID(projectId)));
 
     // Delete project
     projectController.removeProject(projectController.getProjectById(projectId));

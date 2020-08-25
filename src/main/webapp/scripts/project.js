@@ -75,7 +75,7 @@ document.querySelector('.modal-close.add-user-to-project').addEventListener(
 document.getElementById('add-user-button').addEventListener(
     'click',
     () => {
-      document.getElementById('user-email').value = '';
+      document.getElementById('user-invite-code').value = '';
       addUserModal.style.display = 'flex';
     },
 );
@@ -88,12 +88,12 @@ document.getElementById('add-user-button').addEventListener(
  */
 function addUserToProject(projectId) {
   // Get user input for userName
-  const userEmail = document.getElementById('user-email').value;
+  const userInviteCode = document.getElementById('user-invite-code').value;
 
-  // If userEmail is empty, show error message
-  if (userEmail === '') {
+  // If userInviteCode is empty, show error message
+  if (userInviteCode === '') {
     addUserModal.style.display = 'none';
-    showMessage('Invalid email');
+    showMessage('Invalid invite code.');
     return;
   }
 
@@ -102,7 +102,7 @@ function addUserToProject(projectId) {
 
   // Generate query string & use it t call the servlet
   const queryString = '/add-user-to-project?project=' + projectId +
-  '&userEmail=' + userEmail + '&userRole=' + userRole;
+  '&userInviteCode=' + userInviteCode + '&userRole=' + userRole;
   fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
       then((response) => {
         if (response.hasOwnProperty('userId') &&
@@ -267,13 +267,12 @@ function editProjectDetails(projectId) {
   const projectName = document.getElementById('project-name').value;
   const projectDesc = document.getElementById('project-desc').value;
 
-  // If userEmail is empty, show error message
   if (projectDesc === '' || projectName === '') {
     editProjectDetailsModal.style.display = 'none';
     if (projectName === '' && projectDesc === '') {
       showMessage('Invalid inputs.');
     } else if (projectName === '') {
-      showMessage('Invalid email.');
+      showMessage('Invalid name.');
     } else if (projectDesc === '') {
       showMessage('Invalid description.');
     }
