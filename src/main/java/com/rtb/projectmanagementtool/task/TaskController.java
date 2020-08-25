@@ -295,7 +295,6 @@ public final class TaskController {
   }
 
   // Delete methods
-
   public void deleteTasks(ArrayList<Long> taskIDs) {
     TransactionOptions options = TransactionOptions.Builder.withXG(true);
     Transaction transaction = datastore.beginTransaction(options);

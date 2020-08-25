@@ -52,6 +52,17 @@ public class UserController {
     return null;
   }
 
+  public UserData getUserByInviteCode(String inviteCode) {
+    Query query = new Query("User").addFilter("inviteCode", FilterOperator.EQUAL, inviteCode);
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity != null) {
+      UserData user = new UserData(entity);
+      return user;
+    }
+    return null;
+  }
+
   // get users+data to direct/display user's profiles later
   public ArrayList<UserData> getEveryUser() {
     Query query = new Query("User");

@@ -27,6 +27,7 @@ public class CreateUserServlet extends HttpServlet {
 
     // get AuthID
     String AuthID = auth.getAuthID();
+    String email = auth.getEmail();
 
     // get stuff from form update
     String userName = request.getParameter("userName");
