@@ -457,6 +457,94 @@ textarea:focus {
   align-items: center;
 }
 
+/* PROJECT PAGE */
+.project-page-top-bar {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+  padding: 20px;
+}
+
+.page-header-title-and-actions {
+  display: flex;
+  align-items: center;
+}
+
+.page-header-title-and-actions h1 {
+  padding: 0 0 20px 10px;
+  margin-right: 20px;
+  font-weight: bold;
+}
+
+.page-header-description {
+  padding: 0 0 20px 20px;
+  display: none;
+}
+
+.page-header-actions-selector {
+  cursor: pointer;
+}
+
+#angle-down {
+  color: gray;
+  font-size: 25px;
+}
+
+.page-header-actions {
+  background-color: white;
+  width: 185px;
+  position: absolute;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+  display: none;
+}
+
+.action-list-item a {
+  padding: 10px;
+  display: flex;
+  font-size: 16px;
+  color: black;
+  align-items: center;
+}
+
+.action-list-item i {
+  padding-right: 10px;
+}
+
+.action-list-item:hover {
+  background-color: lightgray;
+}
+
+.page-header-nav {
+  display: flex;
+}
+
+.project-header-tab {
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  margin: 0 10px;
+  transition: background 0.4s linear;
+}
+
+.project-header-tab p {
+  font-weight: bold;
+  overflow: hidden;
+  max-width: 0;
+}
+
+.project-header-tab.active p {
+  margin-left: 10px;
+  max-width: 200px;
+  transition: max-width 0.4s linear;
+}
+
+.project-header-tab.active {
+  background-color: #4285f4;
+  color: white;
+}
+
 /* NAVIGATION BAR */
 #navigation ul {
   list-style-type: none;
