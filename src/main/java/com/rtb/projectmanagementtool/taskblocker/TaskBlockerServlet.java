@@ -33,6 +33,7 @@ public class TaskBlockerServlet extends HttpServlet {
 
     // Get and create parameters
     long projectID = Long.parseLong(request.getParameter("projectID"));
+    String projectName = (String) request.getParameter("projectName");
     long taskID = Long.parseLong(request.getParameter("blocked"));
     long blockerID = Long.parseLong(request.getParameter("blocker"));
 
@@ -42,7 +43,19 @@ public class TaskBlockerServlet extends HttpServlet {
     // Add taskBlocker to datastore
     TaskBlockerController taskBlockerController =
         new TaskBlockerController(datastore, taskController);
-    taskBlockerController.addTaskBlocker(taskBlocker);
+    String alert = taskBlockerController.addTaskBlocker(taskBlocker);
+
+    // If adding a task blocker failed, return back to the add-task-blocker page with a message
+    if (alert != "") {
+      response.sendRedirect(
+          "add-task-blocker.jsp?projectID="
+              + projectID
+              + "&projectName="
+              + projectName
+              + "&alert="
+              + alert);
+      return;
+    }
 
     // Redirect back to project page
     response.sendRedirect("/project?id=" + projectID);

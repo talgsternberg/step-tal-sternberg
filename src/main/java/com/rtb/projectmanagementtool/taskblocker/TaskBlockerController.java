@@ -22,32 +22,30 @@ public final class TaskBlockerController {
 
   // Add methods
 
-  public void addTaskBlocker(long taskID, long blockerID) {
-    addTaskBlocker(new TaskBlockerData(taskID, blockerID));
+  public String addTaskBlocker(long taskID, long blockerID) {
+    return addTaskBlocker(new TaskBlockerData(taskID, blockerID));
   }
 
-  public void addTaskBlocker(TaskBlockerData taskBlocker) {
+  public String addTaskBlocker(TaskBlockerData taskBlocker) {
     // Ensure the tasks exist
     ArrayList<TaskData> tasks =
         taskController.getTasksByIDs(
             new ArrayList<>(Arrays.asList(taskBlocker.getTaskID(), taskBlocker.getBlockerID())));
     if (tasks.size() < 2) {
-      System.out.println("Cannot find tasks with provided taskID or blockerID");
-      return;
+      return "Cannot find tasks with provided taskID or blockerID";
     }
     // Ensure the blocked task isn't already set to COMPLETE
     if (tasks.get(0).getStatus() == Status.COMPLETE
         || tasks.get(1).getStatus() == Status.COMPLETE) {
-      System.out.println("One or more tasks are already set to COMPLETE.");
-      return;
+      return "One or more tasks are already set to COMPLETE.";
     }
     // Ensure a cycle wouldn't be created if the TaskBlocker is added
     if (containsPath(taskBlocker.getBlockerID(), taskBlocker.getTaskID())) {
-      System.out.println("Cannot block a task if it would create a cycle.");
-      return;
+      return "Cannot block a task if it would create a cycle.";
     }
     // Add the TaskBlocker
     taskBlocker.setTaskBlockerID(datastore.put(taskBlocker.toEntity()).getId());
+    return "";
   }
 
   private boolean containsPath(long start, long end) {

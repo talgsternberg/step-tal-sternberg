@@ -7,6 +7,7 @@
 <%
     long projectID = Long.parseLong(request.getParameter("projectID"));
     String projectName = request.getParameter("projectName");
+    String alert = request.getParameter("alert");
 %>
 
 <%--HTML--%>
@@ -18,7 +19,7 @@
     <script src="scripts/task.js"></script>
   </head>
 
-  <body onload="initTaskBlockerEventListeners()">
+  <body onload="initTaskBlockerEventListeners();<% if (alert != null) { %> alert('<%=alert%>') <% } %>">
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp"/>
 
@@ -28,9 +29,12 @@
 
       <form id="addtaskblocker-post-form" action="/task-blocker" method="POST">
         <div id="addtaskblocker-post-container">
-          <input type="hidden" id="addtaskblocker-project-input" name="projectID" value="<%=projectID%>">
+          <input type="hidden" id="addtaskblocker-projectID-input" name="projectID" value="<%=projectID%>">
+          <input type="hidden" id="addtaskblocker-projectName-input" name="projectName" value="<%=projectName%>">
           
-          <div id="taskblocker-project-container"><p>This task blocker will be under project: <%=projectName%></p></div>
+          <div id="taskblocker-project-container">
+            <p>This task blocker will be under project: <b><a href="project?id=<%=projectID%>"><%=projectName%></a></b></p>
+          </div>
           <div id="taskblocker-instructions-container"><p>Double-click to select a task.</p></div>
           <div id="taskblocker-blocker-container">
             <h2>Choose a Blocker Task: <div id="addtaskblocker-blocker-name" class="inline"></div></h2>
