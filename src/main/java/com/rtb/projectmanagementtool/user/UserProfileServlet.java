@@ -109,7 +109,7 @@ public class UserProfileServlet extends HttpServlet {
       throws ServletException, IOException {
 
     // get parameters
-    TaskData task = (TaskData) request.getParameter("task")
+    TaskData task = (TaskData) request.getAttribute("task");
     long taskID = Long.parseLong(request.getParameter("taskID-" + task.getName()));
     String message = request.getParameter("message-" + task.getName());
 
