@@ -43,6 +43,11 @@ public final class PrivateCommentController {
     return getPrivateComments(filter, NO_QUERY_LIMIT, NO_QUERY_SORT);
   }
 
+  public void updatePrivateComment(PrivateCommentData privateComment) {
+    Entity entity = privateComment.toEntity();
+    datastore.put(entity);
+  }
+
   // only 1 private comment per task
   public PrivateCommentData getPrivateCommentByTaskID(long taskID) {
     Query query = new Query("PrivateComment").addFilter("taskID", FilterOperator.EQUAL, taskID);

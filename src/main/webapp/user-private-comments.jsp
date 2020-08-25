@@ -31,7 +31,6 @@
           <br>
           <button class="deep-button" type="submit" class="deep-button">Update</button>
         </form>
-        <%request.setAttribute("task", task);%>
         <br><br>
       </li>
     <%}%>
