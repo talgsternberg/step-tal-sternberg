@@ -43,7 +43,12 @@ public class TaskBlockerServlet extends HttpServlet {
     // Add taskBlocker to datastore
     TaskBlockerController taskBlockerController =
         new TaskBlockerController(datastore, taskController);
-    String alert = taskBlockerController.addTaskBlocker(taskBlocker);
+    String alert = "";
+    try {
+      taskBlockerController.addTaskBlocker(taskBlocker);
+    } catch (Exception e) {
+      alert = e.getMessage();
+    }
 
     // If adding a task blocker failed, return back to the add-task-blocker page with a message
     if (alert != "") {

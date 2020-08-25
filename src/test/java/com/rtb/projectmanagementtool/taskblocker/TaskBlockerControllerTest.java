@@ -47,7 +47,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testAddTaskBlockers() {
+  public void testAddTaskBlockers() throws Exception {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 
     // Add 2 initially
@@ -68,7 +68,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testCycleDetectionSmall() {
+  public void testCycleDetectionSmall() throws Exception {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 
     // Create 2 task blockers that block each other
@@ -77,7 +77,11 @@ public class TaskBlockerControllerTest {
 
     // Add task blockers to ds
     ctl.addTaskBlocker(tb1);
-    ctl.addTaskBlocker(tb2);
+    try {
+      ctl.addTaskBlocker(tb2);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
 
     // Assert only the first task blocker was added successfully
     Assert.assertTrue(tb1.getTaskBlockerID() != 0);
@@ -87,7 +91,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testCycleDetectionLarge() {
+  public void testCycleDetectionLarge() throws Exception {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 
     // Create 2 task blockers that block each other
@@ -113,16 +117,28 @@ public class TaskBlockerControllerTest {
     TaskBlockerData tb7 = new TaskBlockerData(task5.getTaskID(), task2.getTaskID());
     TaskBlockerData tb8 = new TaskBlockerData(task6.getTaskID(), task1.getTaskID());
     TaskBlockerData tb9 = new TaskBlockerData(task4.getTaskID(), task4.getTaskID());
-    ctl.addTaskBlocker(tb7);
-    ctl.addTaskBlocker(tb8);
-    ctl.addTaskBlocker(tb9);
+    try {
+      ctl.addTaskBlocker(tb7);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    try {
+      ctl.addTaskBlocker(tb8);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+    try {
+      ctl.addTaskBlocker(tb9);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
 
     // Assert only the first set of task blocker were added successfully
     Assert.assertEquals(6, ctl.getAllTaskBlockers().size());
   }
 
   @Test
-  public void testGetTaskBlockerByID() {
+  public void testGetTaskBlockerByID() throws Exception {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 
     // Create 3 task blockers
@@ -156,7 +172,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testGetBlockersByTaskId() {
+  public void testGetBlockersByTaskId() throws Exception {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 
     // 2 blockers for task1
@@ -178,7 +194,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testDeleteBlockersByBlockerId() {
+  public void testDeleteBlockersByBlockerId() throws Exception {
     TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
 
     // 2 blockers by task4
