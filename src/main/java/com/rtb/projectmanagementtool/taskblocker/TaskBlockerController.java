@@ -53,11 +53,18 @@ public final class TaskBlockerController {
   }
 
   private boolean containsPath(long start, long end) {
-    HashSet<TaskBlockerData> taskBlockers = getAllTaskBlockers();
+    // Get taskBlockers that belong to the current project
+    long projectID = taskController.getTaskByID(start).getProjectID();
+    HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
+    // Create a map that contains { key:taskID, value:false }
     Map<Long, Boolean> taskBlockersVisited =
         taskBlockers
             .stream()
-            .collect(Collectors.toMap(x -> x.getTaskID(), x -> false, (x1, x2) -> x1));
+            .collect(
+                Collectors.toMap(
+                    /* key */ x -> x.getTaskID(),
+                    /* value */ x -> false,
+                    /* when two equivalent keys are added, keep the first entry */ (x1, x2) -> x1));
     LinkedList<Long> queue = new LinkedList<>();
     taskBlockersVisited.put(start, true);
     queue.add(start);
@@ -102,6 +109,20 @@ public final class TaskBlockerController {
 
   public HashSet<TaskBlockerData> getAllTaskBlockers() {
     return getTaskBlockers(NO_FILTER);
+  }
+
+  public HashSet<TaskBlockerData> getTaskBlockersByProjectID(long projectID) {
+    ArrayList<Long> taskIDs = new ArrayList<>();
+    for (TaskData task : getTasksFromTaskBlockers(getAllTaskBlockers())) {
+      if (task.getProjectID() == projectID) {
+        taskIDs.add(task.getTaskID());
+      }
+    }
+    if (taskIDs.isEmpty()) {
+      return new HashSet<>();
+    }
+    Filter filter = new FilterPredicate("taskID", FilterOperator.IN, taskIDs);
+    return getTaskBlockers(filter);
   }
 
   public ArrayList<TaskData> getBlockersForTask(long taskID) {
@@ -175,5 +196,21 @@ public final class TaskBlockerController {
       keys.add(KeyFactory.createKey("TaskBlocker", taskBlocker.getTaskBlockerID()));
     }
     return keys;
+  }
+
+  public ArrayList<TaskData> getTasksFromTaskBlockers(HashSet<TaskBlockerData> taskBlockers) {
+    ArrayList<Long> taskIDs = new ArrayList<>();
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      taskIDs.add(taskBlocker.getTaskID());
+    }
+    return taskController.getTasksByIDs(taskIDs);
+  }
+
+  public ArrayList<TaskData> getBlockersFromTaskBlockers(HashSet<TaskBlockerData> taskBlockers) {
+    ArrayList<Long> blockerIDs = new ArrayList<>();
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      blockerIDs.add(taskBlocker.getTaskID());
+    }
+    return taskController.getTasksByIDs(blockerIDs);
   }
 }
