@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /** Class controlling the TaskBlockerData object. */
 public final class TaskBlockerController {
@@ -56,17 +54,10 @@ public final class TaskBlockerController {
     // Get taskBlockers that belong to the current project
     long projectID = taskController.getTaskByID(start).getProjectID();
     HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
-    // Create a map that contains { key:taskID, value:false }
-    Map<Long, Boolean> taskBlockersVisited =
-        taskBlockers
-            .stream()
-            .collect(
-                Collectors.toMap(
-                    /* key */ x -> x.getTaskID(),
-                    /* value */ x -> false,
-                    /* when two equivalent keys are added, keep the first entry */ (x1, x2) -> x1));
+    // Initialize visited and queue
+    HashSet<Long> visited = new HashSet<>();
     LinkedList<Long> queue = new LinkedList<>();
-    taskBlockersVisited.put(start, true);
+    visited.add(start);
     queue.add(start);
     Long blockerID;
     while (queue.size() != 0) {
@@ -77,9 +68,8 @@ public final class TaskBlockerController {
           if (blockerID == end) {
             return true;
           }
-          if (taskBlockersVisited.containsKey(blockerID)
-              && taskBlockersVisited.get(blockerID) == false) {
-            taskBlockersVisited.put(blockerID, true);
+          if (!visited.contains(blockerID)) {
+            visited.add(blockerID);
             queue.add(blockerID);
           }
         }
