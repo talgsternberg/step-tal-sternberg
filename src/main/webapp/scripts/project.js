@@ -316,3 +316,42 @@ function updateProjectDescription(newDesc) {
   document.getElementById('main-project-description').innerHTML = newDesc;
 }
 
+/**
+ * Implements basic feature of completing a project.
+ * Does not yet fix being able to add tasks or users while a project
+ * is marked as incomplete-- might fix later if there's time
+ *@param {String} projectId the id of project
+ */
+function completeProject(projectId) {
+  const prompt = document.getElementById('set-project');
+  let queryString = '/complete-project?project=' + projectId + '&setComplete=';
+  queryString += (prompt.innerHTML === 'Set Project Complete') ? 'true' : 'false';
+  fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
+  then((response) => {
+    if (response.message === 'Project marked as complete.') {
+      prompt.innerHTML = 'Set Project Incomplete';
+      loadPageElements(/*projectComplete*/ true);
+    } else if (response.message === 'Project marked as incomplete.') {
+      prompt.innerHTML = 'Set Project Complete';
+      loadPageElements(/*projectComplete*/ false);
+    }
+    showMessage(response.message);
+  });
+}
+
+/**
+ * Called when a project page loads. Used to handle displaying page elements
+ * related to the project's state as complete/incomplete
+ *@param {boolean} projectComplete true if the project is complete
+ */
+function loadPageElements(projectComplete) {
+  const addTaskButton = document.querySelector('.deep-button');
+  const addUserButton = document.getElementById('add-user-button');
+  if (projectComplete === false) {
+    addTaskButton.style.display = 'block';
+    addUserButton.style.display = 'block';        
+  } else {
+    addTaskButton.style.display = 'none';
+    addUserButton.style.display = 'none'; 
+  }
+}

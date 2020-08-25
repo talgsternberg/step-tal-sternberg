@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
     <script defer src="scripts/project.js"></script>
   </head>
-  <body onload="initEventListeners()">
+  <body onload="initEventListeners(); loadPageElements(<%=project.isComplete()%>);">
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp" />
 
@@ -39,7 +39,7 @@
                 <li class="action-list-item"><a href="javascript:hideActions();showEditProjectModal();"><i class="fas fa-edit"></i><p>Edit project details</p></a></li>
                 <% } %>
                 <% if (project.isCreator(userId)) { %>
-                <li class="action-list-item"><a href="#"><i class="fas fa-check"></i><p id="set-project">Complete Project</p></a></li>
+                <li class="action-list-item"><a href="javascript:hideActions();completeProject(<%=project.getId()%>);"><i class="fas fa-check"></i><p id="set-project"><%=project.isComplete() ? "Set Project Incomplete" : "Set Project Complete"%></p></a></li>
                 <li class="action-list-item"><a href="#"><i class="far fa-trash-alt"></i><p>Delete project</p></a></li>
                 <% } %>
             </ul>
