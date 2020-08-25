@@ -2,6 +2,7 @@ package com.rtb.projectmanagementtool.user;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.*;
+import java.util.UUID;
 
 /**
  * Enum containing skills for user. enum Skills { NONE, LEADERSHIP, ORGANIZATION, WRITING, ART,
@@ -24,6 +25,7 @@ public class UserData {
 
   private long userID;
   private String AuthID; // this will be the ID from API
+  private String inviteCode; // code used to add user to a project
   private String userName;
   private long userYear;
   private ArrayList<String> userMajors;
@@ -45,6 +47,7 @@ public class UserData {
     this.userMajors = userMajors;
     this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
+    setInviteCode();
   }
 
   public UserData(
@@ -61,16 +64,19 @@ public class UserData {
     this.userMajors = userMajors;
     this.skills = skills;
     this.userTotalCompTasks = userTotalCompTasks;
+    setInviteCode();
   }
 
   public UserData(long userID, String AuthID) {
     this.userID = userID;
     this.AuthID = AuthID;
+    setInviteCode();
   }
 
   public UserData(Entity entity) {
     userID = (long) entity.getKey().getId();
     AuthID = (String) entity.getProperty("AuthID");
+    inviteCode = (String) entity.getProperty("inviteCode");
     userName = (String) entity.getProperty("userName");
     userYear = (long) entity.getProperty("userYear");
     userMajors = (ArrayList<String>) entity.getProperty("userMajors");
@@ -87,6 +93,7 @@ public class UserData {
     }
     entity.setProperty("userID", entity.getKey().getId());
     entity.setProperty("AuthID", AuthID);
+    entity.setProperty("inviteCode", inviteCode);
     entity.setProperty("userName", userName);
     entity.setProperty("userYear", userYear);
     entity.setProperty("userMajors", userMajors);
@@ -111,6 +118,10 @@ public class UserData {
     return userYear;
   }
 
+  public String getInviteCode() {
+    return inviteCode;
+  }
+
   public ArrayList<String> getUserMajors() {
     return userMajors;
   }
@@ -121,6 +132,11 @@ public class UserData {
 
   public long getUserTotal() {
     return userTotalCompTasks;
+  }
+
+  public void
+      setInviteCode() { // can allow user to randomly update their invite code w/ this method
+    this.inviteCode = UUID.randomUUID().toString().replaceAll("-", "");
   }
 
   public void setUserID(long userID) {
@@ -156,6 +172,7 @@ public class UserData {
     String returnString = "{\n";
     returnString += "User ID: " + userID + "\n";
     returnString += "Auth ID: " + AuthID + "\n";
+    returnString += "inviteCode: " + inviteCode + "\n";
     returnString += "User Name: " + userName + "\n";
     returnString += "Year: " + userYear + "\n";
     returnString += "Majors: " + userMajors.toString() + "\n";

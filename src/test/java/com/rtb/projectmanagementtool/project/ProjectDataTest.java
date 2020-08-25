@@ -20,6 +20,7 @@ public class ProjectDataTest {
   private final String PROPERTY_DESCRIPTION = "description";
   private final String PROPERTY_ADMINS = "admins";
   private final String PROPERTY_MEMBERS = "members";
+  private final String PROPERTY_PROJECT_COMPLETE = "complete";
 
   // Projects
   private final String PROJECT1_NAME = "Project 1";
@@ -73,6 +74,7 @@ public class ProjectDataTest {
     entity.setProperty(PROPERTY_DESCRIPTION, PROJECT1_DESC);
     entity.setProperty(PROPERTY_ADMINS, new ArrayList<Long>(Arrays.asList(USER3, USER4)));
     entity.setProperty(PROPERTY_MEMBERS, new ArrayList<Long>(Arrays.asList(USER1)));
+    entity.setProperty(PROPERTY_PROJECT_COMPLETE, "false");
 
     // Create project
     ProjectData project = new ProjectData(entity);

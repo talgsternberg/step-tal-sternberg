@@ -10,7 +10,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Home page</title>
+    <title>Home</title>
     <link rel="stylesheet" href="style.css">
   </head>
 
@@ -18,14 +18,23 @@
     <!-- Include navigation bar -->
     <jsp:include page="navigation-bar.jsp" />
 
-    <p>Hi, <%=user.getUserName() %></p>
-    <div id="project-container">
-      <%for (ProjectData project : userProjects) {%>
+    <div class="project-container">
+      <%for (ProjectData project : userProjects) { %>
+        <div class="project-box">
         <a href="/project?id=<%=project.getId()%>">
-          <button><%=project.getName()%></button>
+          <div class="project-box-content">
+            <h3 class="project-name"><%=project.getName()%></h3>
+          </div>
         </a>
+        </div>
       <%}%>
-    <a href="/create-project"><button>Create Project</button></a>
+      <div class="project-box">
+      <a href="/create-project">
+        <div class="project-box-content">
+          <h3>Add Project</h3>
+        </div>
+      </a>
+      </div>
     </div>
   </body>
 </html>

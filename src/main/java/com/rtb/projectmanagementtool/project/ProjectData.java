@@ -17,6 +17,7 @@ public class ProjectData {
   private static final String PROPERTY_DESCRIPTION = "description";
   private static final String PROPERTY_ADMINS = "admins";
   private static final String PROPERTY_MEMBERS = "members";
+  private static final String PROPERTY_PROJECT_COMPLETE = "complete";
 
   private long id;
   private long creatorId;
@@ -24,6 +25,7 @@ public class ProjectData {
   private String description;
   private HashSet<Long> members;
   private HashSet<Long> admins;
+  private boolean isComplete;
 
   /**
    * Class constructor with the minimum requirements for creating a project.
@@ -38,6 +40,7 @@ public class ProjectData {
     this.description = description;
     this.members = new HashSet<Long>();
     this.admins = new HashSet<Long>();
+    this.isComplete = false;
   }
 
   /**
@@ -66,6 +69,9 @@ public class ProjectData {
     } else {
       this.admins = new HashSet<Long>((ArrayList<Long>) entityProperty);
     }
+
+    this.isComplete =
+        ((String) entity.getProperty(PROPERTY_PROJECT_COMPLETE)).equals("true") ? true : false;
   }
 
   /** @return the entity representation of this class */
@@ -81,6 +87,7 @@ public class ProjectData {
     entity.setProperty(PROPERTY_DESCRIPTION, this.description);
     entity.setProperty(PROPERTY_ADMINS, this.admins);
     entity.setProperty(PROPERTY_MEMBERS, this.members);
+    entity.setProperty(PROPERTY_PROJECT_COMPLETE, this.isComplete == true ? "true" : "false");
     return entity;
   }
 
@@ -114,6 +121,11 @@ public class ProjectData {
     return this.members;
   }
 
+  /** @return true if project is complete */
+  public boolean isComplete() {
+    return this.isComplete;
+  }
+
   /**
    * Set the id of this project
    *
@@ -139,6 +151,16 @@ public class ProjectData {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  /** Set the project status to complete */
+  public void setComplete() {
+    this.isComplete = true;
+  }
+
+  /** Set the project status to complete */
+  public void setIncomplete() {
+    this.isComplete = false;
   }
 
   /**
@@ -216,6 +238,7 @@ public class ProjectData {
     return a.getId() == b.getId()
         && a.getCreatorId() == b.getCreatorId()
         && a.getDescription().equals(b.getDescription())
+        && a.isComplete() == b.isComplete()
         && a.getAdmins().equals(b.getAdmins())
         && a.getMembers().equals(b.getMembers());
   }
@@ -235,6 +258,7 @@ public class ProjectData {
     returnString += "\tProject Description: " + this.description + "\n";
     returnString += "\tProject Members: " + this.admins.toString() + "\n";
     returnString += "\tProject Admins: " + this.members.toString() + "\n}";
+    returnString += "\tProject Complete: " + this.isComplete + "\n}";
     return returnString;
   }
 }
