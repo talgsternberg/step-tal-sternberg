@@ -65,19 +65,19 @@ const messageModalMessage = document.getElementById('message-modal-message');
 
 // Hides the add-user modal when clicked
 document.querySelector('.modal-close.add-user-to-project').addEventListener(
-'click',
+    'click',
     () => {
       addUserModal.style.display = 'none';
-    }
+    },
 );
 
 // Opens the add-user modal when clicked
 document.getElementById('add-user-button').addEventListener(
-'click',
+    'click',
     () => {
       document.getElementById('user-email').value = '';
       addUserModal.style.display = 'flex';
-    }
+    },
 );
 
 /* PAGE FUNCTIONS */
@@ -104,16 +104,16 @@ function addUserToProject(projectId) {
   const queryString = '/add-user-to-project?project=' + projectId +
   '&userEmail=' + userEmail + '&userRole=' + userRole;
   fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
-  then((response) => {
-    if (response.hasOwnProperty('userId') &&
-    response.hasOwnProperty('userName')) {
-      addUserToProjectPage(response.userName, userRole, response.userId);
-    }
+      then((response) => {
+        if (response.hasOwnProperty('userId') &&
+          response.hasOwnProperty('userName')) {
+          addUserToProjectPage(response.userName, userRole, response.userId);
+        }
 
-    // After call to servlet, show message on page describing outcome
-    addUserModal.style.display = 'none';
-    showMessage(response.message);
-  });
+        // After call to servlet, show message on page describing outcome
+        addUserModal.style.display = 'none';
+        showMessage(response.message);
+      });
 }
 
 /**
@@ -142,10 +142,10 @@ function showMessage(message) {
 
 // Closes the message modal
 document.getElementById('message-modal-close').addEventListener(
-'click',
+    'click',
     () => {
       messageModal.style.display = 'none';
-    }
+    },
 );
 
 /**
@@ -197,9 +197,9 @@ function initEventListeners() {
 
 const projectActions = document.querySelector('.page-header-actions');
 const projectDescription = document.
-querySelector('.page-header-description');
+    querySelector('.page-header-description');
 const editProjectDetailsModal = document.
-querySelector('.modal.edit-project-details');
+    querySelector('.modal.edit-project-details');
 
 /**
  * Displays user actions in header of project page
@@ -244,7 +244,7 @@ document.querySelector('.modal-close.edit-project-details').addEventListener(
     'click',
     () => {
       editProjectDetailsModal.style.display = 'none';
-    }
+    },
 );
 
 /**
@@ -284,20 +284,20 @@ function editProjectDetails(projectId) {
   const queryString = '/edit-project-details?project=' + projectId +
   '&projectName=' + projectName + '&projectDesc=' + projectDesc;
   fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
-  then((response) => {
-    if (response.message === 'Updated project name and description.') {
-      updateProjectName(projectName);
-      updateProjectDescription(projectDesc);
-    } else if (response.message === 'Updated project name.') {
-      updateProjectName(projectName);
-    } else if (response.message === 'Updated project description.') {
-      updateProjectDescription(projectDesc);
-    }
+      then((response) => {
+        if (response.message === 'Updated project name and description.') {
+          updateProjectName(projectName);
+          updateProjectDescription(projectDesc);
+        } else if (response.message === 'Updated project name.') {
+          updateProjectName(projectName);
+        } else if (response.message === 'Updated project description.') {
+          updateProjectDescription(projectDesc);
+        }
 
-    // After call to servlet, show message on page describing outcome
-    editProjectDetailsModal.style.display = 'none';
-    showMessage(response.message);
-  });
+        // After call to servlet, show message on page describing outcome
+        editProjectDetailsModal.style.display = 'none';
+        showMessage(response.message);
+      });
 }
 
 /**
@@ -325,18 +325,19 @@ function updateProjectDescription(newDesc) {
 function completeProject(projectId) {
   const prompt = document.getElementById('set-project');
   let queryString = '/complete-project?project=' + projectId + '&setComplete=';
-  queryString += (prompt.innerHTML === 'Set Project Complete') ? 'true' : 'false';
+  queryString +=
+    (prompt.innerHTML === 'Set Project Complete') ? 'true' : 'false';
   fetch(queryString, {'method': 'POST'}).then((response) => response.json()).
-  then((response) => {
-    if (response.message === 'Project marked as complete.') {
-      prompt.innerHTML = 'Set Project Incomplete';
-      loadPageElements(/*projectComplete*/ true);
-    } else if (response.message === 'Project marked as incomplete.') {
-      prompt.innerHTML = 'Set Project Complete';
-      loadPageElements(/*projectComplete*/ false);
-    }
-    showMessage(response.message);
-  });
+      then((response) => {
+        if (response.message === 'Project marked as complete.') {
+          prompt.innerHTML = 'Set Project Incomplete';
+          loadPageElements(/* projectComplete */ true);
+        } else if (response.message === 'Project marked as incomplete.') {
+          prompt.innerHTML = 'Set Project Complete';
+          loadPageElements(/* projectComplete */ false);
+        }
+        showMessage(response.message);
+      });
 }
 
 /**
@@ -349,9 +350,9 @@ function loadPageElements(projectComplete) {
   const addUserButton = document.getElementById('add-user-button');
   if (projectComplete === false) {
     addTaskButton.style.display = 'block';
-    addUserButton.style.display = 'block';        
+    addUserButton.style.display = 'block';
   } else {
     addTaskButton.style.display = 'none';
-    addUserButton.style.display = 'none'; 
+    addUserButton.style.display = 'none';
   }
 }
