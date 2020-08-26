@@ -85,6 +85,9 @@ public class UserController {
     Key key = datastore.put(entity);
     long userID = key.getId();
     user.setUserID(userID);
+    entity = user.toEntity();
+    // put the update in ds
+    datastore.put(entity);
     return userID;
   }
 

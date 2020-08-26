@@ -1,19 +1,13 @@
-<%--For Editorjs Import--%>
-<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
-
 <%--Class Imports--%>
 <%@ page import="com.google.gson.Gson"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.privatecomment.*"%>
 <%@ page import="java.util.*"%>
-<%@page import="@editorjs/editorjs.EditorJS"%>
-
 
 
 
 <%--Get variables--%>
 <%
-    const editor = new EditorJS('editorjs');
     List<TaskData> tasks = (List<TaskData>)(List<?>) request.getAttribute("tasks");
     HashMap<Long, PrivateCommentData> privateCommentsMap = (HashMap<Long, PrivateCommentData>) request.getAttribute("privateCommentsMap");
     boolean currUser = (boolean) request.getAttribute("currentUser");
