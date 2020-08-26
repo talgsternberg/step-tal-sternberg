@@ -1,11 +1,19 @@
+<%--For Editorjs Import--%>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+
 <%--Class Imports--%>
 <%@ page import="com.google.gson.Gson"%>
 <%@ page import="com.rtb.projectmanagementtool.task.*"%>
 <%@ page import="com.rtb.projectmanagementtool.privatecomment.*"%>
 <%@ page import="java.util.*"%>
+<%@page import="@editorjs/editorjs.EditorJS"%>
+
+
+
 
 <%--Get variables--%>
 <%
+    const editor = new EditorJS('editorjs');
     List<TaskData> tasks = (List<TaskData>)(List<?>) request.getAttribute("tasks");
     HashMap<Long, PrivateCommentData> privateCommentsMap = (HashMap<Long, PrivateCommentData>) request.getAttribute("privateCommentsMap");
     boolean currUser = (boolean) request.getAttribute("currentUser");
@@ -16,7 +24,7 @@
   <%if (currUser) {%>
     <h1 id="pc-header">Your Private Task Comments:</h1>
     <%for (TaskData task : tasks) {%>
-      <li class="task">
+      <li class="task-with-pc">
         <button class="inline deep-button" type="button" onclick="location.href='task?taskID=<%=task.getTaskID()%>'">
           <%=task.getName()%>
         </button>
