@@ -14,7 +14,7 @@
 <%--HTML--%>
 <ul>
   <%if (currUser) {%>
-    <h2>Your Private Task Comments:</h2>
+    <h1 id="pc-header">Your Private Task Comments:</h1>
     <%for (TaskData task : tasks) {%>
       <li class="task">
         <%if (task.getStatus().name().equals("COMPLETE")) {%>

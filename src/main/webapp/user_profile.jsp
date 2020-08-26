@@ -29,16 +29,23 @@
     <!-- Page content -->
     <div id="content">
       <div id="title">
-        <div id="user-page-container"><h1><%=user.getUserName()%></h1></div>
+        <%if (currUser) {%>
+          <div id="user-page-container"><h1>Your User Profile</h1></div>
+        <%} else {%>
+          <div id="user-page-container"><h1><%=user.getUserName()%>'s User Profile</h1></div>
+        <%}%>
       </div>
-      <div id="user-inviteCode-container"><p>invite code: <%=user.getInviteCode()%></p></div>
-      <div id="user-name-container"><p>Name: <%=user.getUserName()%></p></div>
-      <div id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></div>
-      <div id="user-majors-container"><p>Majors: <%=userMajorsString %></p></div>
-      
-      <div id="user-skills-container"><p>Top Skill: <%=user.getUserSkills()%></p></div>
-       <div id="user-total-tasks-container">
-          <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
+      <div class="user-description">
+        <ul class="user-desc-list">
+          <li id="user-inviteCode-container"><p>Invite Code: <%=user.getInviteCode()%></p></li><br>
+          <li id="user-name-container"><p>Name: <%=user.getUserName()%></p></li><br>
+          <li id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></li><br>
+          <li id="user-majors-container"><p>Majors: <%=userMajorsString %></p></li><br>
+          <li id="user-skills-container"><p>Top Skill: <%=user.getUserSkills()%></p></li><br>
+           <li id="user-total-tasks-container">
+              <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
+          </li>
+        </ul>
       </div>
       <div id="task-subtasks-container">
         <%request.setAttribute("tasks", userTasks);%>
