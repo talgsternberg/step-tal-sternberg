@@ -78,18 +78,18 @@ public class UserProfileServlet extends HttpServlet {
     // build map of taskID to pcomment
     Map<Long, PrivateCommentData> privateCommentsMap = new HashMap<Long, PrivateCommentData>();
 
-    // for tasks w/o comments, make comments
+    // for every existing pc, put it in the map
+    for (int i = 0; i < privateComments.size(); i++) {
+      PrivateCommentData commentObject = privateComments.get(i);
+      privateCommentsMap.put(privateComments.get(i).getTaskID(), commentObject);
+    }
+
+    // for the tasks with no pc, put a blank message
     for (TaskData task : tasks) {
       if (!privateCommentsMap.containsKey(task.getTaskID())) {
         privateCommentsMap.put(
             task.getTaskID(), new PrivateCommentData(task.getTaskID(), userID, ""));
       }
-    }
-
-    // for tasks with comments, load them
-    for (int i = 0; i < privateComments.size(); i++) {
-      PrivateCommentData commentObject = privateComments.get(i);
-      privateCommentsMap.replace(privateComments.get(i).getTaskID(), commentObject);
     }
 
     // Set attributes of request; retrieve in jsp with
