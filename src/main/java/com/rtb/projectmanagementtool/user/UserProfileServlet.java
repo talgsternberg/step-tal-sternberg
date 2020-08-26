@@ -47,8 +47,9 @@ public class UserProfileServlet extends HttpServlet {
     boolean currentUser = false;
 
     // get user ID
-    if (request.getParameter("userID") == null) {
-      userID = auth.whichUserIsLoggedIn(request, response);
+    if ((request.getParameter("userID") == null)
+        || (Long.parseLong((request.getParameter("userID"))) == userLoggedInId)) {
+      userID = userLoggedInId;
       currentUser = true;
     } else {
       userID = Long.parseLong(request.getParameter("userID"));
@@ -72,22 +73,20 @@ public class UserProfileServlet extends HttpServlet {
 
     // build list of private comments
     ArrayList<PrivateCommentData> privateComments = new ArrayList<>();
-
-    // get private comments
     privateComments = privateCommentController.getPrivateCommentsForUser(userID);
 
     // build map of taskID to pcomment
     Map<Long, PrivateCommentData> privateCommentsMap = new HashMap<Long, PrivateCommentData>();
 
-    // preset each comment if every task is empty
-    if (privateCommentsMap.isEmpty()) {
-      for (TaskData task : tasks) {
+    // for tasks w/o comments, make comments
+    for (TaskData task : tasks) {
+      if (!privateCommentsMap.containsKey(task.getTaskID())) {
         privateCommentsMap.put(
             task.getTaskID(), new PrivateCommentData(task.getTaskID(), userID, ""));
       }
     }
 
-    // if the user has private comments, load them into map
+    // for tasks with comments, load them
     for (int i = 0; i < privateComments.size(); i++) {
       PrivateCommentData commentObject = privateComments.get(i);
       privateCommentsMap.replace(privateComments.get(i).getTaskID(), commentObject);
