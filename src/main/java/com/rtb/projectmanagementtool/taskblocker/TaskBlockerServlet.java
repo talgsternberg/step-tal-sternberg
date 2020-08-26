@@ -1,13 +1,18 @@
 package com.rtb.projectmanagementtool.taskblocker;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.rtb.projectmanagementtool.task.*;
 import java.io.IOException;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.SerializationUtils;
 
 /** Servlet that returns task data */
 @WebServlet("/task-blocker")
@@ -39,10 +44,26 @@ public class TaskBlockerServlet extends HttpServlet {
 
     // Create TaskBlockerData object
     TaskBlockerData taskBlocker = new TaskBlockerData(taskID, blockerID);
-
-    // Add taskBlocker to datastore
     TaskBlockerController taskBlockerController =
         new TaskBlockerController(datastore, taskController);
+
+    MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+    String key = Long.toString(projectID);
+    byte[] value;
+    String graph = "";
+    value = (byte[]) syncCache.get(key);
+    if (value == null) {
+      graph = taskBlockerController.buildGraph(projectID);
+    } else {
+      graph = SerializationUtils.deserialize(value);
+    }
+    graph = taskBlockerController.addEdge(graph, taskID, blockerID);
+    value = SerializationUtils.serialize(graph);
+    syncCache.put(key, value);
+    System.out.println("Graph: " + graph);
+
+    // Add taskBlocker to datastore
     String alert = "";
     try {
       taskBlockerController.addTaskBlocker(taskBlocker);

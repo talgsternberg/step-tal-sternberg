@@ -75,6 +75,16 @@ public final class TaskBlockerController {
     return false;
   }
 
+  // Build methods
+
+  public String buildGraph(long projectID) {
+    return "This is a map for " + Long.toString(projectID);
+  }
+
+  public String addEdge(String graph, long taskID, long blockerID) {
+    return graph + ": " + Long.toString(taskID) + ", " + Long.toString(blockerID);
+  }
+
   // Get methods
 
   public TaskBlockerData getTaskBlockerByID(long taskBlockerID) {
