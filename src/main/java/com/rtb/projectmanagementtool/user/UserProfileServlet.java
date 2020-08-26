@@ -47,8 +47,9 @@ public class UserProfileServlet extends HttpServlet {
     boolean currentUser = false;
 
     // get user ID
-    if (request.getParameter("userID") == null) {
-      userID = auth.whichUserIsLoggedIn(request, response);
+    if ((request.getParameter("userID") == null)
+        || (Long.parseLong((request.getParameter("userID"))) == userLoggedInId)) {
+      userID = userLoggedInId;
       currentUser = true;
     } else {
       userID = Long.parseLong(request.getParameter("userID"));
@@ -57,37 +58,45 @@ public class UserProfileServlet extends HttpServlet {
     // get user with ID
     UserData user = userController.getUserByID(userID);
 
+    // simple way to have majors without []
+    String userMajorsString = "";
+    for (String major : user.getUserMajors()) {
+      if (userMajorsString.equals("")) {
+        userMajorsString = major;
+      } else {
+        userMajorsString = userMajorsString + ", " + major;
+      }
+    }
+
     // get this user's tasks
     ArrayList<TaskData> tasks = taskController.getTasksByUserID(userID);
 
-    // this should only be sent load user looking @ own profile
-
-    // build list of private comments and colors
+    // build list of private comments
     ArrayList<PrivateCommentData> privateComments = new ArrayList<>();
-
-    // build private comments
     privateComments = privateCommentController.getPrivateCommentsForUser(userID);
 
-    // build map of task to pcomment
+    // build map of taskID to pcomment
     Map<Long, PrivateCommentData> privateCommentsMap = new HashMap<Long, PrivateCommentData>();
 
-    // preset each comment for each task empty
+    // for tasks w/o comments, make comments
     for (TaskData task : tasks) {
-      privateCommentsMap.put(
-          task.getTaskID(), new PrivateCommentData(task.getTaskID(), userID, ""));
+      if (!privateCommentsMap.containsKey(task.getTaskID())) {
+        privateCommentsMap.put(
+            task.getTaskID(), new PrivateCommentData(task.getTaskID(), userID, ""));
+      }
     }
 
-    // if the user has private comments, load them into map
+    // for tasks with comments, load them
     for (int i = 0; i < privateComments.size(); i++) {
       PrivateCommentData commentObject = privateComments.get(i);
-      privateCommentsMap.put(privateComments.get(i).getTaskID(), commentObject);
+      privateCommentsMap.replace(privateComments.get(i).getTaskID(), commentObject);
     }
 
     // Set attributes of request; retrieve in jsp with
     request.setAttribute("UserData", user);
     request.setAttribute("UserTasks", tasks);
     request.setAttribute("privateCommentsMap", privateCommentsMap);
-    // will be used to check and see if we should load private comments
+    request.setAttribute("userMajorsString", userMajorsString);
     request.setAttribute("currentUser", currentUser);
 
     // Load jsp for user page
@@ -98,24 +107,30 @@ public class UserProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    Long userID = auth.whichUserIsLoggedIn(request, response);
+    // get parameters
+    long taskID = Long.parseLong(request.getParameter("taskID"));
+    String message = request.getParameter("message-" + taskID);
+    long userID = auth.whichUserIsLoggedIn(request, response);
 
-    // get this user's tasks
-    TaskController taskController = new TaskController(datastore);
-    ArrayList<TaskData> tasks = taskController.getTasksByUserID(userID);
+    // new controller for methods
+    PrivateCommentController pcController = new PrivateCommentController(datastore);
 
-    // for each task, get params and create private comments
-    for (TaskData task : tasks) {
-      long taskID = Long.parseLong(request.getParameter("taskID"));
-      String message = request.getParameter("message");
+    // if a pcomment already exists with this taskID. Get it and update it.
+    if (pcController.getPrivateCommentByTaskID(taskID) != null) {
+      PrivateCommentData pcData = pcController.getPrivateCommentByTaskID(taskID);
+      // update message
+      pcData.setMessage(message);
 
-      // Create PrivateCommentData object
-      PrivateCommentData privateComment = new PrivateCommentData(taskID, userID, message);
-
-      // Add private comment to datastore
-      PrivateCommentController privateCommentController = new PrivateCommentController(datastore);
-      privateCommentController.addPrivateComment(privateComment);
+      // Add updates to datastore
+      pcController.updatePrivateComment(pcData);
     }
+
+    // otherwise, create a new pcData and put that in ds
+    else {
+      PrivateCommentData pcData = new PrivateCommentData(taskID, userID, message);
+      pcController.addPrivateComment(pcData);
+    }
+
     // Redirect back to the user profile servlet
     response.sendRedirect("/user-profile");
   }
