@@ -63,7 +63,7 @@ public final class TaskBlockerController {
   }
 
   private boolean containsPath(long start, long end) {
-    // Deserialize graph from cache or build graph
+    // Get graph
     long projectID = taskController.getTaskByID(start).getProjectID();
     TaskBlockerGraph graph = getGraph(projectID);
     // Initialize visited and queue
@@ -97,6 +97,10 @@ public final class TaskBlockerController {
     value = (byte[]) cache.get(key);
     if (value == null) {
       graph = buildGraph(projectID);
+      // TODO: also add edges so that a subtask blocks its parent task,
+      //       then it's not necessary to ensure not isSubtask() on line ~53,
+      //       and this will account for a parent task blocking an unrelated
+      //       task which is blocking the parent task's subtask.
     } else {
       graph = SerializationUtils.deserialize(value);
     }
