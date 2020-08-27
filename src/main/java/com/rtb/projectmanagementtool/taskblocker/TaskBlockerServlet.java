@@ -42,34 +42,35 @@ public class TaskBlockerServlet extends HttpServlet {
     long taskID = Long.parseLong(request.getParameter("blocked"));
     long blockerID = Long.parseLong(request.getParameter("blocker"));
 
-    // Create TaskBlockerData object
-    TaskBlockerData taskBlocker = new TaskBlockerData(taskID, blockerID);
+    // Deserialize graph from cache or build graph
+    MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
+    cache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
     TaskBlockerController taskBlockerController =
-        new TaskBlockerController(datastore, taskController);
-
-    MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+        new TaskBlockerController(datastore, cache, taskController);
     String key = Long.toString(projectID);
     byte[] value;
     TaskBlockerGraph graph;
-    value = (byte[]) syncCache.get(key);
+    value = (byte[]) cache.get(key);
     if (value == null) {
       graph = taskBlockerController.buildGraph(projectID);
     } else {
       graph = SerializationUtils.deserialize(value);
     }
-    taskBlockerController.addEdge(graph, taskID, blockerID);
-    value = SerializationUtils.serialize(graph);
-    syncCache.put(key, value);
-    System.out.println("Graph: " + graph);
 
-    // Add taskBlocker to datastore
+    // Add taskBlocker to graph and datastore
     String alert = "";
     try {
-      taskBlockerController.addTaskBlocker(taskBlocker);
+      taskBlockerController.addEdge(graph, taskID, blockerID);
     } catch (Exception e) {
       alert = e.getMessage();
+      e.printStackTrace();
+      System.out.println(e);
     }
+
+    // Serialize graph and put it back into the cache
+    value = SerializationUtils.serialize(graph);
+    cache.put(key, value);
+    System.out.println("Graph: " + graph);
 
     // If adding a task blocker failed, return back to the add-task-blocker page with a message
     if (alert != "") {

@@ -2,21 +2,32 @@ package com.rtb.projectmanagementtool.taskblocker;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.*;
+import com.google.appengine.api.memcache.MemcacheService;
 import com.rtb.projectmanagementtool.task.*;
 import com.rtb.projectmanagementtool.task.TaskData.Status;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import org.apache.commons.lang3.SerializationUtils;
 
 /** Class controlling the TaskBlockerData object. */
 public final class TaskBlockerController {
   private DatastoreService datastore;
+  private MemcacheService cache;
   private TaskController taskController;
   private Filter NO_FILTER = null;
 
   public TaskBlockerController(DatastoreService datastore, TaskController taskController) {
     this.datastore = datastore;
+    this.cache = null;
+    this.taskController = taskController;
+  }
+
+  public TaskBlockerController(
+      DatastoreService datastore, MemcacheService cache, TaskController taskController) {
+    this.datastore = datastore;
+    this.cache = cache;
     this.taskController = taskController;
   }
 
@@ -48,75 +59,82 @@ public final class TaskBlockerController {
   }
 
   private boolean containsPath(long start, long end) {
-    // Get taskBlockers that belong to the current project
+    if (cache == null) {
+      // Get taskBlockers that belong to the current project
+      long projectID = taskController.getTaskByID(start).getProjectID();
+      HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
+      // Initialize visited and queue
+      HashSet<Long> visited = new HashSet<>();
+      LinkedList<Long> queue = new LinkedList<>();
+      visited.add(start);
+      queue.add(start);
+      Long blockerID;
+      while (queue.size() != 0) {
+        start = queue.poll();
+        for (TaskBlockerData taskBlocker : taskBlockers) {
+          if (taskBlocker.getTaskID() == start) {
+            blockerID = taskBlocker.getBlockerID();
+            if (blockerID == end) {
+              return true;
+            }
+            if (!visited.contains(blockerID)) {
+              visited.add(blockerID);
+              queue.add(blockerID);
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    // Deserialize graph from cache or build graph
     long projectID = taskController.getTaskByID(start).getProjectID();
-    HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
+    String key = Long.toString(projectID);
+    byte[] value;
+    TaskBlockerGraph graph;
+    value = (byte[]) cache.get(key);
+    if (value == null) {
+      graph = buildGraph(projectID);
+    } else {
+      graph = SerializationUtils.deserialize(value);
+    }
     // Initialize visited and queue
     HashSet<Long> visited = new HashSet<>();
     LinkedList<Long> queue = new LinkedList<>();
     visited.add(start);
     queue.add(start);
-    Long blockerID;
     while (queue.size() != 0) {
       start = queue.poll();
-      for (TaskBlockerData taskBlocker : taskBlockers) {
-        if (taskBlocker.getTaskID() == start) {
-          blockerID = taskBlocker.getBlockerID();
-          if (blockerID == end) {
-            return true;
-          }
-          if (!visited.contains(blockerID)) {
-            visited.add(blockerID);
-            queue.add(blockerID);
-          }
+      for (long blockerID : graph.getBlockerIDs(start)) {
+        if (blockerID == end) {
+          return true;
+        }
+        if (!visited.contains(blockerID)) {
+          visited.add(blockerID);
+          queue.add(blockerID);
         }
       }
     }
     return false;
   }
 
-  // Build methods
+  // Build graph methods
 
   public TaskBlockerGraph buildGraph(long projectID) {
     TaskBlockerGraph graph = new TaskBlockerGraph();
     HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
-    ArrayList<TaskData> projectTasks = taskController.getTasksByProjectID(projectID);
-    TaskData task = null;
-    TaskData blocker = null;
-    for (TaskBlockerData taskBlocker : taskBlockers) {
-      task = null;
-      blocker = null;
-      for (TaskData projectTask : projectTasks) {
-        if (projectTask.getTaskID() == taskBlocker.getTaskID()) {
-          task = projectTask;
-        }
-        if (projectTask.getTaskID() == taskBlocker.getBlockerID()) {
-          blocker = projectTask;
-        }
-        if (task != null && blocker != null) {
-          graph.addEdge(task, blocker);
-          break;
-        }
-      }
-      assert task != null && blocker != null;
-    }
+    graph.buildGraph(taskBlockers);
     return graph;
   }
 
-  public void addEdge(TaskBlockerGraph graph, long taskID, long blockerID) {
-    graph.addEdge(taskController.getTaskByID(taskID), taskController.getTaskByID(blockerID));
+  public void addEdge(TaskBlockerGraph graph, long taskID, long blockerID) throws Exception {
+    addTaskBlocker(taskID, blockerID);
+    graph.addEdge(taskID, blockerID);
   }
 
-  public void addEdge(TaskBlockerGraph graph, TaskBlockerData taskBlocker) {
-    addEdge(graph, taskBlocker.getTaskID(), taskBlocker.getBlockerID());
-  }
-
-  public String buildGraphTest(long projectID) {
-    return "This is a map for " + Long.toString(projectID);
-  }
-
-  public String addEdgeTest(String graph, long taskID, long blockerID) {
-    return graph + ": " + Long.toString(taskID) + ", " + Long.toString(blockerID);
+  public void addEdge(TaskBlockerGraph graph, TaskBlockerData taskBlocker) throws Exception {
+    addTaskBlocker(taskBlocker);
+    graph.addEdge(taskBlocker.getTaskID(), taskBlocker.getBlockerID());
   }
 
   // Get methods

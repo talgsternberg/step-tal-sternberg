@@ -2,38 +2,51 @@ package com.rtb.projectmanagementtool.taskblocker;
 
 import com.rtb.projectmanagementtool.task.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /** Class containing task blocker graph nodes. */
 public final class TaskBlockerGraph implements Serializable {
 
-  private Map<TaskData, ArrayList<TaskData>> vertices;
+  private Map<Long, HashSet<Long>> vertices;
 
   public TaskBlockerGraph() {
     this.vertices = new HashMap<>();
   }
 
-  public void addEdge(TaskData task, TaskData blocker) {
-    vertices.putIfAbsent(task, new ArrayList<>());
-    vertices.get(task).add(blocker);
+  public void addEdge(long taskID, long blockerID) {
+    vertices.putIfAbsent(taskID, new HashSet<>());
+    vertices.get(taskID).add(blockerID);
   }
 
-  public void removeEdge(TaskData task, TaskData blocker) {
-    vertices.get(task).remove(blocker);
-    if (vertices.get(task).equals(new ArrayList<>())) {
-      vertices.remove(task);
+  public void removeEdge(long taskID, long blockerID) {
+    vertices.get(taskID).remove(blockerID);
+    if (vertices.get(taskID).equals(new HashSet<>())) {
+      vertices.remove(taskID);
+    }
+  }
+
+  public HashSet<Long> getBlockerIDs(long taskID) {
+    if (!vertices.containsKey(taskID)) {
+      return new HashSet<>();
+    }
+    return vertices.get(taskID);
+  }
+
+  public void buildGraph(HashSet<TaskBlockerData> taskBlockers) {
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      addEdge(taskBlocker.getTaskID(), taskBlocker.getBlockerID());
     }
   }
 
   @Override
   public String toString() {
     String returnString = "{\n";
-    for (Map.Entry<TaskData, ArrayList<TaskData>> entry : vertices.entrySet()) {
+    for (Map.Entry<Long, HashSet<Long>> entry : vertices.entrySet()) {
       returnString += "{\n";
-      returnString += "Task: " + entry.getKey() + "\n";
-      returnString += "Blockers: " + entry.getValue() + "\n}";
+      returnString += "TaskID: " + entry.getKey() + "\n";
+      returnString += "BlockerIDs: " + entry.getValue() + "\n}";
     }
     return returnString += "\n}";
   }
