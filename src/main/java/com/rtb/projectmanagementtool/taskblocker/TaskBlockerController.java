@@ -61,15 +61,7 @@ public final class TaskBlockerController {
   private boolean containsPath(long start, long end) {
     // Deserialize graph from cache or build graph
     long projectID = taskController.getTaskByID(start).getProjectID();
-    String key = Long.toString(projectID);
-    byte[] value;
-    TaskBlockerGraph graph;
-    value = (byte[]) cache.get(key);
-    if (value == null) {
-      graph = buildGraph(projectID);
-    } else {
-      graph = SerializationUtils.deserialize(value);
-    }
+    TaskBlockerGraph graph = getGraph(projectID);
     // Initialize visited and queue
     HashSet<Long> visited = new HashSet<>();
     LinkedList<Long> queue = new LinkedList<>();
@@ -91,7 +83,29 @@ public final class TaskBlockerController {
     return false;
   }
 
-  // Build graph methods
+  // Graph methods
+
+  public TaskBlockerGraph getGraph(long projectID) {
+    // Deserialize graph from cache or build graph
+    String key = Long.toString(projectID);
+    byte[] value;
+    TaskBlockerGraph graph;
+    value = (byte[]) cache.get(key);
+    if (value == null) {
+      graph = buildGraph(projectID);
+    } else {
+      graph = SerializationUtils.deserialize(value);
+    }
+    return graph;
+  }
+
+  public void cacheGraph(TaskBlockerGraph graph, long projectID) {
+    // Serialize graph and put it back into the cache
+    String key = Long.toString(projectID);
+    byte[] value = SerializationUtils.serialize(graph);
+    cache.put(key, value);
+    System.out.println("Graph: " + graph);
+  }
 
   public TaskBlockerGraph buildGraph(long projectID) {
     TaskBlockerGraph graph = new TaskBlockerGraph();
@@ -146,12 +160,9 @@ public final class TaskBlockerController {
   }
 
   public ArrayList<TaskData> getBlockersForTask(long taskID) {
-    HashSet<TaskBlockerData> taskBlockers = getTaskBlockers(taskID);
-    ArrayList<Long> taskIDs = new ArrayList<>();
-    for (TaskBlockerData taskBlocker : taskBlockers) {
-      taskIDs.add(taskBlocker.getBlockerID());
-    }
-    return taskController.getTasksByIDs(taskIDs);
+    long projectID = taskController.getTaskByID(taskID).getProjectID();
+    TaskBlockerGraph graph = getGraph(projectID);
+    return taskController.getTasksByIDs(new ArrayList<>(graph.getBlockerIDs(taskID)));
   }
 
   public HashSet<TaskBlockerData> getTaskBlockers(long taskID) {
@@ -181,7 +192,17 @@ public final class TaskBlockerController {
   // Delete methods
 
   public void deleteByBlockerID(long blockerID) {
-    datastore.delete(getKeysFromTaskBlockers(getTaskBlockersByBlockerID(blockerID)));
+    // Get graph
+    long projectID = taskController.getTaskByID(blockerID).getProjectID();
+    TaskBlockerGraph graph = getGraph(projectID);
+
+    // Delete task blockers from datastore
+    HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByBlockerID(blockerID);
+    datastore.delete(getKeysFromTaskBlockers(taskBlockers));
+
+    // Update graph in cache
+    graph.removeEdges(taskBlockers);
+    cacheGraph(graph, projectID);
   }
 
   // Conversion methods

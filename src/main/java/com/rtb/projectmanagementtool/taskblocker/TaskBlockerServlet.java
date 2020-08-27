@@ -12,22 +12,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.SerializationUtils;
 
 /** Servlet that returns task data */
 @WebServlet("/task-blocker")
 public class TaskBlockerServlet extends HttpServlet {
 
   DatastoreService datastore;
+  MemcacheService cache;
   TaskController taskController;
 
   public TaskBlockerServlet() {
     datastore = DatastoreServiceFactory.getDatastoreService();
     taskController = new TaskController(datastore);
+    cache = MemcacheServiceFactory.getMemcacheService();
+    cache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
   }
 
   // For testing only
-  public TaskBlockerServlet(DatastoreService datastore, TaskController taskController) {
+  public TaskBlockerServlet(
+      DatastoreService datastore, MemcacheService cache, TaskController taskController) {
     this.datastore = datastore;
     this.taskController = taskController;
   }
@@ -42,20 +45,10 @@ public class TaskBlockerServlet extends HttpServlet {
     long taskID = Long.parseLong(request.getParameter("blocked"));
     long blockerID = Long.parseLong(request.getParameter("blocker"));
 
-    // Deserialize graph from cache or build graph
-    MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
-    cache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+    // Get graph
     TaskBlockerController taskBlockerController =
         new TaskBlockerController(datastore, cache, taskController);
-    String key = Long.toString(projectID);
-    byte[] value;
-    TaskBlockerGraph graph;
-    value = (byte[]) cache.get(key);
-    if (value == null) {
-      graph = taskBlockerController.buildGraph(projectID);
-    } else {
-      graph = SerializationUtils.deserialize(value);
-    }
+    TaskBlockerGraph graph = taskBlockerController.getGraph(projectID);
 
     // Add taskBlocker to graph and datastore
     String alert = "";
@@ -66,11 +59,10 @@ public class TaskBlockerServlet extends HttpServlet {
     }
 
     // Serialize graph and put it back into the cache
-    value = SerializationUtils.serialize(graph);
-    cache.put(key, value);
-    System.out.println("Graph: " + graph);
+    taskBlockerController.cacheGraph(graph, projectID);
 
-    // If adding a task blocker failed, return back to the add-task-blocker page with a message
+    // If adding a task blocker failed due to user input,
+    // return back to the add-task-blocker page with a message
     if (alert != "") {
       response.sendRedirect(
           "add-task-blocker.jsp?projectID="

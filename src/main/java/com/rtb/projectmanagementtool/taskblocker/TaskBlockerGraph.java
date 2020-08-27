@@ -27,6 +27,12 @@ public final class TaskBlockerGraph implements Serializable {
     }
   }
 
+  public void removeEdges(HashSet<TaskBlockerData> taskBlockers) {
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      removeEdge(taskBlocker.getTaskID(), taskBlocker.getBlockerID());
+    }
+  }
+
   public HashSet<Long> getBlockerIDs(long taskID) {
     if (!vertices.containsKey(taskID)) {
       return new HashSet<>();
