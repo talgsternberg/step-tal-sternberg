@@ -23,7 +23,7 @@
     <!-- Page content -->
     <div id="content">
       <div id="title">
-        <div id="user-page-container"><h1><%=user.getUserName()%>'s Settings</h1></div>
+        <div id="user-page-container"><h1>Your Settings</h1></div>
       </div>
       <form action="/user-settings" method="post">
         <tr>

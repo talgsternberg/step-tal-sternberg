@@ -14,6 +14,7 @@
 <%--HTML--%>
 <ul>
   <%if (currUser) {%>
+    <h1 id="pc-header">Your Private Task Comments:</h1>
     <%for (TaskData task : tasks) {%>
       <li class="task">
         <%if (task.getStatus().name().equals("COMPLETE")) {%>
@@ -23,14 +24,13 @@
         <%}%>
           <%=task.getName()%>
         </button>
-        <form class="inline" id="add-private-comment-post-form" action="/user-profile" method="POST">
-          <input type="hidden" id="add-private-comment-task-input" name="taskID" value="<%=task.getTaskID()%>">
+        <form action="/user-profile" method="POST">
+          <input type="hidden" name="taskID" value="<%=task.getTaskID()%>">
           <br>
-          <input class="private-comment" type="text" name="message" value="<%=(privateCommentsMap.get(task.getTaskID())).getMessage().trim()%>"></input>
+          <textarea style="width:300px; height:100px;" type="text" name="message-<%=task.getTaskID()%>" rows="6" cols="50"><%=(privateCommentsMap.get(task.getTaskID())).getMessage().trim()%></textarea>
           <br>
           <button class="deep-button" type="submit" class="deep-button">Update</button>
         </form>
-        <%request.setAttribute("task", task);%>
         <br><br>
       </li>
     <%}%>
