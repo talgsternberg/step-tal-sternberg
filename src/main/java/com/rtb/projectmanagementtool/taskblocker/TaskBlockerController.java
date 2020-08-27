@@ -50,6 +50,10 @@ public final class TaskBlockerController {
         || tasks.get(1).getStatus() == Status.COMPLETE) {
       throw new TaskBlockerException("One or more tasks are already set to COMPLETE");
     }
+    // Ensure the blocked task isn't a subtask of the blocker
+    if (taskController.isSubtask(taskBlocker.getBlockerID(), taskBlocker.getTaskID())) {
+      throw new TaskBlockerException("A task cannot block its subtask");
+    }
     // Ensure a cycle wouldn't be created if the TaskBlocker is added
     if (containsPath(taskBlocker.getBlockerID(), taskBlocker.getTaskID())) {
       throw new TaskBlockerException("Cannot block a task if it would create a cycle");

@@ -758,6 +758,53 @@ public class TaskControllerTest {
   }
 
   @Test
+  public void testIsSubtask() {
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    TaskController taskController = new TaskController(ds);
+
+    // Create tasks
+    TaskData task1 = new TaskData(projectID1, name1, description1, status1, users1);
+    TaskData task2 = new TaskData(projectID2, name2, description2, status2, users2);
+    TaskData task3 = new TaskData(projectID3, name3, description3, status3, users3);
+    TaskData task4 = new TaskData(projectID1, name1, description1, status1, users1);
+    TaskData task5 = new TaskData(projectID2, name2, description2, status2, users2);
+    TaskData task6 = new TaskData(projectID3, name3, description3, status3, users3);
+
+    // Assert no task entities are found
+    Assert.assertEquals(0, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Add task1 to ds
+    long taskID1 = ds.put(task1.toEntity()).getId();
+
+    // Set task2 and task3 as subtasks of task1
+    task2.setParentTaskID(taskID1);
+    task3.setParentTaskID(taskID1);
+
+    // Add task2 and task3 to ds
+    long taskID2 = ds.put(task2.toEntity()).getId();
+    long taskID3 = ds.put(task3.toEntity()).getId();
+
+    // Set task4 and task5 as subtasks of task3
+    task4.setParentTaskID(taskID3);
+    task5.setParentTaskID(taskID3);
+
+    // Add task4 and task5 and task6 to ds
+    long taskID4 = ds.put(task4.toEntity()).getId();
+    long taskID5 = ds.put(task5.toEntity()).getId();
+    long taskID6 = ds.put(task6.toEntity()).getId();
+
+    // Assert 6 entities were added
+    Assert.assertEquals(6, ds.prepare(new Query("Task")).countEntities(withLimit(10)));
+
+    // Assert isSubtask() works
+    Assert.assertTrue("isSubtask", taskController.isSubtask(taskID1, taskID2));
+    Assert.assertTrue("isSubtask", taskController.isSubtask(taskID1, taskID4));
+    Assert.assertFalse("isSubtask", taskController.isSubtask(taskID5, taskID3));
+    Assert.assertFalse("isSubtask", taskController.isSubtask(taskID4, taskID2));
+    Assert.assertFalse("isSubtask", taskController.isSubtask(taskID6, taskID2));
+  }
+
+  @Test
   public void testDeleteTasks() {
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
     TaskController taskController = new TaskController(ds);
