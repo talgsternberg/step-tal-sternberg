@@ -56,7 +56,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testAddTaskBlockers() throws Exception {
+  public void testAddTaskBlockers() throws TaskBlockerException {
     TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Add 2 initially
@@ -77,7 +77,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testCycleDetectionSmall() throws Exception {
+  public void testCycleDetectionSmall() throws TaskBlockerException {
     TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Create 2 task blockers that block each other
@@ -100,7 +100,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testCycleDetectionLarge() throws Exception {
+  public void testCycleDetectionLarge() throws TaskBlockerException {
     TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Create 2 task blockers that block each other
@@ -147,7 +147,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testGetTaskBlockerByID() throws Exception {
+  public void testGetTaskBlockerByID() throws TaskBlockerException {
     TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Create 3 task blockers
@@ -181,7 +181,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testGetBlockersByTaskId() throws Exception {
+  public void testGetBlockersByTaskId() throws TaskBlockerException {
     TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // 2 blockers for task1
@@ -203,7 +203,7 @@ public class TaskBlockerControllerTest {
   }
 
   @Test
-  public void testDeleteBlockersByBlockerId() throws Exception {
+  public void testDeleteBlockersByBlockerId() throws TaskBlockerException {
     TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // 2 blockers by task4

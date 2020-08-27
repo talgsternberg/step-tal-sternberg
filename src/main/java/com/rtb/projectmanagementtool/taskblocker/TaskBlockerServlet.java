@@ -61,10 +61,8 @@ public class TaskBlockerServlet extends HttpServlet {
     String alert = "";
     try {
       taskBlockerController.addEdge(graph, taskID, blockerID);
-    } catch (Exception e) {
+    } catch (TaskBlockerException e) {
       alert = e.getMessage();
-      e.printStackTrace();
-      System.out.println(e);
     }
 
     // Serialize graph and put it back into the cache

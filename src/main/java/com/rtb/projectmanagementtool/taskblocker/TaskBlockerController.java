@@ -33,26 +33,26 @@ public final class TaskBlockerController {
 
   // Add methods
 
-  public void addTaskBlocker(long taskID, long blockerID) throws Exception {
+  public void addTaskBlocker(long taskID, long blockerID) throws TaskBlockerException {
     addTaskBlocker(new TaskBlockerData(taskID, blockerID));
   }
 
-  public void addTaskBlocker(TaskBlockerData taskBlocker) throws Exception {
+  public void addTaskBlocker(TaskBlockerData taskBlocker) throws TaskBlockerException {
     // Ensure the tasks exist
     ArrayList<TaskData> tasks =
         taskController.getTasksByIDs(
             new ArrayList<>(Arrays.asList(taskBlocker.getTaskID(), taskBlocker.getBlockerID())));
     if (tasks.size() < 2) {
-      throw new Exception("Cannot find tasks with provided taskID or blockerID");
+      throw new TaskBlockerException("Cannot find tasks with provided taskID or blockerID");
     }
     // Ensure the blocked task isn't already set to COMPLETE
     if (tasks.get(0).getStatus() == Status.COMPLETE
         || tasks.get(1).getStatus() == Status.COMPLETE) {
-      throw new Exception("One or more tasks are already set to COMPLETE");
+      throw new TaskBlockerException("One or more tasks are already set to COMPLETE");
     }
     // Ensure a cycle wouldn't be created if the TaskBlocker is added
     if (containsPath(taskBlocker.getBlockerID(), taskBlocker.getTaskID())) {
-      throw new Exception("Cannot block a task if it would create a cycle");
+      throw new TaskBlockerException("Cannot block a task if it would create a cycle");
     }
     // Add the TaskBlocker
     taskBlocker.setTaskBlockerID(datastore.put(taskBlocker.toEntity()).getId());
@@ -100,12 +100,14 @@ public final class TaskBlockerController {
     return graph;
   }
 
-  public void addEdge(TaskBlockerGraph graph, long taskID, long blockerID) throws Exception {
+  public void addEdge(TaskBlockerGraph graph, long taskID, long blockerID)
+      throws TaskBlockerException {
     addTaskBlocker(taskID, blockerID);
     graph.addEdge(taskID, blockerID);
   }
 
-  public void addEdge(TaskBlockerGraph graph, TaskBlockerData taskBlocker) throws Exception {
+  public void addEdge(TaskBlockerGraph graph, TaskBlockerData taskBlocker)
+      throws TaskBlockerException {
     addTaskBlocker(taskBlocker);
     graph.addEdge(taskBlocker.getTaskID(), taskBlocker.getBlockerID());
   }
