@@ -1,10 +1,11 @@
 package com.rtb.projectmanagementtool.task;
 
 import com.google.appengine.api.datastore.Entity;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /** Class containing task data. */
-public final class TaskData implements Comparable<TaskData> {
+public final class TaskData implements Serializable, Comparable<TaskData> {
   /** Enum containing status options for a task. */
   public enum Status {
     COMPLETE,
@@ -204,4 +205,9 @@ public final class TaskData implements Comparable<TaskData> {
   public boolean equals(Object other) {
     return other instanceof TaskData && equals(this, (TaskData) other);
   }
+
+  //   @Override
+  //   public int hashCode() {
+  //     return Long.hashCode(taskID);
+  //   }
 }

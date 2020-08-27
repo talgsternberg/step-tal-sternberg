@@ -294,7 +294,22 @@ public final class TaskController {
     return tasks;
   }
 
+  public boolean isSubtask(long parentTaskID, long subtaskID) {
+    return isSubtask(getTaskByID(parentTaskID), subtaskID);
+  }
+
+  private boolean isSubtask(TaskData parentTask, long subtaskID) {
+    ArrayList<TaskData> subtasks = getSubtasks(parentTask);
+    for (TaskData subtask : subtasks) {
+      if (subtask.getTaskID() == subtaskID || isSubtask(subtask, subtaskID) == true) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Delete methods
+
   public void deleteTasks(ArrayList<Long> taskIDs) {
     TransactionOptions options = TransactionOptions.Builder.withXG(true);
     Transaction transaction = datastore.beginTransaction(options);
