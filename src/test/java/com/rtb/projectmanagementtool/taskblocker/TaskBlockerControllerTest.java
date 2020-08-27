@@ -3,12 +3,17 @@ package com.rtb.projectmanagementtool.taskblocker;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.rtb.projectmanagementtool.task.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.logging.Level;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +22,7 @@ import org.junit.Test;
 public class TaskBlockerControllerTest {
 
   private DatastoreService datastore;
+  private MemcacheService cache;
   private TaskController taskController;
 
   // Tasks
@@ -29,6 +35,7 @@ public class TaskBlockerControllerTest {
 
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(
+          new LocalMemcacheServiceTestConfig(),
           new LocalDatastoreServiceTestConfig()
               .setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL));
 
@@ -36,6 +43,8 @@ public class TaskBlockerControllerTest {
   public void setUp() {
     helper.setUp();
     datastore = DatastoreServiceFactory.getDatastoreService();
+    cache = MemcacheServiceFactory.getMemcacheService();
+    cache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
     taskController = new TaskController(datastore);
     taskController.addTasks(
         new ArrayList<>(Arrays.asList(task1, task2, task3, task4, task5, task6)));
@@ -48,7 +57,7 @@ public class TaskBlockerControllerTest {
 
   @Test
   public void testAddTaskBlockers() throws Exception {
-    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+    TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Add 2 initially
     ctl.addTaskBlocker(task1.getTaskID(), task2.getTaskID());
@@ -69,7 +78,7 @@ public class TaskBlockerControllerTest {
 
   @Test
   public void testCycleDetectionSmall() throws Exception {
-    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+    TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Create 2 task blockers that block each other
     TaskBlockerData tb1 = new TaskBlockerData(task1.getTaskID(), task2.getTaskID());
@@ -92,7 +101,7 @@ public class TaskBlockerControllerTest {
 
   @Test
   public void testCycleDetectionLarge() throws Exception {
-    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+    TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Create 2 task blockers that block each other
     TaskBlockerData tb1 = new TaskBlockerData(task1.getTaskID(), task2.getTaskID());
@@ -139,7 +148,7 @@ public class TaskBlockerControllerTest {
 
   @Test
   public void testGetTaskBlockerByID() throws Exception {
-    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+    TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // Create 3 task blockers
     TaskBlockerData tb1 = new TaskBlockerData(task1.getTaskID(), task2.getTaskID());
@@ -173,7 +182,7 @@ public class TaskBlockerControllerTest {
 
   @Test
   public void testGetBlockersByTaskId() throws Exception {
-    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+    TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // 2 blockers for task1
     ctl.addTaskBlocker(task1.getTaskID(), task2.getTaskID());
@@ -195,7 +204,7 @@ public class TaskBlockerControllerTest {
 
   @Test
   public void testDeleteBlockersByBlockerId() throws Exception {
-    TaskBlockerController ctl = new TaskBlockerController(datastore, taskController);
+    TaskBlockerController ctl = new TaskBlockerController(datastore, cache, taskController);
 
     // 2 blockers by task4
     ctl.addTaskBlocker(task1.getTaskID(), task4.getTaskID());

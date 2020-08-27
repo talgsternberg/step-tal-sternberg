@@ -59,34 +59,6 @@ public final class TaskBlockerController {
   }
 
   private boolean containsPath(long start, long end) {
-    if (cache == null) {
-      // Get taskBlockers that belong to the current project
-      long projectID = taskController.getTaskByID(start).getProjectID();
-      HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
-      // Initialize visited and queue
-      HashSet<Long> visited = new HashSet<>();
-      LinkedList<Long> queue = new LinkedList<>();
-      visited.add(start);
-      queue.add(start);
-      Long blockerID;
-      while (queue.size() != 0) {
-        start = queue.poll();
-        for (TaskBlockerData taskBlocker : taskBlockers) {
-          if (taskBlocker.getTaskID() == start) {
-            blockerID = taskBlocker.getBlockerID();
-            if (blockerID == end) {
-              return true;
-            }
-            if (!visited.contains(blockerID)) {
-              visited.add(blockerID);
-              queue.add(blockerID);
-            }
-          }
-        }
-      }
-      return false;
-    }
-
     // Deserialize graph from cache or build graph
     long projectID = taskController.getTaskByID(start).getProjectID();
     String key = Long.toString(projectID);
@@ -103,6 +75,7 @@ public final class TaskBlockerController {
     LinkedList<Long> queue = new LinkedList<>();
     visited.add(start);
     queue.add(start);
+    // Loop through queue until empty or until path is found
     while (queue.size() != 0) {
       start = queue.poll();
       for (long blockerID : graph.getBlockerIDs(start)) {
