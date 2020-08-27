@@ -41,7 +41,7 @@
           <li id="user-name-container"><p>Name: <%=user.getUserName()%></p></li><br>
           <li id="user-year-container"><p>Graduation Year: <%=user.getUserYear()%></p></li><br>
           <li id="user-majors-container"><p>Majors: <%=userMajorsString %></p></li><br>
-          <li id="user-skills-container"><p>Top Skill: <%=user.getUserSkills()%></p></li><br>
+          <li id="user-skills-container"><p>Top Skill: <%=user.getUserSkills().name().toLowerCase()%></p></li><br>
            <li id="user-total-tasks-container">
               <p>Total Completed Tasks: <%=user.getUserTotal()%></p>
           </li>
