@@ -77,11 +77,45 @@ public final class TaskBlockerController {
 
   // Build methods
 
-  public String buildGraph(long projectID) {
+  public TaskBlockerGraph buildGraph(long projectID) {
+    TaskBlockerGraph graph = new TaskBlockerGraph();
+    HashSet<TaskBlockerData> taskBlockers = getTaskBlockersByProjectID(projectID);
+    ArrayList<TaskData> projectTasks = taskController.getTasksByProjectID(projectID);
+    TaskData task = null;
+    TaskData blocker = null;
+    for (TaskBlockerData taskBlocker : taskBlockers) {
+      task = null;
+      blocker = null;
+      for (TaskData projectTask : projectTasks) {
+        if (projectTask.getTaskID() == taskBlocker.getTaskID()) {
+          task = projectTask;
+        }
+        if (projectTask.getTaskID() == taskBlocker.getBlockerID()) {
+          blocker = projectTask;
+        }
+        if (task != null && blocker != null) {
+          graph.addEdge(task, blocker);
+          break;
+        }
+      }
+      assert task != null && blocker != null;
+    }
+    return graph;
+  }
+
+  public void addEdge(TaskBlockerGraph graph, long taskID, long blockerID) {
+    graph.addEdge(taskController.getTaskByID(taskID), taskController.getTaskByID(blockerID));
+  }
+
+  public void addEdge(TaskBlockerGraph graph, TaskBlockerData taskBlocker) {
+    addEdge(graph, taskBlocker.getTaskID(), taskBlocker.getBlockerID());
+  }
+
+  public String buildGraphTest(long projectID) {
     return "This is a map for " + Long.toString(projectID);
   }
 
-  public String addEdge(String graph, long taskID, long blockerID) {
+  public String addEdgeTest(String graph, long taskID, long blockerID) {
     return graph + ": " + Long.toString(taskID) + ", " + Long.toString(blockerID);
   }
 

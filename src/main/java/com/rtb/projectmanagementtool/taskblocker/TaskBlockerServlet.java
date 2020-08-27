@@ -51,14 +51,14 @@ public class TaskBlockerServlet extends HttpServlet {
     syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
     String key = Long.toString(projectID);
     byte[] value;
-    String graph = "";
+    TaskBlockerGraph graph;
     value = (byte[]) syncCache.get(key);
     if (value == null) {
       graph = taskBlockerController.buildGraph(projectID);
     } else {
       graph = SerializationUtils.deserialize(value);
     }
-    graph = taskBlockerController.addEdge(graph, taskID, blockerID);
+    taskBlockerController.addEdge(graph, taskID, blockerID);
     value = SerializationUtils.serialize(graph);
     syncCache.put(key, value);
     System.out.println("Graph: " + graph);
