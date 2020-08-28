@@ -113,7 +113,8 @@ public class TaskServlet extends HttpServlet {
     CommentController commentController = new CommentController(datastore);
     ArrayList<CommentData> comments = new ArrayList<>();
     try {
-      comments = commentController.getComments(taskID, limit, sortBy, sortDirection);
+      // comments = commentController.getComments(taskID, limit, sortBy, sortDirection);
+      comments = commentController.getCommentsByTaskID(taskID);
     } catch (NullPointerException | IllegalArgumentException e) {
       System.out.println("TaskID doesn't exist. Cannot fetch comments.");
     }
